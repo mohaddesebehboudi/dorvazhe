@@ -15,12 +15,60 @@
 
 <button class="island center" data-island="soon" aria-label="جزیره دانایی"><span>🏛️</span></button>
 
-<button class="island bl" data-island="soon" aria-label="جزیره جمله‌سازی"><span>🏡</span></button>
+<button class="island bl" data-island="sentences" aria-label="جزیره جمله‌سازی"><span>🏡</span></button>
 
 <button class="island br" data-island="soon" aria-label="جزیره املا"><span>🏰</span></button></div></div><div class="map-hint">برای جابه‌جایی نقشه یک انگشت بکشید؛ برای بزرگ‌نمایی دو انگشت را باز و بسته کنید.</div><div class="home-actions"><button class="action" id="adventureBtn">📖 دفترچه ماجراجویی</button><button class="action" id="reviewBtn">🔁 مرور آموخته‌ها</button><button class="action" id="backupBtn">⬇️ پشتیبان‌گیری</button><button class="action" id="restoreBtn">⬆️ بازیابی پشتیبان</button><input id="restoreFile" type="file" accept="application/json,.json" class="hidden"></div></section>
 <section id="stages" class="screen"><div class="subhead"><div><div class="title">🧩 جزیره واژه‌سازی</div><div class="notice">یکی از ۱۰ مرحله را انتخاب کن. می‌توانی مرحله‌های قبلی را دوباره بازی کنی.</div></div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="stage-list" id="stageList"></div></div></section>
 <section id="game" class="screen"><div class="subhead"><div class="title">🧩 واژه‌سازی</div><button class="action" data-stages>فهرست مرحله‌ها</button></div><div class="card game-card"><div class="subhead"><b id="stageLabel">مرحله ۱ از ۱۰</b><span>🦪 <b id="gamePearls">۰</b></span></div><div class="progressline"><i id="progressBar" style="width:10%"></i></div><p class="prompt">حروف را به ترتیب درست بچین تا کلمه ساخته شود.</p><div class="target" id="target"></div><div class="tiles" id="tiles"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="game-actions"><button class="action" id="hintBtn">💡 راهنمایی</button><button class="action" id="undoBtn">↩️ یکی برگرد</button><button class="action" id="clearBtn">پاک کردن</button><button class="action primary" id="checkBtn">بررسی پاسخ</button></div><div class="game-actions hidden" id="successActions"><button class="action primary" id="nextBtn">مرحله بعد ←</button><button class="action" id="backStages">فهرست مرحله‌ها</button></div></div></section>
-<section id="review" class="screen"><div class="subhead"><div class="title">🔁 مرور آموخته‌ها</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><p class="notice">تمرین‌هایی که قبلاً در آن‌ها اشتباه داشتی اینجا جمع می‌شوند. با تمرین دوباره می‌توانی آن‌ها را مرور کنی.</p><div id="reviewList"></div></div></section>
+<section id="sentenceStages" class="screen">
+  <div class="subhead">
+    <div>
+      <div class="title">🏡 جزیره جمله‌سازی</div>
+      <div class="notice">کلمه‌ها را مرتب کن تا جمله‌ی درست ساخته شود.</div>
+    </div>
+    <button class="action" data-home>نقشه اصلی</button>
+  </div>
+  <div class="card">
+    <div class="stage-list" id="sentenceStageList"></div>
+  </div>
+</section>
+
+<section id="sentenceGame" class="screen">
+  <div class="subhead">
+    <div class="title">🏡 جمله‌سازی</div>
+    <button class="action" id="backSentenceStages">فهرست جمله‌ها</button>
+  </div>
+
+  <div class="card game-card">
+    <div class="subhead">
+      <b id="sentenceStageLabel">جمله ۱</b>
+      <span id="sentenceProgressLabel"></span>
+    </div>
+
+    <div class="progressline">
+      <i id="sentenceProgressBar" style="width:3%"></i>
+    </div>
+
+    <p class="prompt">کلمه‌ها را به ترتیب درست بچین. نقطه را هم در جای خودش قرار بده.</p>
+
+    <div class="target sentence-target" id="sentenceTarget"></div>
+    <div class="tiles sentence-tiles" id="sentenceTiles"></div>
+
+    <div class="feedback" id="sentenceFeedback" aria-live="polite"></div>
+
+    <div class="game-actions">
+      <button class="action" id="sentenceHint">💡 راهنمایی</button>
+      <button class="action" id="sentenceUndo">↩️ یکی برگرد</button>
+      <button class="action" id="sentenceClear">پاک کردن</button>
+      <button class="action primary" id="sentenceCheck">بررسی جمله</button>
+    </div>
+
+    <div class="game-actions hidden" id="sentenceSuccessActions">
+      <button class="action primary" id="sentenceNext">جمله بعد ←</button>
+      <button class="action" id="sentenceRepeat">دوباره همین جمله</button>
+    </div>
+  </div>
+</section><section id="review" class="screen"><div class="subhead"><div class="title">🔁 مرور آموخته‌ها</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><p class="notice">تمرین‌هایی که قبلاً در آن‌ها اشتباه داشتی اینجا جمع می‌شوند. با تمرین دوباره می‌توانی آن‌ها را مرور کنی.</p><div id="reviewList"></div></div></section>
 <section id="adventure" class="screen"><div class="subhead"><div class="title">📖 دفترچه ماجراجویی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card" id="adventureContent"></div></section>
 </main><footer class="footer">🎨 طراح بازی: محدثه بهبودی</footer></div>
 <div class="modalback" id="modalBack"><div class="modal" id="modal"></div></div><div class="toast" id="toast"></div>
