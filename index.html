@@ -99,7 +99,19 @@ if(!data.name){modal(`<h2>به دریای پارسی خوش آمدی! 🌊</h2><
 $('editName').onclick=()=>{modal(`<h2>تغییر نام</h2><input class="field" id="newName" maxlength="24" value="${esc(data.name)}"/><p><button class="action primary" id="saveName">ذخیره</button> <button class="action" id="cancelName">انصراف</button></p>`);$('saveName').onclick=()=>{let n=$('newName').value.trim();if(n){data.name=n;save();closeModal()}};$('cancelName').onclick=closeModal};
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 document.querySelectorAll('[data-home]').forEach(b=>b.onclick=()=>show('home'));document.querySelectorAll('[data-stages]').forEach(b=>b.onclick=()=>show('stages'));
-document.querySelectorAll('[data-island]').forEach(b=>b.onclick=()=>{if(b.dataset.island==='active'){renderStages();show('stages')}else toast('این جزیره به‌زودی باز می‌شود!')});
+document.querySelectorAll('[data-island]').forEach(b=>b.onclick=()=>{
+  if(b.dataset.island==='active'){
+    renderStages();
+    show('stages');
+  }
+  else if(b.dataset.island==='sentences'){
+    renderSentenceStages();
+    show('sentenceStages');
+  }
+  else {
+    toast('این جزیره به‌زودی باز می‌شود!');
+  }
+});
 $('adventureBtn').onclick=()=>{renderAdventure();show('adventure')};$('reviewBtn').onclick=()=>{renderReview();show('review')};
 function renderStages(){ $('stageList').innerHTML=stages.map((s,i)=>{let done=!!data.completed[i];return `<button class="stage ${done?'done':''}" data-stage="${i}">${done?'🦪':'🐚'} مرحله ${fa(i+1)}<small>${done?'تکمیل‌شده':'برای شروع لمس کن'}</small></button>`}).join('');document.querySelectorAll('[data-stage]').forEach(b=>b.onclick=()=>startStage(+b.dataset.stage))}
 let current=0,tiles=[],placed=[],hinted=false,attempts=0,success=false,reviewMode=false,reviewIndex=null,answerUnits=[];
