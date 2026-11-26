@@ -133,7 +133,421 @@ $('checkBtn').onclick=()=>{if(success)return;let w=wordNow();if(placed.filter(v=
 attempts++;data.stats.wrong++;data.streak=0;data.mistakes[current]={count:(data.mistakes[current]?.count||0)+1,last:Date.now()};save();$('feedback').textContent='اشکالی نداره! دوباره حروف رو مرتب کن.';$('feedback').className='feedback soft';persistSession()};
 function showIslandCelebration(){modal(`<div class="chest">🎁</div><h2>جزیره واژه‌سازی رو به پایان رسوندی!</h2><p>آفرین ${esc(data.name)}! تو هر ۱۰ مرحله رو انجام دادی.</p><p>🦪 مرواریدهای این جزیره: ${fa(Object.keys(data.awarded).length)}</p><p><button class="action primary" id="celebrateClose">ادامه ماجراجویی</button></p>`);$('celebrateClose').onclick=closeModal}
 $('nextBtn').onclick=()=>{if(current<9)startStage(current+1);else{renderStages();show('stages')}};$('backStages').onclick=()=>{renderStages();show('stages')};
-function renderReview(){let keys=Object.keys(data.mistakes);$('reviewList').innerHTML=keys.length?`<div class="stage-list">${keys.map(k=>`<button class="stage" data-review="${k}">🔁 مرحله ${fa(+k+1)}<small>نیاز به مرور · ${fa(data.mistakes[k].count)} اشتباه</small></button>`).join('')}</div>`:'<p class="notice">فعلاً تمرینی برای مرور نداری. عالی پیش می‌ری!</p>';document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>startStage(+b.dataset.review,true))}
+// ===============================
+// Sentence Building Island
+// ===============================
+
+const sentences = [
+'بابا آب داد .',
+'بابا آمَد .',
+'بابا بادام داد .',
+'داماد با ما آمَد .',
+'بابا با اَسب آمَد .',
+'سَبا آدامس داد .',
+'سَما با سَبَد آمَد .',
+'او با سام بود .',
+'دود بَدبو بود .',
+'آب مَسموم بود .',
+'بابا تاب بَست .',
+'دوستَم با سوت آمَد .',
+'او با اَسَد دوست اَست .',
+'او با ما دَست داد .',
+'اَبر آمَد .',
+'مادَر آرام آمَد .',
+'سارا بَرادَر دارَد .',
+'مادَر با سارا آمَد .',
+'رود آب دارَد .',
+'سارا توت دارَد .',
+'اَسب رام بود .',
+'داراب روستا اَست .',
+'روستا آباد اَست .',
+'مار سَم دارَد .',
+'راسو بَدبو اَست .',
+'سارا دَر رودسَر اَست .',
+'رودبار دور اَست .',
+'اَرَس رود اَست .',
+'مَن اَنار دارَم .',
+'اَبر دَر آسمان اَست .',
+'آدَم دَندان دارَد .',
+'مَن اَنار دَر دَست دارَم .',
+'باران نَم‌نَم آمَد .',
+'مَن دَرس دارَم .',
+'مادَر دَر دَست نان دارَد .',
+'آن مَرد نان دارَد .',
+'دَر سَبَد اَنار اَست .',
+'مادَرَم تا اَبَد دوستَت دارَم .'
+];
+
+let sentenceIndex = 0;
+let sentenceTokens = [];
+let sentencePlaced = [];
+let sentenceDone = false;
+
+
+// جدا کردن کلمه‌ها و نقطه
+function sentenceParts(i) {
+  return sentences[i].trim().split(/\s+/);
+}
+
+
+// مخلوط کردن تصادفی کلمه‌ها
+function shuffleSentence(array) {
+  let result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  // اگر تصادفاً ترتیب اولیه باقی ماند، جابه‌جایی انجام بده
+  if (result.every((v, i) => v.v === array[i].v) && result.length > 1) {
+    [result[0], result[1]] = [result[1], result[0]];
+  }
+
+  return result;
+}
+
+
+// نمایش فهرست جمله‌ها
+function renderSentenceStages() {
+
+  $('sentenceStageList').innerHTML = sentences.map((s, i) => `
+    <button class="stage" data-sentence-stage="${i}">
+      🐚 جمله ${fa(i + 1)}
+      <small>${esc(s)}</small>
+    </button>
+  `).join('');
+
+  document.querySelectorAll('[data-sentence-stage]').forEach(b => {
+    b.onclick = () => startSentence(+b.dataset.sentenceStage);
+  });
+}
+
+
+// شروع یک جمله
+function startSentence(i) {
+
+  sentenceIndex = i;
+  sentenceDone = false;
+  sentencePlaced = [];
+
+  let parts = sentenceParts(i).map((v, id) => ({
+    id: id,
+    v: v
+  }));
+
+  sentenceTokens = shuffleSentence(parts);
+
+  renderSentenceGame();
+  show('sentenceGame');
+}
+
+
+// نمایش بازی
+function renderSentenceGame() {
+
+  let parts = sentenceParts(sentenceIndex);
+
+  $('sentenceStageLabel').textContent =
+    'جمله ' + fa(sentenceIndex + 1) + ' از ' + fa(sentences.length);
+
+  $('sentenceProgressLabel').textContent =
+    fa(sentenceIndex + 1) + ' / ' + fa(sentences.length);
+
+  $('sentenceProgressBar').style.width =
+    ((sentenceIndex + 1) / sentences.length * 100) + '%';
+
+
+  // خانه‌های پاسخ
+  $('sentenceTarget').innerHTML = parts.map((v, i) => {
+
+    let id = sentencePlaced[i];
+
+    let value = id !== undefined
+      ? sentenceTokens.find(t => t.id === id).v
+      : '+';
+
+    return `
+      <button class="slot ${id !== undefined ? 'filled' : 'empty-slot'}"
+        data-sentence-slot="${i}">
+        ${esc(value)}
+      </button>
+    `;
+
+  }).join('');
+
+
+  // کلمه‌های درهم‌ریخته
+  $('sentenceTiles').innerHTML = sentenceTokens.map(t => `
+
+    <button class="tile ${sentencePlaced.includes(t.id) ? 'used' : ''}"
+      draggable="true"
+      data-sentence-tile="${t.id}">
+      ${esc(t.v)}
+    </button>
+
+  `).join('');
+
+
+  $('sentenceFeedback').textContent = '';
+  $('sentenceFeedback').className = 'feedback';
+
+  $('sentenceSuccessActions').classList.toggle('hidden', !sentenceDone);
+
+  $('sentenceHint').disabled = sentenceDone;
+
+
+  // لمس و کشیدن کلمه‌ها
+  document.querySelectorAll('[data-sentence-tile]').forEach(el => {
+
+    el.onclick = () => {
+
+      if (sentenceDone) return;
+
+      let id = +el.dataset.sentenceTile;
+
+      if (sentencePlaced.includes(id)) return;
+
+      let pos = sentencePlaced.findIndex(v => v === undefined);
+
+      if (pos < 0) pos = sentencePlaced.length;
+
+      putSentence(id, pos);
+    };
+
+
+    el.ondragstart = e => {
+      e.dataTransfer.setData('text/plain', el.dataset.sentenceTile);
+    };
+
+  });
+
+
+  // خانه‌های پاسخ
+  document.querySelectorAll('[data-sentence-slot]').forEach(el => {
+
+    el.onclick = () => {
+
+      if (sentenceDone) return;
+
+      sentencePlaced[+el.dataset.sentenceSlot] = undefined;
+
+      renderSentenceGame();
+    };
+
+
+    el.ondragover = e => e.preventDefault();
+
+    el.ondrop = e => {
+
+      e.preventDefault();
+
+      putSentence(
+        +e.dataTransfer.getData('text/plain'),
+        +el.dataset.sentenceSlot
+      );
+
+    };
+
+  });
+
+
+  $('sentenceTarget').ondragover = e => e.preventDefault();
+
+  $('sentenceTarget').ondrop = e => {
+
+    e.preventDefault();
+
+    let id = +e.dataTransfer.getData('text/plain');
+
+    let pos = sentencePlaced.findIndex(v => v === undefined);
+
+    putSentence(id, pos < 0 ? sentencePlaced.length : pos);
+
+  };
+
+}
+
+
+// قرار دادن یک کلمه در خانه
+function putSentence(id, pos) {
+
+  if (sentenceDone) return;
+
+  if (sentencePlaced.includes(id)) return;
+
+  if (pos < 0 || pos >= sentenceParts(sentenceIndex).length) return;
+
+  sentencePlaced[pos] = id;
+
+  renderSentenceGame();
+}
+
+
+// بررسی پاسخ
+$('sentenceCheck').onclick = () => {
+
+  if (sentenceDone) return;
+
+  let total = sentenceParts(sentenceIndex).length;
+
+  if (sentencePlaced.filter(v => v !== undefined).length !== total) {
+
+    $('sentenceFeedback').textContent =
+      'همه‌ی کلمه‌ها و نقطه را در جای خود قرار بده.';
+
+    $('sentenceFeedback').className = 'feedback soft';
+
+    return;
+  }
+
+
+  let answer = sentencePlaced.map(id =>
+    sentenceTokens.find(t => t.id === id).v
+  ).join(' ');
+
+
+  if (answer === sentences[sentenceIndex]) {
+
+    sentenceDone = true;
+
+    $('sentenceFeedback').textContent =
+      'آفرین! جمله را درست ساختی. 🌟';
+
+    $('sentenceFeedback').className = 'feedback good';
+
+    $('sentenceSuccessActions').classList.remove('hidden');
+
+    $('sentenceHint').disabled = true;
+
+    $('sentenceTiles').innerHTML = '';
+
+    $('sentenceTarget').innerHTML = `
+      <div style="font-size:clamp(20px,4vw,30px);
+        font-weight:900;color:#087c9d;padding:12px">
+        ${esc(answer)} ✨
+      </div>
+    `;
+
+  } else {
+
+    $('sentenceFeedback').textContent =
+      'ترتیب جمله هنوز درست نیست؛ دوباره امتحان کن.';
+
+    $('sentenceFeedback').className = 'feedback soft';
+
+  }
+
+};
+
+
+// راهنمایی
+$('sentenceHint').onclick = () => {
+
+  if (sentenceDone) return;
+
+  let parts = sentenceParts(sentenceIndex);
+
+  let next = parts.findIndex((v, i) => {
+
+    if (sentencePlaced[i] === undefined) return true;
+
+    return sentenceTokens.find(t =>
+      t.id === sentencePlaced[i]
+    )?.v !== v;
+
+  });
+
+  if (next < 0) return;
+
+
+  let token = sentenceTokens.find(t =>
+    t.v === parts[next] &&
+    !sentencePlaced.includes(t.id)
+  );
+
+
+  if (token) {
+
+    sentencePlaced[next] = token.id;
+
+    renderSentenceGame();
+
+    $('sentenceFeedback').textContent =
+      'یک کلمه را در جای درست گذاشتم؛ بقیه را خودت کامل کن.';
+
+    $('sentenceFeedback').className = 'feedback soft';
+
+  }
+
+};
+
+
+// برگرداندن آخرین کلمه
+$('sentenceUndo').onclick = () => {
+
+  if (sentenceDone) return;
+
+  for (let i = sentencePlaced.length - 1; i >= 0; i--) {
+
+    if (sentencePlaced[i] !== undefined) {
+
+      sentencePlaced[i] = undefined;
+
+      break;
+    }
+
+  }
+
+  renderSentenceGame();
+
+};
+
+
+// پاک کردن همه خانه‌ها
+$('sentenceClear').onclick = () => {
+
+  if (sentenceDone) return;
+
+  sentencePlaced = [];
+
+  renderSentenceGame();
+
+};
+
+
+// جمله بعدی
+$('sentenceNext').onclick = () => {
+
+  if (sentenceIndex < sentences.length - 1) {
+
+    startSentence(sentenceIndex + 1);
+
+  } else {
+
+    renderSentenceStages();
+
+    show('sentenceStages');
+
+  }
+
+};
+
+
+// تکرار جمله
+$('sentenceRepeat').onclick = () => {
+  startSentence(sentenceIndex);
+};
+
+
+// بازگشت به فهرست
+$('backSentenceStages').onclick = () => {
+
+  renderSentenceStages();
+
+  show('sentenceStages');
+
+};function renderReview(){let keys=Object.keys(data.mistakes);$('reviewList').innerHTML=keys.length?`<div class="stage-list">${keys.map(k=>`<button class="stage" data-review="${k}">🔁 مرحله ${fa(+k+1)}<small>نیاز به مرور · ${fa(data.mistakes[k].count)} اشتباه</small></button>`).join('')}</div>`:'<p class="notice">فعلاً تمرینی برای مرور نداری. عالی پیش می‌ری!</p>';document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>startStage(+b.dataset.review,true))}
 function renderAdventure(){let done=Object.keys(data.completed).length,wrong=Object.values(data.mistakes).reduce((a,b)=>a+b.count,0);$('adventureContent').innerHTML=`<h2>${esc(data.name||'دانش‌آموز')}، دفترچه ماجراجویی تو</h2><div class="bookgrid"><div class="bookitem">تمرین‌های انجام‌شده<br><b>${fa(data.stats.attempts)}</b></div><div class="bookitem">پاسخ‌های صحیح<br><b>${fa(data.stats.correct)}</b></div><div class="bookitem">پاسخ‌های اشتباه<br><b>${fa(data.stats.wrong)}</b></div><div class="bookitem">مرواریدهای جمع‌شده<br><b>${fa(data.pearls)}</b></div><div class="bookitem">مراحل تکمیل‌شده<br><b>${fa(done)} از ۱۰</b></div><div class="bookitem">تمرین‌های نیازمند مرور<br><b>${fa(Object.keys(data.mistakes).length)}</b></div><div class="bookitem">مرواریدهای طلایی<br><b>${fa(data.gold)}</b></div><div class="bookitem">رکورد پاسخ صحیح متوالی<br><b>${fa(data.streak)}</b></div></div><h3>جزیره واژه‌سازی</h3><div class="progressline"><i style="width:${done*10}%"></i></div><p class="notice">جزیره‌های دیگر در نقشه دیده می‌شوند و به‌زودی فعال خواهند شد.</p>`}
 $('backupBtn').onclick=()=>{let blob=new Blob([JSON.stringify({app:'DaryayeParsi',schema:1,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='daryaye-parsi-backup.json';a.click();URL.revokeObjectURL(a.href);toast('فایل پشتیبان آماده شد.')};
 $('restoreBtn').onclick=()=>$('restoreFile').click();$('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let incoming=JSON.parse(await f.text());let d=incoming.data||incoming;if(!d||typeof d!=='object'||!d.stats)throw Error();modal(`<h2>بازیابی اطلاعات</h2><p>اطلاعات پشتیبان با اطلاعات فعلی ادغام می‌شوند؛ اطلاعات فعلی پاک نخواهد شد.</p><p class="notice">در صورت وجود مرحله‌های مشترک، تکمیل‌شده‌ها و پاداش‌های قبلی حفظ می‌شوند و تعداد مرواریدها کمتر نخواهد شد.</p><button class="action primary" id="mergeBackup">ادغام و بازیابی</button> <button class="action" id="cancelRestore">انصراف</button>`);$('cancelRestore').onclick=closeModal;$('mergeBackup').onclick=()=>{data.name=data.name||d.name||'';data.pearls=Math.max(data.pearls||0,d.pearls||0);data.gold=Math.max(data.gold||0,d.gold||0);data.completed={...(d.completed||{}),...(data.completed||{})};data.awarded={...(d.awarded||{}),...(data.awarded||{})};data.mistakes={...(d.mistakes||{}),...(data.mistakes||{})};data.stats={attempts:Math.max(data.stats.attempts||0,d.stats.attempts||0),correct:Math.max(data.stats.correct||0,d.stats.correct||0),wrong:Math.max(data.stats.wrong||0,d.stats.wrong||0)};data.goldEarned=data.goldEarned||d.goldEarned;data.streak=Math.max(data.streak||0,d.streak||0);save();closeModal();toast('اطلاعات پشتیبان با اطلاعات فعلی ادغام شد.');};}catch{toast('این فایل پشتیبان معتبر نیست.')}e.target.value=''};
