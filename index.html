@@ -212,11 +212,10 @@ function shuffleSentence(array) {
 function renderSentenceStages() {
 
   $('sentenceStageList').innerHTML = sentences.map((s, i) => `
-    <button class="stage" data-sentence-stage="${i}">
-      🐚 جمله ${fa(i + 1)}
-      <small>${esc(s)}</small>
-    </button>
-  `).join('');
+  <button class="stage" data-sentence-stage="${i}">
+    🐚 جمله ${fa(i + 1)}
+  </button>
+`).join('');
 
   document.querySelectorAll('[data-sentence-stage]').forEach(b => {
     b.onclick = () => startSentence(+b.dataset.sentenceStage);
@@ -448,37 +447,42 @@ $('sentenceHint').onclick = () => {
 
   let parts = sentenceParts(sentenceIndex);
 
-  let next = parts.findIndex((v, i) => {
+  let next = parts.findIndex((word, i) => {
 
     if (sentencePlaced[i] === undefined) return true;
 
-    return sentenceTokens.find(t =>
-      t.id === sentencePlaced[i]
-    )?.v !== v;
+    let current = sentenceTokens.find(
+      t => t.id === sentencePlaced[i]
+    );
+
+    return !current || current.v !== word;
 
   });
 
   if (next < 0) return;
 
-
-  let token = sentenceTokens.find(t =>
-    t.v === parts[next] &&
-    !sentencePlaced.includes(t.id)
+  let token = sentenceTokens.find(
+    t => t.v === parts[next]
   );
 
+  if (!token) return;
 
-  if (token) {
+  let oldPosition = sentencePlaced.indexOf(token.id);
 
-    sentencePlaced[next] = token.id;
+  let displacedToken = sentencePlaced[next];
 
-    renderSentenceGame();
-
-    $('sentenceFeedback').textContent =
-      'یک کلمه را در جای درست گذاشتم؛ بقیه را خودت کامل کن.';
-
-    $('sentenceFeedback').className = 'feedback soft';
-
+  if (oldPosition !== -1) {
+    sentencePlaced[oldPosition] = displacedToken;
   }
+
+  sentencePlaced[next] = token.id;
+
+  renderSentenceGame();
+
+  $('sentenceFeedback').textContent =
+    'یک کلمه را در جای درست گذاشتم؛ بقیه را خودت کامل کن.';
+
+  $('sentenceFeedback').className = 'feedback soft';
 
 };
 
