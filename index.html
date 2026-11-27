@@ -2046,8 +2046,7 @@ function startKnowledgeDaaStage(levelIndex){
  const q=knowledgeDaaLevels[levelIndex];
  const total=q.items.filter(x=>x[2]).length;
  let selected=0,isDragging=false,activeItem=null,currentLine=null,completing=false;
- const boardWidth='100%';
- $('knowledgePrompt').textContent='هر تصویری را که ترکیبِ وسط را دارد، به آن وصل کن.';
+  $('knowledgePrompt').textContent='هر تصویری را که ترکیبِ وسط را دارد، به آن وصل کن.';
  const birdSvg='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="55" rx="25" ry="30" fill="#1a1a1a"/><ellipse cx="45" cy="50" rx="8" ry="12" fill="#fff"/><ellipse cx="55" cy="60" rx="6" ry="10" fill="#fff"/><circle cx="50" cy="30" r="18" fill="#1a1a1a"/><path d="M40 20 Q45 10 50 15 Q55 10 60 20" fill="#e74c3c"/><ellipse cx="50" cy="18" rx="12" ry="6" fill="#e74c3c"/><circle cx="45" cy="28" r="4" fill="#fff"/><circle cx="45" cy="28" r="2.5" fill="#000"/><path d="M55 30 L75 28 L75 32 Z" fill="#f39c12"/><line x1="45" y1="80" x2="45" y2="90" stroke="#7f8c8d" stroke-width="2"/><line x1="55" y1="80" x2="55" y2="90" stroke="#7f8c8d" stroke-width="2"/><path d="M45 90 L42 93 M45 90 L45 93 M45 90 L48 93 M55 90 L52 93 M55 90 L55 93 M55 90 L58 93" stroke="#7f8c8d" stroke-width="1.5"/></svg>';
  const board=document.createElement('div');
  board.className='daa-match-board';
@@ -2057,6 +2056,7 @@ function startKnowledgeDaaStage(levelIndex){
  const shuffled=shuffle(q.items.map((x,index)=>({word:x[0],emoji:x[1],correct:x[2],originalIndex:index})));
  const placed=[];
  const radiusFactor=.38;
+ const rotationOffset=Math.random()*360;
  shuffled.forEach((item,index)=>{
   const el=document.createElement('div');
   el.className='daa-match-item';
@@ -2064,7 +2064,7 @@ function startKnowledgeDaaStage(levelIndex){
   el.dataset.word=item.word;
   const visual=item.word==='دارکوب'?birdSvg:'<span class="daa-item-emoji">'+item.emoji+'</span>';
   el.innerHTML=visual+'<span class="daa-item-word">'+esc(item.word)+'</span>';
-  const angle=(index*(360/shuffled.length)-90+Math.random()*18)*(Math.PI/180);
+  const angle=(index*(360/shuffled.length)-90+rotationOffset)*(Math.PI/180);
   el.dataset.angle=String(angle);
   itemsBox.append(el);placed.push(el);
  });
