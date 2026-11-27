@@ -346,10 +346,10 @@ function renderSentenceGame() {
   let parts = sentenceParts(sentenceIndex);
 
   $('sentenceStageLabel').textContent =
-    'جمله ' + fa(sentenceIndex + 1) + ' از ' + fa(sentences.length);
+'جمله ' + fa(sentenceIndex + 1);
 
   $('sentenceProgressLabel').textContent =
-    fa(sentenceIndex + 1) + ' / ' + fa(sentences.length);
+    '';
 
   $('sentenceProgressBar').style.width =
     ((sentenceIndex + 1) / sentences.length * 100) + '%';
