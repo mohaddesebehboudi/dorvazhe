@@ -1634,7 +1634,18 @@ const knowledgeDifferenceQuestions=[
  {options:['داد','دام','داد','داد'],correct:1},
  {options:['آدَم','آمَد','آمَد','آمَد'],correct:0}
 ];
-const knowledgeTotalStages=20+knowledgeDifferenceQuestions.length+4+knowledgeDiceWords.length;
+const knowledgeSoundStagePositions=[2,5,8,11,14,17,20,23,26,29];
+const knowledgeTotalStages=59;
+function isKnowledgeSoundStage(i){return knowledgeSoundStagePositions.includes(i);}
+function knowledgeLetterIndex(i){
+ for(let old=0;old<20;old++)if(old+Math.floor(old/2)===i)return old;
+ return -1;
+}
+window.addEventListener('message',event=>{
+ const frame=$('knowledgeSoundFrame');
+ if(event.source!==frame?.contentWindow||event.data?.type!=='knowledge-sound-game-complete'||knowledgeLocked)return;
+ knowledgeCorrect();knowledgeProgressUpdate(1,1);save();knowledgeFinishStage();
+});
 let knowledgeIndex=0,knowledgeProgress=0,knowledgeLocked=false,knowledgeSpinTimer=null,knowledgeRevealTimer=null;
 
 // انتقال پیشرفت نسخهٔ قبلی: مرحلهٔ ترکیبی تاج و توپ به سه مرحلهٔ مستقل تبدیل شده است.
@@ -1669,6 +1680,15 @@ if((data.knowledgeStageVersion||0)<4){
  Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedAwarded[n>=20?n+8:n]=true;}});
  data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=4;save();
 }
+// نسخهٔ ۵: ده تمرین تشخیص صدا بین هر دو مرحلهٔ نخست جزیره قرار گرفتند.
+if((data.knowledgeStageVersion||0)<5){
+ const remap=n=>n<2?n:n<20?n+Math.floor(n/2):n+10;
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v)shiftedCompleted[remap(Number(k))]=true;});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v)shiftedAwarded[remap(Number(k))]=true;});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;
+ data.knowledgeStageVersion=5;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -1682,10 +1702,15 @@ function startKnowledgeStage(i){
   clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;knowledgeLetterSelected=[];
   $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
-  if(i<20)startKnowledgeLetterStage(i);
-  else if(i<20+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-20);
-  else{const oldIndex=i-20-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
+  if(isKnowledgeSoundStage(i))startKnowledgeSoundStage(knowledgeSoundStagePositions.indexOf(i));
+  else if(i<30)startKnowledgeLetterStage(knowledgeLetterIndex(i));
+  else if(i<30+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-30);
+  else{const oldIndex=i-30-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
   show('knowledgeGame');
+}
+function startKnowledgeSoundStage(level){
+ $('knowledgePrompt').textContent='';
+ $('knowledgePlayArea').innerHTML='<iframe id="knowledgeSoundFrame" title="بازی تشخیص صداها" src="knowledge-sound.html?level='+level+'" style="display:block;width:100%;height:min(760px,calc(100dvh - 190px));min-height:440px;border:0;border-radius:20px;background:#0a0e2a" allow="autoplay"></iframe>';
 }
 function knowledgeProgressUpdate(done,total){knowledgeProgress=done;$('knowledgeProgressBar').style.width=(done/total*100)+'%';$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);}
 function knowledgeCorrect(){data.stats.attempts++;data.stats.correct++;data.streak++;data.knowledgeScore=(data.knowledgeScore||0)+1;}
