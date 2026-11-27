@@ -38,7 +38,7 @@
 .emoji-rain span {
   position: absolute;
   top: -60px;
-  animation: emojiDrop 950ms linear forwards;
+  animation: emojiDrop 5000ms linear forwards;
   animation-delay: var(--delay);
   font-size: var(--size);
   will-change: transform;
@@ -193,7 +193,7 @@ const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d
 
   document.body.appendChild(rain);
 
-  setTimeout(() => rain.remove(), 1300);
+  setTimeout(() => rain.remove(), 5000);
       }
 const fresh=()=>({version:1,name:'',pearls:0,gold:0,completed:{},sentenceCompleted:{},awarded:{},mistakes:{},stats:{attempts:0,correct:0,wrong:0},streak:0,goldEarned:false,lastStage:0,session:null});
 let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
