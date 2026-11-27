@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>بازی تشخیص صداها - کلاس اول</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    overflow: hidden;
+    touch-action: manipulation;
+    background: #0a0e2a;
+  }
+
+  .game-container {
+    width: 100vw;
+    height: 100vh;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0a0e2a 0%, #1a1a4e 30%, #0d1b3e 60%, #162447 100%);
+  }
+
+  /* === NIGHT SKY === */
+  .sky {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    0% { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .moon {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff9c4, #ffe082, #ffcc02);
+    box-shadow: 0 0 30px 10px rgba(255, 235, 59, 0.3), 0 0 60px 20px rgba(255, 235, 59, 0.15);
+    z-index: 1;
+  }
+
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 15px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,248,180,0.3), transparent);
+  }
+
+  .cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50px;
+    z-index: 1;
+    animation: floatCloud linear infinite;
+  }
+
+  @keyframes floatCloud {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-120%); }
+  }
+
+  .planet {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  .planet-1 {
+    width: 25px; height: 25px;
+    top: 12%; right: 15%;
+    background: radial-gradient(circle at 30% 30%, #ff7043, #d84315);
+    box-shadow: 0 0 15px rgba(255,112,67,0.4);
+    animation: floatPlanet 6s ease-in-out infinite;
+  }
+
+  .planet-2 {
+    width: 18px; height: 18px;
+    top: 20%; right: 40%;
+    background: radial-gradient(circle at 30% 30%, #ab47bc, #7b1fa2);
+    box-shadow: 0 0 12px rgba(171,71,188,0.4);
+    animation: floatPlanet 8s ease-in-out infinite reverse;
+  }
+
+  @keyframes floatPlanet {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* === TOP BAR === */
+  .top-bar {
+    position: relative;
+    z-index: 10;
+    padding: 8px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stage-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stage-badge {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+  }
+
+  .back-btn {
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Vazirmatn', sans-serif;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+  }
+
+  .back-btn:active {
+    transform: scale(0.95);
+    background: rgba(255,255,255,0.25);
+  }
+
+  .progress-container {
+    width: 100%;
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00e676, #69f0ae, #00e676);
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(0,230,118,0.5);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* === BUS === */
+  .bus-area {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    flex: 0 0 auto;
+  }
+
+  .bus-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 360px;
+    perspective: 800px;
+  }
+
+  .bus {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    transform: rotateX(5deg);
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+  }
+
+  .bus-body {
+    position: absolute;
+    width: 100%;
+    height: 120px;
+    bottom: 20px;
+    background: linear-gradient(180deg, 
+      rgba(100, 200, 255, 0.4) 0%, 
+      rgba(60, 150, 255, 0.3) 30%,
+      rgba(40, 120, 220, 0.5) 70%,
+      rgba(30, 80, 180, 0.6) 100%
+    );
+    border-radius: 20px 20px 15px 15px;
+    border: 2px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+      0 10px 40px rgba(0,100,255,0.3),
+      inset 0 2px 0 rgba(255,255,255,0.3),
+      inset 0 -5px 15px rgba(0,50,150,0.3),
+      0 0 60px rgba(100,200,255,0.15);
+    overflow: hidden;
+  }
+
+  .bus-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
+    border-radius: 20px 20px 0 0;
+  }
+
+  .bus-body::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    width: 40%;
+    height: 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    transform: skewX(-15deg);
+  }
+
+  .bus-roof {
+    position: absolute;
+    width: 85%;
+    height: 30px;
+    top: 0;
+    left: 7.5%;
+    background: linear-gradient(180deg, rgba(120,220,255,0.5), rgba(80,180,255,0.4));
+    border-radius: 15px 15px 0 0;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-bottom: none;
+    box-shadow: 0 -5px 20px rgba(100,200,255,0.2);
+  }
+
+  .bus-window {
+    position: absolute;
+    top: 15px;
+    height: 45px;
+    background: linear-gradient(180deg, rgba(200,240,255,0.3), rgba(100,200,255,0.15));
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    box-shadow: inset 0 2px 5px rgba(255,255,255,0.2);
+  }
+
+  .bus-window-1 { left: 8%; width: 22%; }
+  .bus-window-2 { left: 34%; width: 22%; }
+  .bus-window-3 { left: 60%; width: 22%; }
+
+  .bus-word {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 
+      0 0 10px rgba(255,255,255,0.8),
+      0 0 20px rgba(100,200,255,0.6),
+      0 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 4px;
+    white-space: nowrap;
+  }
+
+  .bus-wheel {
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #555, #222);
+    border: 3px solid #666;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+  }
+
+  .bus-wheel::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #999, #555);
+  }
+
+  .bus-wheel-1 { left: 15%; }
+  .bus-wheel-2 { right: 15%; }
+
+  .bus-headlight {
+    position: absolute;
+    bottom: 35px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff9c4, #ffeb3b);
+    box-shadow: 0 0 15px 5px rgba(255,235,59,0.5);
+    animation: headlightPulse 2s ease-in-out infinite;
+  }
+
+  .bus-headlight-l { left: 5px; }
+  .bus-headlight-r { right: 5px; }
+
+  @keyframes headlightPulse {
+    0%, 100% { box-shadow: 0 0 15px 5px rgba(255,235,59,0.5); }
+    50% { box-shadow: 0 0 25px 10px rgba(255,235,59,0.7); }
+  }
+
+  .bus-glow {
+    position: absolute;
+    bottom: -10px;
+    left: 5%;
+    width: 90%;
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(100,200,255,0.3), transparent);
+    filter: blur(10px);
+  }
+
+  /* === CIRCLES (Sound Slots) === */
+  .circles-area {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 15px 10px 8px;
+    flex-wrap: wrap;
+  }
+
+  .sound-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(255,255,255,0.15), rgba(100,200,255,0.08));
+    border: 3px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 
+      0 0 15px rgba(100,200,255,0.2),
+      inset 0 0 15px rgba(100,200,255,0.1);
+    animation: circlePulse 2s ease-in-out infinite;
+  }
+
+  .sound-circle::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: conic-gradient(from 0deg, transparent, rgba(100,200,255,0.3), transparent, rgba(100,200,255,0.3), transparent) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateBorder 4s linear infinite;
+  }
+
+  @keyframes circlePulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(100,200,255,0.2), inset 0 0 15px rgba(100,200,255,0.1); }
+    50% { box-shadow: 0 0 25px rgba(100,200,255,0.4), inset 0 0 20px rgba(100,200,255,0.2); }
+  }
+
+  @keyframes rotateBorder {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .sound-circle.filled {
+    background: radial-gradient(circle at 40% 35%, rgba(0,230,118,0.3), rgba(0,200,100,0.15));
+    border-color: rgba(0,230,118,0.6);
+    box-shadow: 0 0 20px rgba(0,230,118,0.4), inset 0 0 15px rgba(0,230,118,0.2);
+    animation: none;
+  }
+
+  .sound-circle.filled::before {
+    display: none;
+  }
+
+  .sound-circle.highlight {
+    border-color: rgba(255,235,59,0.8);
+    box-shadow: 0 0 30px rgba(255,235,59,0.5), inset 0 0 20px rgba(255,235,59,0.2);
+    transform: scale(1.1);
+  }
+
+  .sound-circle.wrong {
+    animation: shake 0.5s ease-in-out;
+    border-color: rgba(255,82,82,0.8);
+    box-shadow: 0 0 20px rgba(255,82,82,0.5);
+  }
+
+  .sound-circle.correct-glow {
+    background: radial-gradient(circle at 40% 35%, rgba(255,235,59,0.5), rgba(255,200,0,0.3));
+    border-color: rgba(255,235,59,0.9);
+    box-shadow: 0 0 30px rgba(255,235,59,0.7), inset 0 0 20px rgba(255,235,59,0.3);
+    transform: scale(1.15);
+    animation: celebrateGlow 0.6s ease-in-out;
+  }
+
+  @keyframes celebrateGlow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1.15); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+
+  /* === SOUND CARDS === */
+  .cards-area {
+    position: relative;
+    z-index: 10;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 10px 20px;
+    min-height: 110px;
+  }
+
+  .sound-card {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+    border: 2px solid rgba(255,255,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+    color: #fff;
+    cursor: grab;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(5px);
+    box-shadow: 
+      0 5px 20px rgba(0,0,0,0.3),
+      0 0 15px rgba(100,200,255,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.3);
+    animation: floatCard var(--float-dur, 3s) ease-in-out infinite;
+    animation-delay: var(--float-delay, 0s);
+  }
+
+  .sound-card::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    width: 20px;
+    height: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: rotate(-20deg);
+  }
+
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-5px) rotate(2deg); }
+    75% { transform: translateY(3px) rotate(-1deg); }
+  }
+
+  .sound-card:active, .sound-card.dragging {
+    cursor: grabbing;
+    transform: scale(1.2) !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 30px rgba(100,200,255,0.4);
+    z-index: 100;
+    animation: none;
+  }
+
+  .sound-card.selected {
+    border-color: rgba(255,235,59,0.9);
+    box-shadow: 0 0 25px rgba(255,235,59,0.5), 0 5px 20px rgba(0,0,0,0.3);
+    transform: scale(1.15);
+    animation: none;
+  }
+
+  .sound-card.used {
+    opacity: 0;
+    transform: scale(0) !important;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* === MESSAGE === */
+  .message-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+  }
+
+  .message-overlay.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .message-box {
+    background: linear-gradient(135deg, #1a237e, #283593);
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 25px;
+    padding: 30px 40px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(100,200,255,0.2);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .message-box .emoji {
+    font-size: 50px;
+    margin-bottom: 10px;
+  }
+
+  .message-box .text {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    line-height: 1.6;
+  }
+
+  /* === BUS ANIMATION === */
+  .bus-wrapper.driving {
+    animation: busDrive 1.5s ease-in-out forwards;
+  }
+
+  @keyframes busDrive {
+    0% { transform: translateX(0) scale(1); opacity: 1; }
+    50% { transform: translateX(-30px) scale(0.95); opacity: 0.8; }
+    100% { transform: translateX(120%) scale(0.8); opacity: 0; }
+  }
+
+  .bus-wrapper.arrive {
+    animation: busArrive 0.8s ease-out forwards;
+  }
+
+  @keyframes busArrive {
+    0% { transform: translateX(-120%) scale(0.8); opacity: 0; }
+    100% { transform: translateX(0) scale(1); opacity: 1; }
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-height: 700px) {
+    .bus { height: 130px; }
+    .bus-body { height: 100px; }
+    .bus-word { font-size: 28px; bottom: 10px; }
+    .sound-circle { width: 48px; height: 48px; font-size: 18px; }
+    .sound-card { width: 54px; height: 54px; font-size: 20px; }
+    .circles-area { padding: 10px 10px 5px; gap: 10px; }
+    .cards-area { padding: 8px 15px; gap: 10px; min-height: 90px; }
+  }
+
+  @media (max-height: 600px) {
+    .bus { height: 110px; }
+    .bus-body { height: 85px; }
+    .bus-word { font-size: 24px; }
+    .top-bar { padding: 6px 12px 4px; }
+  }
+
+  /* Drag ghost */
+  .drag-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+    border: 2px solid rgba(255,235,59,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+    color: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 30px rgba(255,235,59,0.4);
+    transform: translate(-50%, -50%) scale(1.2);
+    font-family: 'Vazirmatn', sans-serif;
+  }
+
+  .instruction-text {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 0;
+  }
+
+  /* === TOP CREDIT === */
+  .top-credit {
+    position: relative;
+    z-index: 10;
+    padding: 12px 14px 10px;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 14, 42, 1) 0%,
+      rgba(10, 14, 42, 0.95) 45%,
+      rgba(10, 14, 42, 0.75) 75%,
+      rgba(10, 14, 42, 0) 100%
+    );
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .designer-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .designer-name .heart {
+    color: #ff6b9d;
+    display: inline-block;
+    animation: heartBeat 1.5s ease-in-out infinite;
+    margin: 0 3px;
+  }
+
+  @keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  /* === ID ROW with inline icons === */
+  .id-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .channel-id {
+    font-size: 15px;
+    font-weight: 900;
+    color: #ffd93d;
+    direction: ltr;
+    text-shadow: 0 0 10px rgba(255,217,61,0.5), 0 1px 3px rgba(0,0,0,0.4);
+    letter-spacing: 0.5px;
+  }
+
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .social-btn:active {
+    transform: scale(0.88);
+  }
+
+  .social-btn.telegram {
+    background: linear-gradient(135deg, #2AABEE, #229ED9);
+    box-shadow: 0 3px 12px rgba(42,171,238,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+    animation: iconPulseT 2.5s ease-in-out infinite;
+  }
+
+  .social-btn.eitaa {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    box-shadow: 0 3px 12px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+    animation: iconPulseE 2.5s ease-in-out infinite;
+  }
+
+  @keyframes iconPulseT {
+    0%, 100% { box-shadow: 0 3px 12px rgba(42,171,238,0.5), inset 0 1px 0 rgba(255,255,255,0.25); }
+    50% { box-shadow: 0 3px 18px rgba(42,171,238,0.8), inset 0 1px 0 rgba(255,255,255,0.35); }
+  }
+
+  @keyframes iconPulseE {
+    0%, 100% { box-shadow: 0 3px 12px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,0.25); }
+    50% { box-shadow: 0 3px 18px rgba(245,158,11,0.8), inset 0 1px 0 rgba(255,255,255,0.35); }
+  }
+
+  .social-btn svg {
+    width: 19px;
+    height: 19px;
+    fill: #fff;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+    position: relative;
+    z-index: 2;
+  }
+
+  .social-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="game-container" id="gameContainer">
+  <!-- Sky Background -->
+  <div class="sky" id="sky"></div>
+  <div class="moon"></div>
+  <div class="planet planet-1"></div>
+  <div class="planet planet-2"></div>
+
+  <!-- Top Credit -->
+  <div class="top-credit">
+    <div class="designer-name">طراح <span class="heart">❤</span> خانم عباسی</div>
+    <div class="id-row">
+      <a href="https://eitaa.com/kelas_avvalll" target="_blank" rel="noopener" class="social-btn eitaa" aria-label="کانال ایتا">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.5 7.5l-1.8 7.2c-.13.52-.44.65-.88.4l-2.3-1.7-1.1 1.07c-.12.12-.23.23-.47.23l.17-2.4 4.4-3.97c.19-.17-.04-.27-.3-.1L8.8 13.4l-2.4-.75c-.52-.16-.53-.52.11-.77l9.4-3.63c.43-.16.81.1.69.75z"/>
+        </svg>
+      </a>
+      <div class="channel-id">@kelas_avvalll</div>
+      <a href="https://t.me/kelas_avvalll" target="_blank" rel="noopener" class="social-btn telegram" aria-label="کانال تلگرام">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="stage-info">
+      <div class="stage-badge" id="stageBadge">مرحله ۱ از ۱۰</div>
+      <button class="back-btn" id="backBtn" onclick="goBack()">⟫ مرحله قبل</button>
+    </div>
+    <div class="progress-container">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <!-- Bus Area -->
+  <div class="bus-area">
+    <div class="bus-wrapper" id="busWrapper">
+      <div class="bus">
+        <div class="bus-roof"></div>
+        <div class="bus-body">
+          <div class="bus-window bus-window-1"></div>
+          <div class="bus-window bus-window-2"></div>
+          <div class="bus-window bus-window-3"></div>
+          <div class="bus-word" id="busWord">بابا</div>
+          <div class="bus-headlight bus-headlight-l"></div>
+          <div class="bus-headlight bus-headlight-r"></div>
+        </div>
+        <div class="bus-wheel bus-wheel-1"></div>
+        <div class="bus-wheel bus-wheel-2"></div>
+        <div class="bus-glow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Circles -->
+  <div class="circles-area" id="circlesArea"></div>
+
+  <div class="instruction-text" id="instructionText">صداها را به ترتیب درست در دایره‌ها قرار بده</div>
+
+  <!-- Sound Cards -->
+  <div class="cards-area" id="cardsArea"></div>
+
+  <!-- Message Overlay -->
+  <div class="message-overlay" id="messageOverlay">
+    <div class="message-box">
+      <div class="emoji" id="msgEmoji">🎉</div>
+      <div class="text" id="msgText">آفرین!</div>
+    </div>
+  </div></div>
+
+<script>
+// === GAME DATA ===
+const levels = [
+  { word: "بابا", sounds: ["بـ", "ا", "بـ", "ا"] },
+  { word: "آب", sounds: ["آ", "ب"] },
+  { word: "بادام", sounds: ["بـ", "ا", "د", "ا", "م"] },
+  { word: "باد", sounds: ["بـ", "ا", "د"] },
+  { word: "آداب", sounds: ["آ", "د", "ا", "ب"] },
+  { word: "دام", sounds: ["د", "ا", "م"] },
+  { word: "دَم", sounds: ["د", "َ", "م"] },
+  { word: "داماد", sounds: ["د", "ا", "مـ", "ا", "د"] },
+  { word: "آباد", sounds: ["آ", "بـ", "ا", "د"] },
+  { word: "دَما", sounds: ["د", "َ", "مـ", "ا"] },
+];
+
+const requestedLevel = Math.max(0, Math.min(9, Number(new URLSearchParams(location.search).get('level')) || 0));
+const selectedLevel = levels[requestedLevel];
+levels.splice(0, levels.length, selectedLevel);
+let currentLevel = 0;
+let circleStates = [];
+let selectedCard = null;
+let isAnimating = false;
+
+// === AUDIO ===
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+}
+
+function playTone(freq, duration, type = 'sine', volume = 0.3) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function playPlaceSound() {
+  playTone(800, 0.15, 'sine', 0.2);
+  setTimeout(() => playTone(1000, 0.1, 'sine', 0.15), 80);
+}
+
+function playCorrectSound() {
+  const notes = [523, 659, 784, 1047];
+  notes.forEach((n, i) => {
+    setTimeout(() => playTone(n, 0.3, 'sine', 0.25), i * 150);
+  });
+}
+
+function playWrongSound() {
+  playTone(200, 0.3, 'square', 0.15);
+  setTimeout(() => playTone(180, 0.3, 'square', 0.12), 150);
+}
+
+// === SKY GENERATION ===
+function createSky() {
+  const sky = document.getElementById('sky');
+  sky.innerHTML = '';
+  
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3 + 1;
+    star.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      top: ${Math.random() * 60}%;
+      left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 3 + 2}s;
+      animation-delay: ${Math.random() * 3}s;
+    `;
+    sky.appendChild(star);
+  }
+
+  for (let i = 0; i < 3; i++) {
+    const cloud = document.createElement('div');
+    cloud.className = 'cloud';
+    const w = Math.random() * 100 + 80;
+    cloud.style.cssText = `
+      width: ${w}px; height: ${w * 0.4}px;
+      top: ${15 + i * 15}%;
+      right: ${-w}px;
+      animation-duration: ${30 + i * 15}s;
+      animation-delay: ${i * 10}s;
+    `;
+    sky.appendChild(cloud);
+  }
+}
+
+// === SHUFFLE ===
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  if (a.length > 1 && a.every((v, i) => v === arr[i])) {
+    [a[0], a[1]] = [a[1], a[0]];
+  }
+  return a;
+}
+
+// === RENDER LEVEL ===
+function renderLevel() {
+  const level = levels[currentLevel];
+  
+  document.getElementById('stageBadge').textContent = `مرحله ${toPersianNum(requestedLevel + 1)} از ۱۰`;
+  document.getElementById('backBtn').style.display = 'none';
+  document.getElementById('progressFill').style.width = `${((requestedLevel + 1) / 10) * 100}%`;
+  document.getElementById('busWord').textContent = level.word;
+  
+  circleStates = new Array(level.sounds.length).fill(null);
+  selectedCard = null;
+  
+  const circlesArea = document.getElementById('circlesArea');
+  circlesArea.innerHTML = '';
+  level.sounds.forEach((_, i) => {
+    const circle = document.createElement('div');
+    circle.className = 'sound-circle';
+    circle.dataset.index = i;
+    circle.addEventListener('click', () => onCircleClick(i));
+    circlesArea.appendChild(circle);
+  });
+  
+  const shuffled = shuffle(level.sounds);
+  const cardsArea = document.getElementById('cardsArea');
+  cardsArea.innerHTML = '';
+  shuffled.forEach((sound, i) => {
+    const card = document.createElement('div');
+    card.className = 'sound-card';
+    card.textContent = sound;
+    card.dataset.sound = sound;
+    card.dataset.cardId = `card-${i}`;
+    card.style.setProperty('--float-dur', `${2.5 + Math.random() * 2}s`);
+    card.style.setProperty('--float-delay', `${Math.random() * 2}s`);
+    
+    card.addEventListener('mousedown', (e) => startDrag(e, card));
+    card.addEventListener('touchstart', (e) => startDrag(e, card), { passive: false });
+    
+    card.addEventListener('click', (e) => {
+      if (!card._wasDragged) onCardClick(card);
+      card._wasDragged = false;
+    });
+    
+    cardsArea.appendChild(card);
+  });
+  
+  const busWrapper = document.getElementById('busWrapper');
+  busWrapper.classList.remove('driving');
+  busWrapper.classList.add('arrive');
+  setTimeout(() => busWrapper.classList.remove('arrive'), 800);
+}
+
+// === CARD CLICK ===
+function onCardClick(card) {
+  if (isAnimating) return;
+  initAudio();
+  
+  if (selectedCard === card) {
+    card.classList.remove('selected');
+    selectedCard = null;
+    document.querySelectorAll('.sound-circle').forEach(c => c.classList.remove('highlight'));
+    return;
+  }
+  
+  if (selectedCard) {
+    selectedCard.classList.remove('selected');
+  }
+  
+  card.classList.add('selected');
+  selectedCard = card;
+  playTone(600, 0.1, 'sine', 0.15);
+  
+  document.querySelectorAll('.sound-circle').forEach(c => {
+    const idx = parseInt(c.dataset.index);
+    if (circleStates[idx] === null) {
+      c.classList.add('highlight');
+    } else {
+      c.classList.remove('highlight');
+    }
+  });
+}
+
+// === CIRCLE CLICK ===
+function onCircleClick(index) {
+  if (isAnimating) return;
+  initAudio();
+  
+  const circle = document.querySelectorAll('.sound-circle')[index];
+  
+  if (circleStates[index] !== null) {
+    const removedSound = circleStates[index].sound;
+    const removedCardId = circleStates[index].cardId;
+    circleStates[index] = null;
+    circle.textContent = '';
+    circle.classList.remove('filled');
+    
+    const card = document.querySelector(`[data-card-id="${removedCardId}"]`);
+    if (card) {
+      card.classList.remove('used');
+      card.textContent = removedSound;
+    }
+    
+    playTone(400, 0.1, 'sine', 0.1);
+    return;
+  }
+  
+  if (selectedCard) {
+    const sound = selectedCard.dataset.sound;
+    const cardId = selectedCard.dataset.cardId;
+    
+    circleStates[index] = { sound, cardId };
+    circle.textContent = sound;
+    circle.classList.add('filled');
+    circle.classList.remove('highlight');
+    
+    selectedCard.classList.remove('selected');
+    selectedCard.classList.add('used');
+    selectedCard = null;
+    
+    document.querySelectorAll('.sound-circle').forEach(c => c.classList.remove('highlight'));
+    
+    playPlaceSound();
+    
+    checkAllFilled();
+  }
+}
+
+// === DRAG AND DROP ===
+let dragCard = null;
+let dragGhost = null;
+let dragStartX, dragStartY;
+let isDragging = false;
+
+function startDrag(e, card) {
+  if (isAnimating) return;
+  initAudio();
+  
+  e.preventDefault();
+  dragCard = card;
+  isDragging = false;
+  
+  const pos = e.touches ? e.touches[0] : e;
+  dragStartX = pos.clientX;
+  dragStartY = pos.clientY;
+  
+  document.addEventListener('mousemove', onDragMove);
+  document.addEventListener('mouseup', onDragEnd);
+  document.addEventListener('touchmove', onDragMove, { passive: false });
+  document.addEventListener('touchend', onDragEnd);
+}
+
+function onDragMove(e) {
+  if (!dragCard) return;
+  e.preventDefault();
+  
+  const pos = e.touches ? e.touches[0] : e;
+  const dx = pos.clientX - dragStartX;
+  const dy = pos.clientY - dragStartY;
+  
+  if (!isDragging && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+    isDragging = true;
+    dragCard._wasDragged = true;
+    dragCard.classList.add('dragging');
+    
+    dragGhost = document.createElement('div');
+    dragGhost.className = 'drag-ghost';
+    dragGhost.textContent = dragCard.textContent;
+    document.body.appendChild(dragGhost);
+    
+    if (selectedCard === dragCard) {
+      selectedCard.classList.remove('selected');
+      selectedCard = null;
+      document.querySelectorAll('.sound-circle').forEach(c => c.classList.remove('highlight'));
+    }
+  }
+  
+  if (isDragging && dragGhost) {
+    dragGhost.style.left = pos.clientX + 'px';
+    dragGhost.style.top = pos.clientY + 'px';
+    
+    document.querySelectorAll('.sound-circle').forEach(c => {
+      const rect = c.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dist = Math.sqrt((pos.clientX - cx) ** 2 + (pos.clientY - cy) ** 2);
+      const idx = parseInt(c.dataset.index);
+      if (dist < 40 && circleStates[idx] === null) {
+        c.classList.add('highlight');
+      } else {
+        c.classList.remove('highlight');
+      }
+    });
+  }
+}
+
+function onDragEnd(e) {
+  document.removeEventListener('mousemove', onDragMove);
+  document.removeEventListener('mouseup', onDragEnd);
+  document.removeEventListener('touchmove', onDragMove);
+  document.removeEventListener('touchend', onDragEnd);
+  
+  if (isDragging && dragCard && dragGhost) {
+    const pos = e.changedTouches ? e.changedTouches[0] : e;
+    
+    let dropped = false;
+    document.querySelectorAll('.sound-circle').forEach(c => {
+      const rect = c.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dist = Math.sqrt((pos.clientX - cx) ** 2 + (pos.clientY - cy) ** 2);
+      const idx = parseInt(c.dataset.index);
+      
+      if (dist < 45 && circleStates[idx] === null) {
+        const sound = dragCard.dataset.sound;
+        const cardId = dragCard.dataset.cardId;
+        circleStates[idx] = { sound, cardId };
+        c.textContent = sound;
+        c.classList.add('filled');
+        c.classList.remove('highlight');
+        dragCard.classList.add('used');
+        dragCard.classList.remove('dragging');
+        dropped = true;
+        playPlaceSound();
+        checkAllFilled();
+      }
+      c.classList.remove('highlight');
+    });
+    
+    if (!dropped) {
+      dragCard.classList.remove('dragging');
+    }
+    
+    dragGhost.remove();
+    dragGhost = null;
+  }
+  
+  dragCard = null;
+  isDragging = false;
+}
+
+// === CHECK ALL FILLED ===
+function checkAllFilled() {
+  const level = levels[currentLevel];
+  const allFilled = circleStates.every(s => s !== null);
+  
+  if (!allFilled) return;
+  
+  isAnimating = true;
+  
+  const isCorrect = circleStates.every((s, i) => s.sound === level.sounds[i]);
+  
+  setTimeout(() => {
+    if (isCorrect) {
+      onCorrect();
+    } else {
+      onWrong();
+    }
+  }, 300);
+}
+
+// === CORRECT ANSWER ===
+function onCorrect() {
+  playCorrectSound();
+  const circles = document.querySelectorAll('.sound-circle');
+  circles.forEach((c, i) => {
+    setTimeout(() => {
+      c.classList.add('correct-glow');
+      playTone(600 + i * 100, 0.2, 'sine', 0.15);
+    }, i * 200);
+  });
+  setTimeout(() => {
+    document.getElementById('busWrapper').classList.add('driving');
+    setTimeout(() => {
+      isAnimating = false;
+      document.getElementById('progressFill').style.width = '100%';
+      window.parent.postMessage({ type: 'knowledge-sound-game-complete' }, '*');
+    }, 1500);
+  }, circles.length * 200 + 500);
+}
+
+// === WRONG ANSWER ===
+function onWrong() {
+  playWrongSound();
+  
+  const level = levels[currentLevel];
+  const circles = document.querySelectorAll('.sound-circle');
+  
+  circleStates.forEach((s, i) => {
+    if (s && s.sound !== level.sounds[i]) {
+      circles[i].classList.add('wrong');
+      setTimeout(() => circles[i].classList.remove('wrong'), 600);
+    }
+  });
+  
+  setTimeout(() => {
+    showMessage('🤔', 'یه بار دیگه تلاش کن!');
+  }, 400);
+  
+  setTimeout(() => {
+    hideMessage();
+    isAnimating = false;
+  }, 2000);
+}
+
+// === MESSAGES ===
+function showMessage(emoji, text) {
+  document.getElementById('msgEmoji').textContent = emoji;
+  document.getElementById('msgText').textContent = text;
+  document.getElementById('messageOverlay').classList.add('show');
+}
+
+function hideMessage() {
+  document.getElementById('messageOverlay').classList.remove('show');
+}
+
+// === NAVIGATION ===
+function goBack() {
+  if (currentLevel > 0 && !isAnimating) {
+    initAudio();
+    currentLevel--;
+    renderLevel();
+    playTone(500, 0.15, 'sine', 0.15);
+  }
+}
+
+function restartGame() {
+  initAudio();
+  currentLevel = 0;
+  document.getElementById('finalScreen').classList.remove('show');
+  renderLevel();
+}
+
+// === PERSIAN NUMBERS ===
+function toPersianNum(n) {
+  const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  return n.toString().replace(/\d/g, d => persianDigits[d]);
+}
+
+// === INIT ===
+window.addEventListener('load', () => {
+  createSky();
+  renderLevel();
+});
+
+document.addEventListener('dblclick', (e) => e.preventDefault());
+</script>
+</body>
+</html>
