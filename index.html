@@ -36,13 +36,12 @@
 <button class="island bl" data-island="sentences" aria-label="جزیره جمله‌سازی"><span>🏡</span></button>
 
 <button class="island br" data-island="soon" aria-label="جزیره املا"><span>🏰</span></button></div></div><div class="map-hint">برای جابه‌جایی نقشه یک انگشت بکشید؛ برای بزرگ‌نمایی دو انگشت را باز و بسته کنید.</div><div class="home-actions"><button class="action" id="adventureBtn">📖 دفترچه ماجراجویی</button><button class="action" id="reviewBtn">🔁 مرور آموخته‌ها</button><button class="action" id="backupBtn">⬇️ پشتیبان‌گیری</button><button class="action" id="restoreBtn">⬆️ بازیابی پشتیبان</button><input id="restoreFile" type="file" accept="application/json,.json" class="hidden"></div></section>
-<section id="stages" class="screen"><div class="subhead"><div><div class="title">🧩 جزیره واژه‌سازی</div><div class="notice">یکی از ۱۰ مرحله را انتخاب کن. می‌توانی مرحله‌های قبلی را دوباره بازی کنی.</div></div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="stage-list" id="stageList"></div></div></section>
+<section id="stages" class="screen"><div class="subhead"><div><div class="title">🧩 جزیره واژه‌سازی</div></div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="stage-list" id="stageList"></div></div></section>
 <section id="game" class="screen"><div class="subhead"><div class="title">🧩 واژه‌سازی</div><button class="action" data-stages>فهرست مرحله‌ها</button></div><div class="card game-card"><div class="subhead"><b id="stageLabel">مرحله ۱ </b><span>🦪 <b id="gamePearls">۰</b></span></div><div class="progressline"><i id="progressBar" style="width:0%"></i></div><p class="prompt">حروف را به ترتیب درست بچین تا کلمه ساخته شود.</p><div class="target" id="target"></div><div class="tiles" id="tiles"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="game-actions"><button class="action" id="hintBtn">💡 راهنمایی</button><button class="action" id="undoBtn">↩️ یکی برگرد</button><button class="action" id="clearBtn">پاک کردن</button><button class="action primary" id="checkBtn">بررسی پاسخ</button></div><div class="game-actions hidden" id="successActions"><button class="action primary" id="nextBtn">مرحله بعد ←</button><button class="action" id="backStages">فهرست مرحله‌ها</button></div></div></section>
 <section id="sentenceStages" class="screen">
   <div class="subhead">
     <div>
       <div class="title">🏡 جزیره جمله‌سازی</div>
-      <div class="notice">کلمه‌ها را مرتب کن تا جمله‌ی درست ساخته شود.</div>
     </div>
     <button class="action" data-home>نقشه اصلی</button>
   </div>
@@ -171,7 +170,6 @@ function renderStages(){
 
         return `<button class="stage ${done?'done':''}" data-stage="${i}" ${unlocked?'':'disabled'}>
             ${done?'🦪':unlocked?'🐚':'🔒'} مرحله ${fa(i+1)}
-            <small>${done?'تکمیل‌شده':unlocked?'برای شروع لمس کن':'ابتدا مرحله‌های قبلی را کامل کن'}</small>
         </button>`;
     }).join('');
 
@@ -379,7 +377,6 @@ function renderSentenceStages(){
 
         return `<button class="stage ${done?'done':''}" data-sentence-stage="${i}" ${unlocked?'':'disabled'}>
             ${done?'🦪':unlocked?'🐚':'🔒'} جمله ${fa(i+1)}
-            <small>${done?'تکمیل‌شده':unlocked?'برای شروع لمس کن':'ابتدا جمله‌های قبلی را کامل کن'}</small>
         </button>`;
 
     }).join('');
