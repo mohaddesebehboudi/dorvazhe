@@ -1716,7 +1716,7 @@ function startKnowledgeDifferenceStage(questionIndex){
  const q=knowledgeDifferenceQuestions[questionIndex];
  const choices=q.options.map((word,index)=>({word,correct:index===q.correct}));
  for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
- $('knowledgePrompt').textContent='کلمه‌ای را پیدا کن که با سه کلمهٔ دیگر متفاوت است.';
+ $('knowledgePrompt').textContent='واژه‌ی متفاوت را پیدا کن.';
  $('knowledgePlayArea').innerHTML='<div class="knowledge-choice-grid" id="knowledgeDifferenceChoices" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:520px"></div>';
  const grid=$('knowledgeDifferenceChoices');
  choices.forEach((choice,index)=>{
