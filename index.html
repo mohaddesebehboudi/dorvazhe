@@ -380,6 +380,162 @@ body.alchemy-world .combination-option{color:#f5fff6;background:linear-gradient(
 body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progressline>i{background:linear-gradient(90deg,#8fe5ae,#f5d276,#f39cba)}body.alchemy-world .feedback{color:#d9f5df}body.alchemy-world .feedback.good{color:#9ff0c6}
 @media(max-width:600px){.world-banner{padding:14px;min-height:94px}.world-banner p{font-size:12px}.world-banner-icon{font-size:44px}}
 
+
+/* نقشه‌ی سینمایی دریای پارسی */
+#home.active .map-shell{
+  isolation:isolate;
+  border:1px solid #b9f4ff99;
+  border-radius:28px;
+  background:#07162f;
+  box-shadow:
+    0 0 0 5px #142b4c,
+    0 0 0 7px #7ceaff55,
+    0 22px 55px #02081799,
+    inset 0 0 35px #6deaff33;
+  perspective:1100px;
+}
+#home.active .map-world{
+  transform-style:preserve-3d;
+}
+#home.active .map-world img{
+  filter:saturate(1.22) contrast(1.08) brightness(.88);
+  transform:scale(1.012);
+}
+#home.active .map-world::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 48%,transparent 35%,#06142b22 78%,#03102288 100%),
+    radial-gradient(circle at 12% 18%,#8ceeff66 0 1px,transparent 2px),
+    radial-gradient(circle at 78% 24%,#fff5b866 0 1.5px,transparent 2.5px),
+    radial-gradient(circle at 35% 82%,#b5a5ff88 0 1px,transparent 2px),
+    radial-gradient(circle at 91% 72%,#9af8ff88 0 1px,transparent 2px),
+    linear-gradient(125deg,#06162a18,#2c1c5a18 48%,#03132944);
+  background-size:auto,190px 170px,230px 190px,210px 180px,250px 210px,auto;
+  mix-blend-mode:screen;
+  animation:mapAurora 12s ease-in-out infinite alternate;
+}
+#home.active .map-world::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  border:1px solid #d5faff33;
+  box-shadow:inset 0 0 55px #64dfff24,inset 0 -45px 70px #07152d44;
+}
+@keyframes mapAurora{
+  from{opacity:.48;filter:hue-rotate(0deg);transform:translate3d(-.4%,0,0)}
+  to{opacity:.9;filter:hue-rotate(24deg);transform:translate3d(.4%,-.5%,0)}
+}
+#home.active .island{
+  z-index:4;
+  width:20%;
+  height:24%;
+  min-width:0;
+  max-width:none;
+  padding:0;
+  border:0;
+  background:transparent!important;
+  color:transparent;
+  overflow:visible;
+}
+#home.active .island::before{
+  content:"";
+  position:absolute;
+  inset:9% 4%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  white-space:pre-line;
+  text-align:center;
+  direction:rtl;
+  padding:5px 3px;
+  border:1px solid #d8f8ffbb;
+  border-radius:22px;
+  color:#f5fcff;
+  font-size:clamp(10px,1.35vw,16px);
+  line-height:1.55;
+  font-weight:900;
+  text-shadow:0 2px 7px #06142c,0 0 12px #9deeffaa;
+  background:
+    linear-gradient(145deg,#ffffff38,#a8dfff16 45%,#111d48a8),
+    radial-gradient(circle at 50% 0%,#ffffff66,transparent 65%);
+  -webkit-backdrop-filter:blur(12px) saturate(1.5);
+  backdrop-filter:blur(12px) saturate(1.5);
+  box-shadow:
+    inset 0 1px 1px #ffffff88,
+    inset 0 -12px 25px #06132d55,
+    0 8px 18px #02081788,
+    0 0 20px #70e7ff55;
+  transform:perspective(500px) rotateX(7deg);
+  animation:islandLevitate 4.2s ease-in-out infinite;
+}
+#home.active .island::after{
+  content:"";
+  position:absolute;
+  width:9px;height:9px;
+  top:5%;left:17%;
+  border-radius:50%;
+  background:#e9ffff;
+  box-shadow:0 0 8px 3px #8df2ff,0 0 22px 7px #62dfff99;
+  pointer-events:none;
+  animation:islandSpark 2.4s ease-in-out infinite alternate;
+}
+#home.active .island.tr::before{content:"🪄\A کارخانه‌ی واژه‌ها";border-color:#82efff;background:linear-gradient(145deg,#35d9ff55,#192c65c9 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #36dfff88}
+#home.active .island.tl::before{content:"🏰\A قلعه‌ی املا";border-color:#d5b9ff;background:linear-gradient(145deg,#b88aff55,#272052d9 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #b58aff88}
+#home.active .island.center::before{content:"🔭\A رصدخانه‌ی دانایی";border-color:#ffe69a;background:linear-gradient(145deg,#ffe17b66,#30417bcf 72%);box-shadow:inset 0 1px #fff9,0 8px 22px #02081799,0 0 30px #ffe17b99}
+#home.active .island.bl::before{content:"📖\A شهر قصه‌ها";border-color:#ffb8e4;background:linear-gradient(145deg,#ff9bd455,#243d70d9 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #ff8ed688}
+#home.active .island.br::before{content:"⚗️\A آزمایشگاه واژه‌ها";border-color:#9affd5;background:linear-gradient(145deg,#6effc455,#153f55dc 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #68ffc288}
+#home.active .island.tr::before{animation-delay:-.8s}
+#home.active .island.tl::before{animation-delay:-1.6s}
+#home.active .island.center::before{animation-delay:-2.4s}
+#home.active .island.bl::before{animation-delay:-3.2s}
+@keyframes islandLevitate{
+  0%,100%{translate:0 0;filter:brightness(1)}
+  50%{translate:0 -7px;filter:brightness(1.16)}
+}
+@keyframes islandSpark{
+  from{opacity:.35;transform:scale(.75)}
+  to{opacity:1;transform:scale(1.25)}
+}
+#home.active .map-hint{
+  width:fit-content;
+  max-width:100%;
+  margin:12px auto 0;
+  padding:8px 15px;
+  color:#e7f8ff;
+  background:linear-gradient(100deg,#10264ddd,#183c5ddd);
+  border:1px solid #9deaff66;
+  border-radius:30px;
+  box-shadow:0 5px 18px #06142c55,inset 0 1px #ffffff22;
+  text-shadow:0 1px 5px #06142c;
+}
+#home.active .home-actions .action{
+  color:#e9faff;
+  border:1px solid #a6eaff66;
+  background:linear-gradient(145deg,#254a72,#142b4b);
+  box-shadow:0 4px 0 #07162b,0 0 15px #59dfff22;
+}
+#home.active .home-actions .action.primary{
+  color:#17233e;
+  background:linear-gradient(135deg,#fff0a8,#ffc85b);
+  border-color:#fff5c9;
+  box-shadow:0 4px 0 #a96d27,0 0 18px #ffdb7b55;
+}
+@media(max-width:600px){
+  #home.active .map-shell{border-radius:21px;box-shadow:0 0 0 3px #142b4c,0 0 0 5px #7ceaff55,0 15px 35px #02081799,inset 0 0 25px #6deaff33}
+  #home.active .island::before{inset:13% 2%;padding:3px 1px;font-size:clamp(9px,2.55vw,11px);line-height:1.5;border-radius:14px}
+  #home.active .island::after{width:6px;height:6px}
+}
+@media(prefers-reduced-motion:reduce){
+  #home.active .map-world::before,#home.active .island::before,#home.active .island::after{animation:none!important}
+}
+
 </style></head>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     <body><div class="app">
 <header class="topbar"><div class="brand">🌊 دریای پارسی</div><div class="stats"><div class="pill" id="namePill">👤 مهمان</div><div class="pill">🦪 <b id="pearls">۰</b></div><div class="pill gold">🌟 <b id="goldPearls">۰</b></div><button class="iconbtn" id="editName">ویرایش نام</button></div></header>
