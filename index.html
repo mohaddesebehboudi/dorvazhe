@@ -1937,7 +1937,7 @@ function startKnowledgeLetterStage(questionIndex){
  const svg=$('knowledgePlayArea').querySelector('svg');
  if(svg)svg.style.cssText='width:140px;height:140px;max-width:45vw;max-height:45vw';
  [['initial','بـ'],['final','ب']].forEach(([choice,label])=>{
-  const b=document.createElement('button');b.type='button';b.className='knowledge-choice';b.textContent=label;
+  const b=document.createElement('button');b.type='button';b.className='knowledge-choice';b.dataset.letterChoice=choice;b.textContent=label;
   b.style.cssText='min-width:105px;min-height:90px;font-size:48px;font-weight:bold;border:3px solid #fff;border-radius:24px;cursor:pointer;background:linear-gradient(145deg,#fff,#e7dcff);color:#55347f;box-shadow:0 7px 16px #0002';
   b.onclick=()=>checkKnowledgeLetterAnswer(choice,b,q);$('knowledgeLetterChoices').append(b);
  });
@@ -1946,9 +1946,22 @@ function checkKnowledgeLetterAnswer(choice,button,q){
  if(knowledgeLocked||button.disabled||knowledgeLetterSelected.includes(choice))return;
  const correct=q.type==='both'||q.type===choice;
  if(!correct){knowledgeWrong();$('knowledgeFeedback').textContent='این شکل درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';button.animate([{transform:'translateX(0)'},{transform:'translateX(-7px)'},{transform:'translateX(7px)'},{transform:'translateX(0)'}],{duration:260});return;}
- knowledgeLetterSelected.push(choice);button.disabled=true;button.style.background='linear-gradient(145deg,#a8ff78,#78ffd6)';button.style.color='#17633b';knowledgeCorrect();knowledgeProgressUpdate(knowledgeLetterSelected.length,q.type==='both'?2:1);save();
- if(q.type!=='both'||knowledgeLetterSelected.length===2){$('knowledgeLetterChoices').querySelectorAll('button').forEach(b=>b.disabled=true);knowledgeFinishStage();}
- else{$('knowledgeFeedback').textContent='آفرین! حالا شکل دیگر را هم انتخاب کن.';$('knowledgeFeedback').className='feedback soft';}
+ knowledgeLetterSelected.push(choice);
+ button.disabled=true;
+ button.style.setProperty('background','linear-gradient(145deg,#a8ff78,#78ffd6)','important');
+ button.style.setProperty('color','#17633b','important');
+ knowledgeCorrect();knowledgeProgressUpdate(knowledgeLetterSelected.length,q.type==='both'?2:1);save();
+ if(q.type!=='both'||knowledgeLetterSelected.length===2){
+  $('knowledgeLetterChoices').querySelectorAll('button').forEach(b=>{
+   b.disabled=true;
+   if(!knowledgeLetterSelected.includes(b.dataset.letterChoice)){
+    b.style.setProperty('background','linear-gradient(145deg,#fff,#e7dcff)','important');
+    b.style.setProperty('color','#55347f','important');
+    b.style.setProperty('opacity','1','important');
+   }
+  });
+  knowledgeFinishStage();
+ }else{$('knowledgeFeedback').textContent='آفرین! حالا شکل دیگر را هم انتخاب کن.';$('knowledgeFeedback').className='feedback soft';}
 }
 function startKnowledgeDifferenceStage(questionIndex){
  const q=knowledgeDifferenceQuestions[questionIndex];
