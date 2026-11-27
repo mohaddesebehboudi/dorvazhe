@@ -2202,7 +2202,7 @@ function startKnowledgeStage(i){
   clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;knowledgeLetterSelected=[];$('knowledgeGame').classList.toggle('sound-game-mode',isKnowledgeSoundStage(i));
   $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
-  if(i===0)startKnowledgeAlefFindStage('آ');
+  if(i===0)startKnowledgeAlefFindStage(Math.random()<0.5?'آ':'ا');
   else if(i===1)startKnowledgeAlefQuizStage();
   else{
    const oldIndex=i-2;
