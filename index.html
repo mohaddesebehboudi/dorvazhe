@@ -1608,11 +1608,21 @@ const knowledgeDiceWords=[
  {word:'باد',has:false},{word:'بام',has:false},{word:'بادام',has:false},{word:'اَسب',has:false},
  {word:'بوس',has:false},{word:'سود',has:false},{word:'آدَم',has:false},{word:'دام',has:false},{word:'داماد',has:false}
 ];
-// ترتیب واژه‌های مراحل ۵ تا ۲۱ برای هر بازیکن یک‌بار تصادفی می‌شود و ثابت می‌ماند.
-if(!Array.isArray(data.knowledgeDiceOrder)||data.knowledgeDiceOrder.length!==knowledgeDiceWords.length||new Set(data.knowledgeDiceOrder).size!==knowledgeDiceWords.length||data.knowledgeDiceOrder.some(i=>!Number.isInteger(i)||i<0||i>=knowledgeDiceWords.length)){
- const order=knowledgeDiceWords.map((_,i)=>i);
- for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
- data.knowledgeDiceOrder=order;save();
+// مراحل ۳۳ تا ۴۹: واژه‌های بدون «ت» و دارای «ت» یکی‌درمیان می‌آیند.
+{
+ const validOrder=Array.isArray(data.knowledgeDiceOrder)&&
+  data.knowledgeDiceOrder.length===knowledgeDiceWords.length&&
+  new Set(data.knowledgeDiceOrder).size===knowledgeDiceWords.length&&
+  data.knowledgeDiceOrder.every((i,pos)=>Number.isInteger(i)&&i>=0&&i<knowledgeDiceWords.length&&knowledgeDiceWords[i].has===(pos%2===1));
+ if(!validOrder){
+  const withoutT=knowledgeDiceWords.map((x,i)=>!x.has?i:-1).filter(i=>i>=0);
+  const withT=knowledgeDiceWords.map((x,i)=>x.has?i:-1).filter(i=>i>=0);
+  const shuffleOrder=arr=>{for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
+  shuffleOrder(withoutT);shuffleOrder(withT);
+  data.knowledgeDiceOrder=[];
+  for(let i=0;i<knowledgeDiceWords.length;i++)data.knowledgeDiceOrder.push(i%2===0?withoutT.shift():withT.shift());
+  save();
+ }
 }
 const knowledgeDifferenceQuestions=[
  {options:['آداب','آداب','آباد','آداب'],correct:2},
