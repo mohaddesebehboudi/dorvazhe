@@ -1924,7 +1924,8 @@ const knowledgeDifferenceQuestions=[
  {options:['آدَم','آمَد','آمَد','آمَد'],correct:0}
 ];
 const knowledgeSoundStagePositions=[2,5,8,11,14,17,20,23,26,29];
-const knowledgeTotalStages=59;
+const knowledgeDaaLevels=[{target:'دا',items:[['دارو','💊',true],['دَست','✋',false],['داغ','🌶️',true],['دَفتَر','📓',false],['دارکوب','🐦',true],['دَر','🚪',false],['داد','🗣️',true],['بَرف','❄️',false],['دام','🐑',true],['بادام','🌰',true]]},{target:'دَ',items:[['دَست','✋',true],['دارو','💊',false],['دَریا','🌊',true],['داغ','🌶️',false],['دَفتَر','📓',true],['دام','🐑',false],['دَر','🚪',true],['بَرف','❄️',false],['داستان','📖',false],['دَرد','🤕',true]]}];
+const knowledgeTotalStages=61;
 function isKnowledgeSoundStage(i){return knowledgeSoundStagePositions.includes(i);}
 function knowledgeLetterIndex(i){
  for(let old=0;old<20;old++)if(old+Math.floor(old/2)===i)return old;
@@ -1978,6 +1979,13 @@ if((data.knowledgeStageVersion||0)<5){
  data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;
  data.knowledgeStageVersion=5;save();
 }
+// افزودن دو مرحلهٔ تشخیص «دا/دَ» در جایگاه‌های ۳۱ و ۳۲؛ پیشرفت قبلی حفظ می‌شود.
+if((data.knowledgeStageVersion||0)<6){
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedCompleted[n>=30?n+2:n]=true;}});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedAwarded[n>=30?n+2:n]=true;}});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=6;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -1993,9 +2001,20 @@ function startKnowledgeStage(i){
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
   if(isKnowledgeSoundStage(i))startKnowledgeSoundStage(knowledgeSoundStagePositions.indexOf(i));
   else if(i<30)startKnowledgeLetterStage(knowledgeLetterIndex(i));
-  else if(i<30+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-30);
-  else{const oldIndex=i-30-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
+  else if(i===30||i===31)startKnowledgeDaaStage(i-30);
+  else if(i<32+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-32);
+  else{const oldIndex=i-32-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
   show('knowledgeGame');
+}
+function startKnowledgeDaaStage(levelIndex){
+ const q=knowledgeDaaLevels[levelIndex],total=q.items.filter(x=>x[2]).length;let selected=0;const locked=new Set();
+ $('knowledgePrompt').textContent='تصویرهایی را انتخاب کن که صدای «'+q.target+'» را دارند.';
+ $('knowledgePlayArea').innerHTML='<div class="knowledge-word" style="font-size:clamp(34px,9vw,54px);margin:8px auto 18px">🔊 '+q.target+'</div><div class="knowledge-choice-grid" id="daaChoices">'+q.items.map((x,i)=>'<button class="knowledge-choice" data-daa="'+i+'" style="min-height:105px"><span style="display:block;font-size:36px">'+x[1]+'</span><span>'+esc(x[0])+'</span></button>').join('')+'</div><p class="notice" style="text-align:center;margin-top:12px">تصویرهای درست: '+fa(total)+' مورد</p>';
+ document.querySelectorAll('[data-daa]').forEach(btn=>btn.onclick=()=>{
+  if(knowledgeLocked||locked.has(+btn.dataset.daa))return;const x=q.items[+btn.dataset.daa];
+  if(x[2]){locked.add(+btn.dataset.daa);btn.classList.add('correct');btn.disabled=true;selected++;knowledgeCorrect();knowledgeProgressUpdate(selected,total);save();if(selected===total)knowledgeFinishStage();}
+  else{btn.classList.add('wrong');knowledgeWrong();setTimeout(()=>btn.classList.remove('wrong'),550);$('knowledgeFeedback').textContent='این تصویر صدای «'+q.target+'» را ندارد. دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}
+ });
 }
 function startKnowledgeSoundStage(level){
  $('knowledgePrompt').textContent='';
