@@ -115,6 +115,17 @@
     50% { transform: translateY(-10px); }
   }
 
+  /* فضای شفاف بالای بازی؛ جای نوار قبلی حفظ می‌شود و آسمان از پشت آن دیده می‌شود */
+  .top-clear-space {
+    height: 76px;
+    width: 100%;
+    flex: 0 0 76px;
+    position: relative;
+    z-index: 2;
+    background: transparent !important;
+    pointer-events: none;
+  }
+
   /* === BUS === */
   .bus-area {
     position: relative;
@@ -598,6 +609,8 @@
   <div class="moon"></div>
   <div class="planet planet-1"></div>
   <div class="planet planet-2"></div>
+
+  <div class="top-clear-space" aria-hidden="true"></div>
 
   <!-- Bus Area -->
   <div class="bus-area">
