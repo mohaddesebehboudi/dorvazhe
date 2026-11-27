@@ -2113,8 +2113,8 @@ const knowledgeDifferenceQuestions=[
  {options:['داد','دام','داد','داد'],correct:1},
  {options:['آدَم','آمَد','آمَد','آمَد'],correct:0}
 ];
-const knowledgeSoundStagePositions=[4,7,10,13,16,19,22,25,28,31];
-const knowledgeTotalStages=61;
+const knowledgeSoundStagePositions=[34,37,40,43,46,49,52,55,58,61];
+const knowledgeTotalStages=91;
 function isKnowledgeSoundStage(i){return knowledgeSoundStagePositions.includes(i);}
 function knowledgeLetterIndex(i){
  for(let old=0;old<20;old++)if(old+Math.floor(old/2)===i)return old;
@@ -2189,6 +2189,13 @@ if((data.knowledgeStageVersion||0)<8){
  Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v)shiftedAwarded[Number(k)+2]=true;});
  data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=8;save();
 }
+// نسخهٔ ۹: سی پرسش «کدام کلمه؟» به مراحل ۳ تا ۳۲ اضافه شدند؛ تمام مراحل قبلی از مرحلهٔ ۳ به بعد ۳۰ شماره جلو می‌روند.
+if((data.knowledgeStageVersion||0)<9){
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedCompleted[n<2?n:n+30]=true;}});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedAwarded[n<2?n:n+30]=true;}});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=9;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -2204,8 +2211,9 @@ function startKnowledgeStage(i){
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
   if(i===0)startKnowledgeAlefFindStage(Math.random()<0.5?'آ':'ا');
   else if(i===1)startKnowledgeAlefQuizStage();
+  else if(i<32)startKnowledgeAlefSingleStage(i-2);
   else{
-   const oldIndex=i-2;
+   const oldIndex=i-32;
    if(isKnowledgeSoundStage(i))startKnowledgeSoundStage(knowledgeSoundStagePositions.indexOf(i));
    else if(oldIndex<30)startKnowledgeLetterStage(knowledgeLetterIndex(oldIndex));
    else if(oldIndex<30+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(oldIndex-30);
@@ -2233,6 +2241,48 @@ function startKnowledgeAlefFindStage(target){
     if(!left)knowledgeFinishStage();
    }else{knowledgeWrong();b.classList.add('miss');$('knowledgeFeedback').textContent='این حرف «'+letter+'» است؛ دنبال «'+target+'» بگرد.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('miss'),450);}
   };grid.append(b);
+ });
+}
+function buildKnowledgeAlefQuizQuestions(){
+ const AI=[['آدم','🧑'],['آدم برفی','⛄'],['آش','🍲'],['آتش','🔥'],['آب','💧'],['آینه','🪞'],['آهو','🦌'],['آلو','🍑'],['آبی','🔵'],['آرد','🌾'],['آجیل','🥜'],['آزاده','👧'],['آسمان','🌤️'],['آفتاب','☀️'],['آبشار','🏞️']];
+ const AP=AI.slice(0,11);
+ const AN=[['بابا','👨'],['کتاب','📚'],['نان','🍞'],['ماه','🌙'],['ماشین','🚗'],['گاو','🐄'],['ماهی','🐟'],['باران','🌧️'],['مادر','👩'],['پا','🦶'],['باد','💨'],['بادبادک','🪁'],['بازی','🎮'],['خانه','🏠'],['ساعت','⏰'],['جارو','🧹']];
+ const NO=[['سیب','🍎'],['گل','🌸'],['موز','🍌'],['چشم','👁️'],['ستاره','⭐'],['خرس','🐻'],['فیل','🐘'],['برف','❄️'],['دست','✋'],['توپ','⚽'],['گربه','🐱'],['خورشید','🌞'],['شیر','🦁'],['کفش','👟']];
+ const pa=knowledgeAlefShuffle(AI),pb=knowledgeAlefShuffle(AN),questions=[];
+ for(let i=0;i<30;i++){
+  const type=i%2===0?'first':'notfirst';let right,wrong;
+  if(type==='first'){right=pa[i>>1];wrong=knowledgeAlefShuffle(AN.concat(NO)).slice(0,3);}
+  else{right=pb[i>>1];wrong=knowledgeAlefShuffle(AP.concat(NO)).slice(0,3);}
+  questions.push({type,right,options:knowledgeAlefShuffle([right,...wrong])});
+ }
+ return questions;
+}
+let knowledgeAlefStageQuestions=null;
+function startKnowledgeAlefSingleStage(questionIndex){
+ if(!knowledgeAlefStageQuestions)knowledgeAlefStageQuestions=buildKnowledgeAlefQuizQuestions();
+ const q=knowledgeAlefStageQuestions[questionIndex],isA=q.type==='first';
+ const letter=isA?'آ':'ا',colorClass=isA?'alef-a':'alef-e';
+ $('knowledgePrompt').textContent=isA?'کدام کلمه با «آ» شروع می‌شود؟':'کدام کلمه «ا» غیرِ اول دارد؟';
+ $('knowledgePlayArea').innerHTML='<div class="alef-quiz"><div class="alef-quiz-progress">پرسش '+fa(questionIndex+1)+' از ۳۰</div><div class="alef-quiz-question">کدام کلمه <strong class="'+colorClass+'">'+letter+'</strong> '+(isA?'اول دارد؟':'غیرِ اول دارد؟')+'</div><div class="alef-quiz-options" id="knowledgeAlefOptions"></div></div>';
+ const options=$('knowledgeAlefOptions');
+ q.options.forEach(option=>{
+  const b=document.createElement('button');b.type='button';b.className='alef-quiz-option';b.innerHTML='<span class="alef-quiz-emoji">'+option[1]+'</span><span>'+esc(option[0])+'</span>';
+  b.onclick=()=>{
+   if(knowledgeLocked||b.disabled)return;
+   if(option===q.right){
+    b.classList.add('correct');options.querySelectorAll('button').forEach(x=>x.disabled=true);
+    const word=b.querySelector('span:last-child');
+    if(q.type==='first')word.innerHTML='<b class="alef-a">'+esc(option[0][0])+'</b>'+esc(option[0].slice(1));
+    else word.innerHTML=esc(option[0]).replace(/ا/g,'<b class="alef-e">ا</b>');
+    knowledgeCorrect();knowledgeProgressUpdate(1,1);save();
+    $('knowledgeFeedback').textContent='آفرین!';$('knowledgeFeedback').className='feedback good';
+    knowledgeFinishStage();
+   }else{
+    knowledgeWrong();b.classList.add('wrong');$('knowledgeFeedback').textContent='نه، دوباره با دقت نگاه کن.';$('knowledgeFeedback').className='feedback soft';
+    setTimeout(()=>b.classList.remove('wrong'),450);
+   }
+  };
+  options.append(b);
  });
 }
 function startKnowledgeAlefQuizStage(){
