@@ -2111,8 +2111,8 @@ const knowledgeDifferenceQuestions=[
  {options:['داد','دام','داد','داد'],correct:1},
  {options:['آدَم','آمَد','آمَد','آمَد'],correct:0}
 ];
-const knowledgeSoundStagePositions=[34,37,40,43,46,49,52,55,58,61];
-const knowledgeTotalStages=91;
+const knowledgeSoundStagePositions=[35,38,41,44,47,50,53,56,59,62];
+const knowledgeTotalStages=92;
 function isKnowledgeSoundStage(i){return knowledgeSoundStagePositions.includes(i);}
 function knowledgeLetterIndex(i){
  for(let old=0;old<20;old++)if(old+Math.floor(old/2)===i)return old;
@@ -2194,6 +2194,13 @@ if((data.knowledgeStageVersion||0)<9){
  Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedAwarded[n<2?n:n+30]=true;}});
  data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=9;save();
 }
+// نسخهٔ ۱۰: مرحلهٔ دوم «پیدا کن» اضافه شد؛ پیشرفت مراحل قبلی از مرحلهٔ ۲ به بعد یک شماره جابه‌جا می‌شود.
+if((data.knowledgeStageVersion||0)<10){
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedCompleted[n===0?0:n+1]=true;}});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedAwarded[n===0?0:n+1]=true;}});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=10;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -2211,7 +2218,7 @@ function startKnowledgeStage(i){
   else if(i===1)startKnowledgeAlefQuizStage();
   else if(i<32)startKnowledgeAlefSingleStage(i-2);
   else{
-   const oldIndex=i-32;
+   const oldIndex=i-33;
    if(isKnowledgeSoundStage(i))startKnowledgeSoundStage(knowledgeSoundStagePositions.indexOf(i));
    else if(oldIndex<30)startKnowledgeLetterStage(knowledgeLetterIndex(oldIndex));
    else if(oldIndex<30+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(oldIndex-30);
@@ -2223,33 +2230,57 @@ function knowledgeAlefShuffle(arr){
  const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;
 }
 function startKnowledgeAlefFindStage(target){
+  const colorClass=target==='آ'?'alef-a':'alef-e';
+  $('knowledgePrompt').textContent='';
+  const count=4,letters=Array(16);
+  // چهار نشانهٔ هدف را در چهار ردیف و چهار ستون متفاوت می‌چینیم.
+  const targetColumns=knowledgeAlefShuffle([0,1,2,3]);
+  targetColumns.forEach((column,row)=>{letters[row*4+column]=target;});
+  const symbols=['آ','ا','ب','د','م'];
+  const distractors=[];
+  while(distractors.length<12){
+   const symbol=symbols[Math.floor(Math.random()*symbols.length)];
+   if(symbol!==target)distractors.push(symbol);
+  }
+  const shuffledDistractors=knowledgeAlefShuffle(distractors);
+  let next=0;
+  for(let i=0;i<letters.length;i++)if(letters[i]===undefined)letters[i]=shuffledDistractors[next++];
+  const question=target==='آ'
+   ?'همه‌ی <strong class="alef-a">آ</strong> ها را پیدا کن.'
+   :'همه‌ی <strong class="alef-e">ا</strong> ها را پیدا کن.';
+  $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">'+question+'</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
+  const grid=$('knowledgeAlefGrid');let left=count;
+  letters.forEach(letter=>{
+   const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell';b.textContent=letter;
+   b.onclick=()=>{
+    if(knowledgeLocked||b.disabled)return;
+    if(letter===target){b.disabled=true;b.classList.add('found');left--;knowledgeCorrect();knowledgeProgressUpdate(count-left,count);save();$('knowledgeAlefCount').textContent=left?'باقی‌مانده: '+fa(left):'آفرین! همه را پیدا کردی';
+     if(!left)knowledgeFinishStage();
+    }else{knowledgeWrong();b.classList.add('miss');$('knowledgeFeedback').textContent='این نشانه «'+letter+'» است؛ دنبال «'+target+'» بگرد.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('miss'),450);}
+   };grid.append(b);
+  });
+}
+function startKnowledgeAlefFindStage(target){
  $('knowledgePrompt').textContent='همهٔ «'+target+'»ها را پیدا کن.';
- const other=target==='آ'?'ا':'آ',count=4+Math.floor(Math.random()*2),letters=function startKnowledgeAlefFindStage(){
- $('knowledgePrompt').textContent='';
- const count=4,letters=Array(16);
- // چهار «آ» را در چهار ردیف و چهار ستون متفاوت قرار می‌دهیم.
- const targetColumns=knowledgeAlefShuffle([0,1,2,3]);
- targetColumns.forEach((column,row)=>{letters[row*4+column]='آ';});
- const distractors=['ا','ا','ا','ا','ا'];
- const extras=['ب','م','ن','د'];
- while(distractors.length<12)distractors.push(extras[Math.floor(Math.random()*extras.length)]);
- const shuffledDistractors=knowledgeAlefShuffle(distractors);
- let next=0;
- for(let i=0;i<letters.length;i++){
-  if(letters[i]===undefined)letters[i]=shuffledDistractors[next++];
- }
- $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">همه‌ی <strong style="color:#45baff">آ</strong> ها را پیدا کن.</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
+ const other=target==='آ'?'ا':'آ',count=4+Math.floor(Math.random()*2),letters=[];
+ for(let i=0;i<count;i++)letters.push(target);
+ for(let i=0;i<5;i++)letters.push(other);
+ const extras=['ب','م','ن','د'];while(letters.length<16)letters.push(extras[Math.floor(Math.random()*extras.length)]);
+ const colors=target==='آ'?'#45baff':'#ff626f';
+ $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">همهٔ <strong style="color:'+colors+'">'+target+'</strong>ها را پیدا کن</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
  const grid=$('knowledgeAlefGrid');let left=count;
- letters.forEach(letter=>{
-  const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell';b.textContent=letter;
+ knowledgeAlefShuffle(letters).forEach(letter=>{
+  const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell '+(letter==='آ'?'alef-a':'alef-e');b.textContent=letter;
   b.onclick=()=>{
    if(knowledgeLocked||b.disabled)return;
-   if(letter==='آ'){b.disabled=true;b.classList.add('found');left--;knowledgeCorrect();knowledgeProgressUpdate(count-left,count);save();$('knowledgeAlefCount').textContent=left?'باقی‌مانده: '+fa(left):'آفرین! همه را پیدا کردی';
+   if(letter===target){b.disabled=true;b.classList.add('found');left--;knowledgeCorrect();knowledgeProgressUpdate(count-left,count);save();$('knowledgeAlefCount').textContent=left?'باقی‌مانده: '+fa(left):'آفرین! همه را پیدا کردی';
     if(!left)knowledgeFinishStage();
-   }else{knowledgeWrong();b.classList.add('miss');$('knowledgeFeedback').textContent='این حرف «'+letter+'» است؛ دنبال «آ» بگرد.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('miss'),450);}
+   }else{knowledgeWrong();b.classList.add('miss');$('knowledgeFeedback').textContent='این حرف «'+letter+'» است؛ دنبال «'+target+'» بگرد.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('miss'),450);}
   };grid.append(b);
  });
-}یل','🥜'],['آزاده','👧'],['آسمان','🌤️'],['آفتاب','☀️'],['آبشار','🏞️']];
+}
+function buildKnowledgeAlefQuizQuestions(){
+ const AI=[['آدم','🧑'],['آدم برفی','⛄'],['آش','🍲'],['آتش','🔥'],['آب','💧'],['آینه','🪞'],['آهو','🦌'],['آلو','🍑'],['آبی','🔵'],['آرد','🌾'],['آجیل','🥜'],['آزاده','👧'],['آسمان','🌤️'],['آفتاب','☀️'],['آبشار','🏞️']];
  const AP=AI.slice(0,11);
  const AN=[['بابا','👨'],['کتاب','📚'],['نان','🍞'],['ماه','🌙'],['ماشین','🚗'],['گاو','🐄'],['ماهی','🐟'],['باران','🌧️'],['مادر','👩'],['پا','🦶'],['باد','💨'],['بادبادک','🪁'],['بازی','🎮'],['خانه','🏠'],['ساعت','⏰'],['جارو','🧹']];
  const NO=[['سیب','🍎'],['گل','🌸'],['موز','🍌'],['چشم','👁️'],['ستاره','⭐'],['خرس','🐻'],['فیل','🐘'],['برف','❄️'],['دست','✋'],['توپ','⚽'],['گربه','🐱'],['خورشید','🌞'],['شیر','🦁'],['کفش','👟']];
