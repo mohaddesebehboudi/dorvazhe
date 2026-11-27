@@ -384,48 +384,27 @@ body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progre
 /* نقشه‌ی سینمایی دریای پارسی */
 #home.active .map-shell{
   isolation:isolate;
-  border:1px solid #b9f4ff99;
+  border:5px solid #fff;
   border-radius:28px;
-  background:#07162f;
-  box-shadow:
-    0 0 0 5px #142b4c,
-    0 0 0 7px #7ceaff55,
-    0 22px 55px #02081799,
-    inset 0 0 35px #6deaff33;
+  background:linear-gradient(145deg,#35d9ed,#079bd1);
+  box-shadow:0 0 0 2px #8cecff,0 16px 38px #087ca744;
   perspective:1100px;
 }
 #home.active .map-world{
   transform-style:preserve-3d;
 }
 #home.active .map-world img{
-  filter:saturate(1.22) contrast(1.08) brightness(.88);
+  filter:saturate(1.12) contrast(1.02) brightness(1.08);
   transform:scale(1.012);
 }
 #home.active .map-world::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-  background:
-    radial-gradient(ellipse at 50% 48%,transparent 35%,#06142b22 78%,#03102288 100%),
-    radial-gradient(circle at 12% 18%,#8ceeff66 0 1px,transparent 2px),
-    radial-gradient(circle at 78% 24%,#fff5b866 0 1.5px,transparent 2.5px),
-    radial-gradient(circle at 35% 82%,#b5a5ff88 0 1px,transparent 2px),
-    radial-gradient(circle at 91% 72%,#9af8ff88 0 1px,transparent 2px),
-    linear-gradient(125deg,#06162a18,#2c1c5a18 48%,#03132944);
-  background-size:auto,190px 170px,230px 190px,210px 180px,250px 210px,auto;
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,#ffffff08,transparent 35%,#006d8a08);
   mix-blend-mode:screen;
-  animation:mapAurora 12s ease-in-out infinite alternate;
 }
 #home.active .map-world::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:2;
-  pointer-events:none;
-  border:1px solid #d5faff33;
-  box-shadow:inset 0 0 55px #64dfff24,inset 0 -45px 70px #07152d44;
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  border:1px solid #ffffff66;box-shadow:inset 0 0 28px #d5ffff22;
 }
 @keyframes mapAurora{
   from{opacity:.48;filter:hue-rotate(0deg);transform:translate3d(-.4%,0,0)}
