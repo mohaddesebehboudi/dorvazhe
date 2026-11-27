@@ -182,6 +182,164 @@
 
 #knowledgeGame.sound-game-mode .game-card > .subhead,
 #knowledgeGame.sound-game-mode .game-card > .progressline{display:none!important}
+
+/* دنیای کیهانی جزیره دانایی */
+body.cosmic-knowledge{
+  color:#eaf7ff;
+  background:
+    radial-gradient(ellipse at 18% 18%,#263d78 0,transparent 36%),
+    radial-gradient(ellipse at 82% 72%,#24376c 0,transparent 38%),
+    linear-gradient(145deg,#070d27 0%,#101a42 48%,#080f2b 100%);
+  background-attachment:fixed;
+}
+body.cosmic-knowledge::before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(2px 2px at 8% 18%,#fff 98%,transparent),
+    radial-gradient(1.5px 1.5px at 19% 73%,#b8eaff 98%,transparent),
+    radial-gradient(2px 2px at 34% 35%,#fff 98%,transparent),
+    radial-gradient(1.5px 1.5px at 51% 12%,#d6c9ff 98%,transparent),
+    radial-gradient(2px 2px at 67% 66%,#fff 98%,transparent),
+    radial-gradient(1.5px 1.5px at 82% 28%,#b8eaff 98%,transparent),
+    radial-gradient(2px 2px at 93% 82%,#fff 98%,transparent);
+  background-size:290px 230px;
+  opacity:.75;
+  animation:cosmicTwinkle 7s ease-in-out infinite alternate;
+}
+@keyframes cosmicTwinkle{from{opacity:.42;transform:translateY(0)}to{opacity:.9;transform:translateY(-5px)}}
+body.cosmic-knowledge .app{position:relative;z-index:1}
+body.cosmic-knowledge .topbar{
+  background:linear-gradient(100deg,#111d4aee,#263d78e8);
+  border-bottom:1px solid #8bdcff55;
+  box-shadow:0 5px 28px #02071988;
+  backdrop-filter:blur(14px);
+}
+body.cosmic-knowledge .brand{text-shadow:0 0 16px #75dfff}
+body.cosmic-knowledge .pill{
+  color:#eaf7ff;background:#ffffff16;border:1px solid #a9ddff55;
+  box-shadow:inset 0 0 14px #9ddfff12;
+}
+body.cosmic-knowledge .iconbtn{
+  background:#ffffff12;border-color:#a9ddff66;color:#eaf7ff;
+}
+body.cosmic-knowledge .title{color:#eaf7ff;text-shadow:0 0 18px #65caff88}
+body.cosmic-knowledge .action{
+  color:#eaf7ff;background:linear-gradient(135deg,#263d78,#172653);
+  border:1px solid #8bdcff88;box-shadow:0 4px 0 #080f2b,0 0 18px #46bfff25;
+}
+body.cosmic-knowledge .action.primary{
+  color:#101b42;background:linear-gradient(135deg,#c7f5ff,#66cfff 55%,#a7a0ff);
+  border:1px solid #e6fbff;box-shadow:0 4px 0 #315a9a,0 0 22px #55cfff55;
+}
+body.cosmic-knowledge .card{
+  color:#eaf7ff;background:linear-gradient(145deg,#172653d9,#0d1738e8);
+  border:1px solid #8bdcff66;border-radius:26px;
+  box-shadow:0 18px 50px #02071988,inset 0 1px #ffffff20;
+  backdrop-filter:blur(16px);
+}
+#knowledgeStages .lab-banner{
+  position:relative;overflow:hidden;min-height:112px;padding:20px 22px;
+  border:1px solid #8bdcff77;border-radius:22px;
+  background:linear-gradient(110deg,#21396dcc,#14224ddd 65%,#302b68cc);
+  box-shadow:inset 0 0 28px #67d9ff18,0 8px 26px #02071966;
+}
+#knowledgeStages .lab-banner::after{
+  content:"";position:absolute;width:170px;height:170px;left:-32px;top:-82px;
+  border:1px solid #a8eaff55;border-radius:50%;
+  box-shadow:0 0 0 16px #9be8ff0b,0 0 0 34px #9be8ff09;
+}
+#knowledgeStages .lab-title{color:#dff8ff;font-size:clamp(22px,4vw,29px);text-shadow:0 0 15px #65cfff88}
+#knowledgeStages .lab-banner .notice{color:#b9d9f5;margin:5px 0 0}
+#knowledgeStages .lab-scientist{
+  position:relative;z-index:1;font-size:clamp(48px,9vw,70px);
+  filter:drop-shadow(0 0 16px #69dfffaa);
+  animation:orbitFloat 4s ease-in-out infinite;
+}
+@keyframes orbitFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(7deg)}}
+#knowledgeStages .stage-list{gap:12px}
+#knowledgeStages .stage{
+  position:relative;overflow:hidden;min-height:88px;padding:15px 9px;
+  color:#eaf7ff;border:1px solid #85dfff88;border-radius:19px;
+  background:linear-gradient(145deg,#253d77dd,#172653ee);
+  box-shadow:inset 0 1px #ffffff25,0 5px 0 #080f2b,0 0 16px #45bfff20;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+#knowledgeStages .stage:not(:disabled):hover{
+  transform:translateY(-4px);border-color:#d5f8ff;
+  box-shadow:inset 0 1px #ffffff40,0 7px 0 #080f2b,0 0 24px #55cfff66;
+}
+#knowledgeStages .stage.done{
+  color:#eafff8;border-color:#75e8cb;
+  background:linear-gradient(145deg,#176c78,#174b68);
+  box-shadow:inset 0 1px #ffffff30,0 5px 0 #092d46,0 0 18px #58f0d555;
+}
+#knowledgeStages .stage:disabled{opacity:.58;filter:saturate(.55)}
+#knowledgeStages .stage::before{
+  content:"✦";position:absolute;top:5px;left:9px;color:#b9edff;font-size:13px;opacity:.8;
+}
+#knowledgeGame .game-card{position:relative;overflow:hidden}
+#knowledgeGame:not(.sound-game-mode) .game-card > .subhead:first-child{
+  padding:4px 2px 12px;border-bottom:1px solid #8bdcff33;
+}
+#knowledgeGame:not(.sound-game-mode) #knowledgeStageLabel{color:#dff8ff}
+#knowledgeGame:not(.sound-game-mode) #knowledgePrompt{
+  display:inline-block;margin:12px auto;padding:10px 18px;
+  color:#eaf7ff;background:#ffffff10;border:1px solid #8bdcff55;
+  border-radius:16px;box-shadow:inset 0 0 18px #78dfff10;
+}
+#knowledgeGame:not(.sound-game-mode) .progressline{background:#ffffff1c;border:1px solid #8bdcff33}
+#knowledgeGame:not(.sound-game-mode) .progressline>i{
+  background:linear-gradient(90deg,#55e4d0,#62cfff,#b7a5ff);
+  box-shadow:0 0 14px #63dfff99;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-choice{
+  color:#f2fbff!important;border:1px solid #b5eaff!important;
+  background:linear-gradient(145deg,#31558f,#172c5d)!important;
+  box-shadow:inset 0 1px #ffffff40,0 6px 0 #09142f,0 0 20px #51caff2b!important;
+  text-shadow:0 2px 5px #06112c;
+  transition:transform .18s,filter .18s,box-shadow .18s;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-choice:not(:disabled):hover{
+  transform:translateY(-4px);filter:brightness(1.18);
+  box-shadow:inset 0 1px #ffffff55,0 8px 0 #09142f,0 0 25px #51caff77!important;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-choice.correct,
+#knowledgeGame:not(.sound-game-mode) .knowledge-choice:disabled{
+  border-color:#8effdc!important;background:linear-gradient(145deg,#1d927f,#17675f)!important;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-choice.wrong{
+  border-color:#ff9eae!important;background:linear-gradient(145deg,#a83f69,#672c59)!important;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-field{
+  border:1px solid #8bdcff88;border-radius:22px;
+  background:
+    radial-gradient(circle at 20% 20%,#ffffff13 0 2px,transparent 3px),
+    radial-gradient(ellipse at 50% 110%,#1b7a8a99,transparent 60%),
+    linear-gradient(160deg,#101d49,#172d5c 65%,#102d48);
+  box-shadow:inset 0 0 35px #60d9ff20,0 8px 25px #02071966;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-ball{
+  border:1px solid #e4faff;box-shadow:0 0 18px currentColor,0 5px 0 #07152f;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-word{
+  color:#e7f8ff;text-shadow:0 0 22px #62d7ff88;
+}
+#knowledgeGame:not(.sound-game-mode) .knowledge-dice{filter:drop-shadow(0 0 18px #70dfff)}
+#knowledgeGame:not(.sound-game-mode) .knowledge-answer{
+  color:#eaf7ff;background:linear-gradient(145deg,#294b83,#172653);
+  border:1px solid #8bdcff88;box-shadow:0 5px 0 #09142f,0 0 16px #51caff33;
+}
+#knowledgeGame:not(.sound-game-mode) .feedback{color:#c9eaff}
+#knowledgeGame:not(.sound-game-mode) .feedback.good{color:#83f2c9}
+#knowledgeGame:not(.sound-game-mode) .feedback.soft{color:#ffd58b}
+body.cosmic-knowledge .footer{color:#9bbddd}
+@media(max-width:600px){
+  #knowledgeStages .lab-banner{padding:15px;min-height:100px}
+  #knowledgeStages .stage{min-height:76px;padding:12px 5px}
+  #knowledgeGame:not(.sound-game-mode) .knowledge-field{min-height:290px}
+}
+
 </style></head>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     <body><div class="app">
 <header class="topbar"><div class="brand">🌊 دریای پارسی</div><div class="stats"><div class="pill" id="namePill">👤 مهمان</div><div class="pill">🦪 <b id="pearls">۰</b></div><div class="pill gold">🌟 <b id="goldPearls">۰</b></div><button class="iconbtn" id="editName">ویرایش نام</button></div></header>
@@ -306,7 +464,7 @@
   </div>
 </section>
 
-<section id="knowledgeStages" class="screen"><div class="subhead"><div class="title">🏛️ جزیره دانایی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="lab-banner"><div><div class="lab-title">🧠 سرزمین تیزبینی و تمرکز</div></div><div class="lab-scientist">🧠</div></div><div class="stage-list" id="knowledgeStageList"></div></div></section>
+<section id="knowledgeStages" class="screen"><div class="subhead"><div class="title">🏛️ جزیره دانایی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="lab-banner"><div><div class="lab-title">🔭 رصدخانه‌ی دانایی</div><div class="notice">برای کشف رازها، چشم‌هایت را تیز کن و ستاره‌ها را دنبال کن.</div></div><div class="lab-scientist">🪐</div></div><div class="stage-list" id="knowledgeStageList"></div></div></section>
 <section id="knowledgeGame" class="screen"><div class="subhead"><div class="title">🧠 جزیره دانایی</div><button class="action" id="backKnowledgeStages">فهرست مرحله‌ها</button></div><div class="card game-card"><div class="subhead"><b id="knowledgeStageLabel">مرحله ۱</b><span>⭐ <b id="knowledgeScoreLabel">۰</b></span></div><div class="progressline"><i id="knowledgeProgressBar" style="width:0%"></i></div><p class="prompt" id="knowledgePrompt"></p><div id="knowledgePlayArea"></div><div class="feedback" id="knowledgeFeedback" aria-live="polite"></div><div class="game-actions"><button class="action primary hidden" id="knowledgeNext">مرحله بعد ←</button><button class="action hidden" id="knowledgeRetry">تکرار مرحله</button></div></div></section>
 <section id="review" class="screen"><div class="subhead"><div class="title">🔁 مرور آموخته‌ها</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><p class="notice">تمرین‌هایی که قبلاً در آن‌ها اشتباه داشتی اینجا جمع می‌شوند. با تمرین دوباره می‌توانی آن‌ها را مرور کنی.</p><div id="reviewList"></div></div></section>
 <section id="adventure" class="screen"><div class="subhead"><div class="title">📖 دفترچه ماجراجویی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card" id="adventureContent"></div></section>
@@ -409,7 +567,7 @@ const fresh=()=>({
       let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{toast('فضای ذخیره‌سازی مرورگر کافی نیست. از پشتیبان‌گیری استفاده کن.')}updateHeader()}
 function updateHeader(){$('namePill').textContent='👤 '+(data.name||'مهمان');$('pearls').textContent=fa(data.pearls);$('goldPearls').textContent=fa(data.gold);$('gamePearls').textContent=fa(data.pearls)}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');document.body.classList.toggle('cosmic-knowledge',id==='knowledgeStages'||id==='knowledgeGame');window.scrollTo(0,0)}
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2300)}
 function modal(html){$('modal').innerHTML=html;$('modalBack').classList.add('show')}function closeModal(){$('modalBack').classList.remove('show')}
 if(!data.name){modal(`<h2>به دریای پارسی خوش آمدی! 🌊</h2><p>برای شروع، اسمت رو بنویس.</p><input class="field" id="firstName" maxlength="24" placeholder="اسم من..."/><p><button class="action primary" id="saveFirst">شروع ماجراجویی</button></p>`);$('saveFirst').onclick=()=>{let n=$('firstName').value.trim();if(!n)return toast('اول اسمت رو بنویس.');data.name=n;save();closeModal()}}
