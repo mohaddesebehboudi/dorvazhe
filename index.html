@@ -173,7 +173,10 @@
   .combination-option {
     min-height:105px;
   }
-}</style></head>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+}
+/* جزیره دانایی */
+.knowledge-ball{position:absolute;border:0;border-radius:50%;width:68px;height:68px;color:#fff;font-size:25px;font-weight:900;box-shadow:0 5px 0 #174b65;cursor:pointer}.knowledge-field{position:relative;height:min(58vh,470px);min-height:300px;overflow:hidden;border-radius:20px;background:linear-gradient(#b8efff,#e7fbff 70%,#b4e8cf);border:2px solid #9edce4}.knowledge-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:620px;margin:18px auto}.knowledge-choice{min-height:105px;border:3px solid #fff;border-radius:22px;color:#fff;font-size:25px;font-weight:900;box-shadow:0 5px 0 #477b91}.knowledge-choice.crown{border-radius:16px 16px 34px 34px;background:linear-gradient(145deg,#ffd86b,#e79b28)}.knowledge-choice.ball{border-radius:50%;aspect-ratio:1/1;max-width:125px;justify-self:center;background:linear-gradient(145deg,#73d8ff,#168acb)}.knowledge-choice:disabled{opacity:.75}.knowledge-dice{font-size:76px;margin:12px auto;animation:knowledgeDice 1s ease-in-out}.knowledge-word{font-size:clamp(35px,8vw,58px);font-weight:900;color:#075b91;margin:12px}.knowledge-answer{min-width:120px;padding:15px 24px;border-radius:18px;background:#e1f8f6;color:#075b91;font-size:20px;font-weight:900;margin:6px}.knowledge-answer:disabled{opacity:.55}@keyframes knowledgeDice{0%{transform:rotate(0) scale(.8)}70%{transform:rotate(720deg) scale(1.2)}100%{transform:rotate(1080deg) scale(1)}}@media(max-width:600px){.knowledge-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.knowledge-choice{min-height:90px;font-size:22px}}
+</style></head>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     <body><div class="app">
 <header class="topbar"><div class="brand">🌊 دریای پارسی</div><div class="stats"><div class="pill" id="namePill">👤 مهمان</div><div class="pill">🦪 <b id="pearls">۰</b></div><div class="pill gold">🌟 <b id="goldPearls">۰</b></div><button class="iconbtn" id="editName">ویرایش نام</button></div></header>
 <main class="main">
@@ -181,7 +184,7 @@
 
 <button class="island tr" data-island="active" aria-label="جزیره واژه‌سازی"><span>🧩</span></button>
 
-<button class="island center" data-island="soon" aria-label="جزیره دانایی"><span>🏛️</span></button>
+<button class="island center" data-island="knowledge" aria-label="جزیره دانایی"><span>🏛️</span></button>
 
 <button class="island bl" data-island="sentences" aria-label="جزیره جمله‌سازی"><span>🏡</span></button>
 
@@ -297,6 +300,9 @@
     </div>
   </div>
 </section>
+
+<section id="knowledgeStages" class="screen"><div class="subhead"><div class="title">🏛️ جزیره دانایی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="lab-banner"><div><div class="lab-title">🧠 سرزمین تیزبینی و تمرکز</div><p class="notice">۱۹ مرحله برای تقویت توجه، تشخیص دیداری و تصمیم‌گیری</p></div><div class="lab-scientist">🧠</div></div><div class="stage-list" id="knowledgeStageList"></div></div></section>
+<section id="knowledgeGame" class="screen"><div class="subhead"><div class="title">🧠 جزیره دانایی</div><button class="action" id="backKnowledgeStages">فهرست مرحله‌ها</button></div><div class="card game-card"><div class="subhead"><b id="knowledgeStageLabel">مرحله ۱</b><span>⭐ <b id="knowledgeScoreLabel">۰</b></span></div><div class="progressline"><i id="knowledgeProgressBar" style="width:0%"></i></div><p class="prompt" id="knowledgePrompt"></p><div id="knowledgePlayArea"></div><div class="feedback" id="knowledgeFeedback" aria-live="polite"></div><div class="game-actions"><button class="action primary hidden" id="knowledgeNext">مرحله بعد ←</button><button class="action hidden" id="knowledgeRetry">تکرار مرحله</button></div></div></section>
 <section id="review" class="screen"><div class="subhead"><div class="title">🔁 مرور آموخته‌ها</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><p class="notice">تمرین‌هایی که قبلاً در آن‌ها اشتباه داشتی اینجا جمع می‌شوند. با تمرین دوباره می‌توانی آن‌ها را مرور کنی.</p><div id="reviewList"></div></div></section>
 <section id="adventure" class="screen"><div class="subhead"><div class="title">📖 دفترچه ماجراجویی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card" id="adventureContent"></div></section>
 </main><footer class="footer">🎨 طراح بازی: محدثه بهبودی</footer></div>
@@ -386,6 +392,9 @@ const fresh=()=>({
   completed:{},
   sentenceCompleted:{},
   combinationCompleted:{},
+  knowledgeCompleted:{},
+  knowledgeAwarded:{},
+  knowledgeScore:0,
   awarded:{},
   combinationAwarded:{},
   combinationScore:0,
@@ -418,7 +427,11 @@ document.querySelectorAll('[data-island]').forEach(b=>b.onclick=()=>{
         else if(b.dataset.island==='combinations'){
     renderCombinationStages();
     show('combinationStages');
-        }
+  }
+  else if(b.dataset.island==='knowledge'){
+    renderKnowledgeStages();
+    show('knowledgeStages');
+  }
   else {
     toast('این جزیره به‌زودی باز می‌شود!');
   }
@@ -1515,11 +1528,97 @@ function renderReview(){
     };
   });
 }
+
+/* جزیره دانایی: دو بازی چندسؤالی + ۱۷ مرحله مستقل تاس */
+const knowledgeGroups=[
+ {target:'تا',targets:['تا','با','نا','یا','پا','ثا'],kind:'crown'},
+ {target:'تو',targets:['تو','بو','نو','یو','ثو','پو'],kind:'ball'},
+ {target:'تَـ',targets:['تَـ','ثَـ','نَـ','بَـ','پَـ','یَـ'],kind:'crown'}
+];
+const knowledgeDiceWords=[
+ {word:'توت',has:true},{word:'سوت',has:true},{word:'تاب',has:true},{word:'ماست',has:true},
+ {word:'بَست',has:true},{word:'اَست',has:true},{word:'تاس',has:true},{word:'دَست',has:true},
+ {word:'باد',has:false},{word:'بام',has:false},{word:'بادام',has:false},{word:'اَسب',has:false},
+ {word:'بوس',has:false},{word:'سود',has:false},{word:'آدَم',has:false},{word:'دام',has:false},{word:'داماد',has:false}
+];
+const knowledgeTotalStages=2+knowledgeDiceWords.length;
+let knowledgeIndex=0,knowledgeProgress=0,knowledgeLocked=false,knowledgeSpinTimer=null,knowledgeRevealTimer=null;
+function renderKnowledgeStages(){
+ $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
+  const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
+  const title=i===0?'توپ‌های تیزبین':i===1?'تاج و توپ':'تاس جادویی · '+knowledgeDiceWords[i-2].word;
+  return '<button class="stage '+(done?'done':'')+'" data-knowledge-stage="'+i+'" '+(unlocked?'':'disabled')+'>'+(done?'🦪':unlocked?'🐚':'🔒')+' مرحله '+fa(i+1)+'<small>'+esc(title)+'</small></button>';
+ }).join('');
+ document.querySelectorAll('[data-knowledge-stage]:not(:disabled)').forEach(b=>b.onclick=()=>startKnowledgeStage(+b.dataset.knowledgeStage));
+}
+function startKnowledgeStage(i){
+ const unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
+ if(!unlocked){toast('اول مرحله‌های قبلی را کامل کن.');return;}
+ clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;
+ $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
+ $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
+ if(i===0)startKnowledgeBalloons();else if(i===1)startKnowledgeCrowns();else startKnowledgeDiceWord(i-2);
+ show('knowledgeGame');
+}
+function knowledgeProgressUpdate(done,total){knowledgeProgress=done;$('knowledgeProgressBar').style.width=(done/total*100)+'%';$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);}
+function knowledgeCorrect(){data.stats.attempts++;data.stats.correct++;data.streak++;data.knowledgeScore=(data.knowledgeScore||0)+1;}
+function knowledgeWrong(){data.stats.attempts++;data.stats.wrong++;data.streak=0;save();}
+function knowledgeFinishStage(){
+ if(knowledgeLocked)return;knowledgeLocked=true;clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);
+ data.knowledgeCompleted[knowledgeIndex]=true;
+ if(!data.knowledgeAwarded[knowledgeIndex]){data.knowledgeAwarded[knowledgeIndex]=true;data.pearls++;}
+ save();$('knowledgeFeedback').textContent='آفرین! این مرحله کامل شد. 🏆';$('knowledgeFeedback').className='feedback good';
+ $('knowledgeNext').classList.remove('hidden');$('knowledgeRetry').classList.remove('hidden');
+ $('knowledgeNext').textContent=knowledgeIndex===knowledgeTotalStages-1?'پایان جزیره ←':'مرحله بعد ←';
+}
+function startKnowledgeBalloons(){
+ $('knowledgePrompt').textContent='فقط توپ‌هایی را انتخاب کن که نشانهٔ «تـ» یا «ت» دارند. ۱۵ توپ درست پیدا کن!';
+ $('knowledgePlayArea').innerHTML='<p class="notice" id="knowledgeCount">توپ درست: ۰ از ۱۵</p><div class="knowledge-field" id="knowledgeField"></div>';
+ const field=$('knowledgeField');let found=0;
+ function spawn(){
+  if(knowledgeLocked||found>=15)return;
+  const correct=Math.random()<.43,sym=correct?shuffle(['تـ','ت'])[0]:shuffle(['بـ','ب','ثـ','ث','یـ','نـ','پـ','پ'])[0];
+  const b=document.createElement('button');b.className='knowledge-ball';b.textContent=sym;b.style.left=Math.max(2,Math.random()*(field.clientWidth-75))+'px';b.style.background='hsl('+Math.random()*360+' 82% 54%)';field.append(b);
+  const anim=b.animate([{transform:'translateY(-90px)'},{transform:'translateY('+(field.clientHeight+90)+'px)'}],{duration:5100+Math.random()*1900,easing:'linear',fill:'forwards'});anim.onfinish=()=>b.remove();
+  b.onclick=()=>{if(knowledgeLocked||b.dataset.used)return;b.dataset.used='1';if(correct){anim.pause();b.remove();knowledgeCorrect();found++;$('knowledgeCount').textContent='توپ درست: '+fa(found)+' از ۱۵';knowledgeProgressUpdate(found,15);save();if(found===15)knowledgeFinishStage();}else{knowledgeWrong();b.remove();$('knowledgeFeedback').textContent='این توپ نشانهٔ مورد نظر را ندارد؛ با دقت ادامه بده.';$('knowledgeFeedback').className='feedback soft';}};
+ }
+ spawn();knowledgeSpinTimer=setInterval(spawn,720);
+}
+function startKnowledgeCrowns(){
+ $('knowledgePrompt').textContent='ترکیب خواسته‌شده را از میان تاج‌ها و توپ‌ها پیدا کن.';
+ const questions=shuffle([{target:'تا',group:0},{target:'تَـ',group:2},{target:'تو',group:1}].flatMap(x=>Array.from({length:5},()=>({...x}))));
+ let qi=0;
+ function question(){
+  if(knowledgeLocked)return;
+  const x=questions[qi],g=knowledgeGroups[x.group];
+  $('knowledgePlayArea').innerHTML='<h2 class="knowledge-word">ترکیب «'+x.target+'» را پیدا کن</h2><p class="notice">سؤال '+fa(qi+1)+' از ۱۵</p><div class="knowledge-choice-grid" id="knowledgeChoices"></div>';
+  shuffle(g.targets).forEach((w,i)=>{const b=document.createElement('button');b.className='knowledge-choice '+(g.kind==='crown'?'crown':'ball');b.textContent=w;b.style.filter='hue-rotate('+(i*43)+'deg)';b.onclick=()=>{if(knowledgeLocked||b.disabled)return;if(w===x.target){b.disabled=true;knowledgeCorrect();qi++;knowledgeProgressUpdate(qi,15);save();if(qi===15)knowledgeFinishStage();else setTimeout(question,420);}else{knowledgeWrong();$('knowledgeFeedback').textContent='این گزینه درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}};$('knowledgeChoices').append(b);});
+ }
+ question();
+}
+function startKnowledgeDiceWord(wordIndex){
+ const x=knowledgeDiceWords[wordIndex];$('knowledgePrompt').textContent='پس از چرخیدن تاس، تشخیص بده این کلمه نشانهٔ «تـ» یا «ت» دارد یا نه.';
+ $('knowledgePlayArea').innerHTML='<div class="knowledge-dice" id="knowledgeDice">🎲</div><div class="knowledge-word" id="knowledgeWord">؟</div><div><button class="knowledge-answer" id="knowledgeYes" disabled>✅ دارد</button><button class="knowledge-answer" id="knowledgeNo" disabled>❌ ندارد</button></div>';
+ let ticks=0;const faces=['⚀','⚁','⚂','⚃','⚄','⚅'],dice=$('knowledgeDice');
+ knowledgeSpinTimer=setInterval(()=>{dice.textContent=faces[ticks++%6];},90);
+ knowledgeRevealTimer=setTimeout(()=>{clearInterval(knowledgeSpinTimer);dice.textContent='🎲';$('knowledgeWord').textContent=x.word;$('knowledgeYes').disabled=$('knowledgeNo').disabled=false;},1000);
+ function answer(choice){
+  if(knowledgeLocked||$('knowledgeYes').disabled)return;
+  if(choice===x.has){knowledgeCorrect();knowledgeProgressUpdate(1,1);if(x.has)$('knowledgeWord').innerHTML=esc(x.word).replace(/ت/g,'<b style="color:#e33">ت</b>');$('knowledgeYes').disabled=$('knowledgeNo').disabled=true;save();knowledgeFinishStage();}
+  else{knowledgeWrong();$('knowledgeFeedback').textContent='یک بار دیگر فکر کن؛ آیا واقعاً نشانهٔ «ت» دارد؟';$('knowledgeFeedback').className='feedback soft';}
+ }
+ $('knowledgeYes').onclick=()=>answer(true);$('knowledgeNo').onclick=()=>answer(false);
+}
+$('knowledgeNext').onclick=()=>{if(knowledgeIndex<knowledgeTotalStages-1){renderKnowledgeStages();startKnowledgeStage(knowledgeIndex+1);}else{toast('همه مرحله‌های جزیره دانایی را تمام کردی!');renderKnowledgeStages();show('knowledgeStages');}};
+$('knowledgeRetry').onclick=()=>startKnowledgeStage(knowledgeIndex);
+$('backKnowledgeStages').onclick=()=>{clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);renderKnowledgeStages();show('knowledgeStages');};
+
 function renderAdventure(){
   let done=
   Object.values(data.completed).filter(Boolean).length+
     Object.values(data.sentenceCompleted).filter(Boolean).length+
-  Object.values(data.combinationCompleted).filter(Boolean).length;
+  Object.values(data.combinationCompleted).filter(Boolean).length+
+  Object.values(data.knowledgeCompleted).filter(Boolean).length;
   let wrong=Object.values(data.mistakes).reduce((a,b)=>a+(b.count||0),0);
 
   const islands=[...document.querySelectorAll('[data-island]')];
@@ -1540,6 +1639,10 @@ function renderAdventure(){
 else if(button.dataset.island==='combinations'){
   total=combinationRounds.length;
   completed=Object.values(data.combinationCompleted).filter(Boolean).length;
+    }
+    else if(button.dataset.island==='knowledge'){
+      total=knowledgeTotalStages;
+      completed=Object.values(data.knowledgeCompleted).filter(Boolean).length;
     }
     const percent=total
       ? Math.round(Math.min(completed,total)/total*100)
@@ -1588,6 +1691,9 @@ data.combinationAwarded={
   ...(d.combinationAwarded||{}),
   ...(data.combinationAwarded||{})
 };
+data.knowledgeCompleted={...(d.knowledgeCompleted||{}),...(data.knowledgeCompleted||{})};
+data.knowledgeAwarded={...(d.knowledgeAwarded||{}),...(data.knowledgeAwarded||{})};
+data.knowledgeScore=Math.max(data.knowledgeScore||0,d.knowledgeScore||0);
 
 data.combinationScore=Math.max(
   data.combinationScore||0,
