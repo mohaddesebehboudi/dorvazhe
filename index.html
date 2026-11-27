@@ -179,13 +179,13 @@ const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d
     ...Array(34).fill('🫧')
   ];
 
-  emojis.forEach(emoji => {
+  emojis.forEach((emoji, index) => {
     const item = document.createElement('span');
 
     item.textContent = emoji;
     item.style.left = Math.random() * 100 + '%';
     item.style.setProperty('--size', (20 + Math.random() * 20) + 'px');
-    item.style.setProperty('--delay', Math.random() * 120 + 'ms');
+    item.style.setProperty('--delay', (index * 80) + 'ms');
     item.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
 
     rain.appendChild(item);
@@ -193,7 +193,7 @@ const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d
 
   document.body.appendChild(rain);
 
-  setTimeout(() => rain.remove(), 5000);
+  setTimeout(() => rain.remove(), 13200);
       }
 const fresh=()=>({version:1,name:'',pearls:0,gold:0,completed:{},sentenceCompleted:{},awarded:{},mistakes:{},stats:{attempts:0,correct:0,wrong:0},streak:0,goldEarned:false,lastStage:0,session:null});
 let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
