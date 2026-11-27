@@ -1039,6 +1039,12 @@ const sentences = [
 'مادَرَم تا اَبَد دوستَت دارَم .'
 ];
 
+// پاسخ‌های جایگزینِ درست برای جمله‌هایی که بیش از یک ترتیب طبیعی دارند
+const acceptedSentenceAnswers = {
+  12: ['اَسَد با او دوست اَست .'],
+  17: ['سارا با مادَر آمَد .']
+};
+
 let sentenceIndex = 0;
 let sentenceTokens = [];
 let sentencePlaced = [];
@@ -1282,7 +1288,7 @@ $('sentenceCheck').onclick=()=>{
 
 data.stats.attempts++;
 
-if(answer===sentences[sentenceIndex]){
+if([sentences[sentenceIndex],...(acceptedSentenceAnswers[sentenceIndex]||[])].includes(answer)){
 
     sentenceDone=true;data.stats.correct++;
 data.streak++;
