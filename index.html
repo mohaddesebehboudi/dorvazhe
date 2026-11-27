@@ -743,8 +743,61 @@ $('backSentenceStages').onclick = () => {
   show('sentenceStages');
 
 };function renderReview(){let keys=Object.keys(data.mistakes);$('reviewList').innerHTML=keys.length?`<div class="stage-list">${keys.map(k=>`<button class="stage" data-review="${k}">🔁 مرحله ${fa(+k+1)}<small>نیاز به مرور · ${fa(data.mistakes[k].count)} اشتباه</small></button>`).join('')}</div>`:'<p class="notice">فعلاً تمرینی برای مرور نداری. عالی پیش می‌ری!</p>';document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>startStage(+b.dataset.review,true))}
-function renderAdventure(){let done=Object.keys(data.completed).length,wrong=Object.values(data.mistakes).reduce((a,b)=>a+b.count,0);$('adventureContent').innerHTML=`<h2>${esc(data.name||'دانش‌آموز')}، دفترچه ماجراجویی تو</h2><div class="bookgrid"><div class="bookitem">تمرین‌های انجام‌شده<br><b>${fa(data.stats.attempts)}</b></div><div class="bookitem">پاسخ‌های صحیح<br><b>${fa(data.stats.correct)}</b></div><div class="bookitem">پاسخ‌های اشتباه<br><b>${fa(data.stats.wrong)}</b></div><div class="bookitem">مرواریدهای جمع‌شده<br><b>${fa(data.pearls)}</b></div><div class="bookitem">مراحل تکمیل‌شده<br><b>${fa(done)}</b></div><div class="bookitem">تمرین‌های نیازمند مرور<br><b>${fa(Object.keys(data.mistakes).length)}</b></div><div class="bookitem">مرواریدهای طلایی<br><b>${fa(data.gold)}</b></div><div class="bookitem">رکورد پاسخ صحیح متوالی<br><b>${fa(data.streak)}</b></div></div><h3>جزیره واژه‌سازی</h3><div class="progressline"><i style="width:${stages.length?Math.min(done/stages.length*100,100):0}%"></i></div><p class="notice">جزیره‌های دیگر در نقشه دیده می‌شوند و به‌زودی فعال خواهند شد.</p>`}
-$('backupBtn').onclick=()=>{let blob=new Blob([JSON.stringify({app:'DaryayeParsi',schema:1,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='daryaye-parsi-backup.json';a.click();URL.revokeObjectURL(a.href);toast('فایل پشتیبان آماده شد.')};
+function renderAdventure(){
+  let done=Object.values(data.completed).filter(Boolean).length;
+  let wrong=Object.values(data.mistakes).reduce((a,b)=>a+(b.count||0),0);
+
+  const islands=[...document.querySelectorAll('[data-island]')];
+
+  const islandHTML=islands.map((button,index)=>{
+    const label=button.getAttribute('aria-label')||`جزیره ${index+1}`;
+    let completed=0;
+    let total=0;
+
+    if(button.dataset.island==='active'){
+      total=stages.length;
+      completed=Object.values(data.completed).filter(Boolean).length;
+    }
+    else if(button.dataset.island==='sentences'){
+      total=sentences.length;
+      completed=Object.values(data.sentenceCompleted).filter(Boolean).length;
+    }
+
+    const percent=total
+      ? Math.round(Math.min(completed,total)/total*100)
+      : 0;
+
+    return `
+      <h3>${esc(label)}</h3>
+      <div class="progressline">
+        <i style="width:${percent}%"></i>
+      </div>
+      <p class="notice">
+        ${fa(percent)}٪ پیشرفت
+        ${total ? ` · ${fa(completed)} از ${fa(total)} مرحله` : ''}
+      </p>
+    `;
+  }).join('');
+
+  $('adventureContent').innerHTML=`
+    <h2>${esc(data.name||'دانش‌آموز')}، دفترچه ماجراجویی تو</h2>
+
+    <div class="bookgrid">
+      <div class="bookitem">تمرین‌های انجام‌شده<br><b>${fa(data.stats.attempts)}</b></div>
+      <div class="bookitem">پاسخ‌های صحیح<br><b>${fa(data.stats.correct)}</b></div>
+      <div class="bookitem">پاسخ‌های اشتباه<br><b>${fa(data.stats.wrong)}</b></div>
+      <div class="bookitem">مرواریدهای جمع‌شده<br><b>${fa(data.pearls)}</b></div>
+      <div class="bookitem">مراحل تکمیل‌شده<br><b>${fa(done)}</b></div>
+      <div class="bookitem">تمرین‌های نیازمند مرور<br><b>${fa(Object.keys(data.mistakes).length)}</b></div>
+      <div class="bookitem">مرواریدهای طلایی<br><b>${fa(data.gold)}</b></div>
+      <div class="bookitem">رکورد پاسخ صحیح متوالی<br><b>${fa(data.streak)}</b></div>
+    </div>
+
+    <h2>پیشرفت جزیره‌ها</h2>
+    ${islandHTML}
+  `;
+}
+      $('backupBtn').onclick=()=>{let blob=new Blob([JSON.stringify({app:'DaryayeParsi',schema:1,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='daryaye-parsi-backup.json';a.click();URL.revokeObjectURL(a.href);toast('فایل پشتیبان آماده شد.')};
 $('restoreBtn').onclick=()=>$('restoreFile').click();$('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let incoming=JSON.parse(await f.text());let d=incoming.data||incoming;if(!d||typeof d!=='object'||!d.stats)throw Error();modal(`<h2>بازیابی اطلاعات</h2><p>اطلاعات پشتیبان با اطلاعات فعلی ادغام می‌شوند؛ اطلاعات فعلی پاک نخواهد شد.</p><p class="notice">در صورت وجود مرحله‌های مشترک، تکمیل‌شده‌ها و پاداش‌های قبلی حفظ می‌شوند و تعداد مرواریدها کمتر نخواهد شد.</p><button class="action primary" id="mergeBackup">ادغام و بازیابی</button> <button class="action" id="cancelRestore">انصراف</button>`);$('cancelRestore').onclick=closeModal;$('mergeBackup').onclick=()=>{data.name=data.name||d.name||'';data.pearls=Math.max(data.pearls||0,d.pearls||0);data.gold=Math.max(data.gold||0,d.gold||0);data.completed={...(d.completed||{}),...(data.completed||{})};data.awarded={...(d.awarded||{}),...(data.awarded||{})};data.mistakes={...(d.mistakes||{}),...(data.mistakes||{})};data.stats={attempts:Math.max(data.stats.attempts||0,d.stats.attempts||0),correct:Math.max(data.stats.correct||0,d.stats.correct||0),wrong:Math.max(data.stats.wrong||0,d.stats.wrong||0)};data.goldEarned=data.goldEarned||d.goldEarned;data.streak=Math.max(data.streak||0,d.streak||0);save();closeModal();toast('اطلاعات پشتیبان با اطلاعات فعلی ادغام شد.');};}catch{toast('این فایل پشتیبان معتبر نیست.')}e.target.value=''};
 // Resume the exact in-progress exercise if one was saved.
 if(data.session&&Number.isInteger(data.session.stage)&&data.session.stage>=0&&data.session.stage<stages.length){let s=data.session;current=s.stage;reviewMode=!!s.review;answer=s.answer||stages[current].answers[0];answerUnits=s.answerUnits||unitsFor(current,answer);tiles=(s.tiles||stages[current].tiles.map((v,id)=>id)).map(id=>({id,v:stages[current].tiles[id]}));placed=s.placed||[];attempts=s.attempts||0;hinted=!!s.hinted;success=false;renderGame();show('game');}
