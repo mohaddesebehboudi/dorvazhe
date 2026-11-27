@@ -546,8 +546,6 @@ body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progre
 #knowledgeGame .alef-hunt-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 #knowledgeGame .alef-hunt-cell{aspect-ratio:1;border-radius:18px;border:2px solid #9edfff88;background:linear-gradient(145deg,#253b70,#14244e);box-shadow:0 5px 0 #080f2b,0 0 16px #60cfff20;color:#fff;font-size:clamp(28px,7vw,43px);font-weight:900;transition:transform .15s,background .2s}
 #knowledgeGame .alef-hunt-cell:active{transform:translateY(3px)}
-#knowledgeGame .alef-hunt-cell.alef-a{color:#55bdff;text-shadow:0 0 15px #39aaff88}
-#knowledgeGame .alef-hunt-cell.alef-e{color:#ff6876;text-shadow:0 0 15px #ff526888}
 #knowledgeGame .alef-hunt-cell.found{background:linear-gradient(145deg,#145d65,#138d82);border-color:#6bffe0;color:#fff;box-shadow:0 0 20px #38e6c688}
 #knowledgeGame .alef-hunt-cell.miss{background:#71334d;border-color:#ff8da0;animation:alefMiss .35s}
 #knowledgeGame .alef-hunt-count{text-align:center;margin:15px 0 0;color:#d9f3ff;font-size:18px;font-weight:900}
@@ -2209,7 +2207,7 @@ function startKnowledgeStage(i){
   clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;knowledgeLetterSelected=[];$('knowledgeGame').classList.toggle('sound-game-mode',isKnowledgeSoundStage(i));
   $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
-  if(i===0)startKnowledgeAlefFindStage(Math.random()<0.5?'آ':'ا');
+  if(i===0)startKnowledgeAlefFindStage();
   else if(i===1)startKnowledgeAlefQuizStage();
   else if(i<32)startKnowledgeAlefSingleStage(i-2);
   else{
@@ -2226,25 +2224,32 @@ function knowledgeAlefShuffle(arr){
 }
 function startKnowledgeAlefFindStage(target){
  $('knowledgePrompt').textContent='همهٔ «'+target+'»ها را پیدا کن.';
- const other=target==='آ'?'ا':'آ',count=4+Math.floor(Math.random()*2),letters=[];
- for(let i=0;i<count;i++)letters.push(target);
- for(let i=0;i<5;i++)letters.push(other);
- const extras=['ب','م','ن','د'];while(letters.length<16)letters.push(extras[Math.floor(Math.random()*extras.length)]);
- const colors=target==='آ'?'#45baff':'#ff626f';
- $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">همهٔ <strong style="color:'+colors+'">'+target+'</strong>ها را پیدا کن</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
+ const other=target==='آ'?'ا':'آ',count=4+Math.floor(Math.random()*2),letters=function startKnowledgeAlefFindStage(){
+ $('knowledgePrompt').textContent='';
+ const count=4,letters=Array(16);
+ // چهار «آ» را در چهار ردیف و چهار ستون متفاوت قرار می‌دهیم.
+ const targetColumns=knowledgeAlefShuffle([0,1,2,3]);
+ targetColumns.forEach((column,row)=>{letters[row*4+column]='آ';});
+ const distractors=['ا','ا','ا','ا','ا'];
+ const extras=['ب','م','ن','د'];
+ while(distractors.length<12)distractors.push(extras[Math.floor(Math.random()*extras.length)]);
+ const shuffledDistractors=knowledgeAlefShuffle(distractors);
+ let next=0;
+ for(let i=0;i<letters.length;i++){
+  if(letters[i]===undefined)letters[i]=shuffledDistractors[next++];
+ }
+ $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">همه‌ی <strong style="color:#45baff">آ</strong> ها را پیدا کن.</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
  const grid=$('knowledgeAlefGrid');let left=count;
- knowledgeAlefShuffle(letters).forEach(letter=>{
-  const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell '+(letter==='آ'?'alef-a':'alef-e');b.textContent=letter;
+ letters.forEach(letter=>{
+  const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell';b.textContent=letter;
   b.onclick=()=>{
    if(knowledgeLocked||b.disabled)return;
-   if(letter===target){b.disabled=true;b.classList.add('found');left--;knowledgeCorrect();knowledgeProgressUpdate(count-left,count);save();$('knowledgeAlefCount').textContent=left?'باقی‌مانده: '+fa(left):'آفرین! همه را پیدا کردی';
+   if(letter==='آ'){b.disabled=true;b.classList.add('found');left--;knowledgeCorrect();knowledgeProgressUpdate(count-left,count);save();$('knowledgeAlefCount').textContent=left?'باقی‌مانده: '+fa(left):'آفرین! همه را پیدا کردی';
     if(!left)knowledgeFinishStage();
-   }else{knowledgeWrong();b.classList.add('miss');$('knowledgeFeedback').textContent='این حرف «'+letter+'» است؛ دنبال «'+target+'» بگرد.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('miss'),450);}
+   }else{knowledgeWrong();b.classList.add('miss');$('knowledgeFeedback').textContent='این حرف «'+letter+'» است؛ دنبال «آ» بگرد.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('miss'),450);}
   };grid.append(b);
  });
-}
-function buildKnowledgeAlefQuizQuestions(){
- const AI=[['آدم','🧑'],['آدم برفی','⛄'],['آش','🍲'],['آتش','🔥'],['آب','💧'],['آینه','🪞'],['آهو','🦌'],['آلو','🍑'],['آبی','🔵'],['آرد','🌾'],['آجیل','🥜'],['آزاده','👧'],['آسمان','🌤️'],['آفتاب','☀️'],['آبشار','🏞️']];
+}یل','🥜'],['آزاده','👧'],['آسمان','🌤️'],['آفتاب','☀️'],['آبشار','🏞️']];
  const AP=AI.slice(0,11);
  const AN=[['بابا','👨'],['کتاب','📚'],['نان','🍞'],['ماه','🌙'],['ماشین','🚗'],['گاو','🐄'],['ماهی','🐟'],['باران','🌧️'],['مادر','👩'],['پا','🦶'],['باد','💨'],['بادبادک','🪁'],['بازی','🎮'],['خانه','🏠'],['ساعت','⏰'],['جارو','🧹']];
  const NO=[['سیب','🍎'],['گل','🌸'],['موز','🍌'],['چشم','👁️'],['ستاره','⭐'],['خرس','🐻'],['فیل','🐘'],['برف','❄️'],['دست','✋'],['توپ','⚽'],['گربه','🐱'],['خورشید','🌞'],['شیر','🦁'],['کفش','👟']];
