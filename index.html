@@ -755,8 +755,9 @@ if(data.streak>=5&&!data.goldEarned){
 
     save();
 
-    $('sentenceFeedback').textContent='آفرین! جمله را درست ساختی. 🌟';
-    $('sentenceFeedback').className='feedback good';
+    $('sentenceFeedback').textContent = '';
+$('sentenceFeedback').className = 'feedback';
+rainReward();
 
     $('sentenceSuccessActions').classList.remove('hidden');
     $('sentenceHint').disabled=true;
