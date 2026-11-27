@@ -725,7 +725,9 @@ $('sentenceCheck').onclick=()=>{
 
   let reviewKey='sentence_'+sentenceIndex;
 
-  if(answer===sentences[sentenceIndex]){
+data.stats.attempts++;
+
+if(answer===sentences[sentenceIndex]){
 
     sentenceDone=true;data.stats.correct++;
 data.streak++;
