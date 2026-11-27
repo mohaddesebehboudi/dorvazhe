@@ -2045,7 +2045,7 @@ function startKnowledgeStage(i){
 function startKnowledgeDaaStage(levelIndex){
  const q=knowledgeDaaLevels[levelIndex];
  const total=q.items.filter(x=>x[2]).length;
- let selected=0,isDragging=false,activeItem=null,currentLine=null;
+ let selected=0,isDragging=false,activeItem=null,currentLine=null,completing=false;
  const boardWidth='100%';
  $('knowledgePrompt').textContent='هر تصویری را که ترکیبِ وسط را دارد، به آن وصل کن.';
  const birdSvg='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="55" rx="25" ry="30" fill="#1a1a1a"/><ellipse cx="45" cy="50" rx="8" ry="12" fill="#fff"/><ellipse cx="55" cy="60" rx="6" ry="10" fill="#fff"/><circle cx="50" cy="30" r="18" fill="#1a1a1a"/><path d="M40 20 Q45 10 50 15 Q55 10 60 20" fill="#e74c3c"/><ellipse cx="50" cy="18" rx="12" ry="6" fill="#e74c3c"/><circle cx="45" cy="28" r="4" fill="#fff"/><circle cx="45" cy="28" r="2.5" fill="#000"/><path d="M55 30 L75 28 L75 32 Z" fill="#f39c12"/><line x1="45" y1="80" x2="45" y2="90" stroke="#7f8c8d" stroke-width="2"/><line x1="55" y1="80" x2="55" y2="90" stroke="#7f8c8d" stroke-width="2"/><path d="M45 90 L42 93 M45 90 L45 93 M45 90 L48 93 M55 90 L52 93 M55 90 L55 93 M55 90 L58 93" stroke="#7f8c8d" stroke-width="1.5"/></svg>';
@@ -2107,19 +2107,19 @@ function startKnowledgeDaaStage(levelIndex){
     activeItem.classList.add('connected');activeItem.style.pointerEvents='none';
     selected++;knowledgeCorrect();knowledgeProgressUpdate(selected,total);save();
     $('knowledgeFeedback').textContent='آفرین! درست وصل کردی.';$('knowledgeFeedback').className='feedback good';
-    if(selected===total){resizeObserver.disconnect();setTimeout(()=>knowledgeFinishStage(),650);}
+    if(selected===total){completing=true;resizeObserver.disconnect();setTimeout(()=>knowledgeFinishStage(),650);}
    }else{
-    currentLine.style.transition='opacity .35s';currentLine.style.opacity='0';setTimeout(()=>currentLine?.remove(),380);
+    const failedLine=currentLine;failedLine.style.transition='opacity .35s';failedLine.style.opacity='0';setTimeout(()=>failedLine.remove(),380);
     knowledgeWrong();$('knowledgeFeedback').textContent='این کلمه ترکیبِ وسط را ندارد؛ دوباره با دقت امتحان کن.';$('knowledgeFeedback').className='feedback soft';
    }
   }else{
-   currentLine.style.transition='opacity .25s';currentLine.style.opacity='0';setTimeout(()=>currentLine?.remove(),280);
+   const cancelledLine=currentLine;cancelledLine.style.transition='opacity .25s';cancelledLine.style.opacity='0';setTimeout(()=>cancelledLine.remove(),280);
   }
   activeItem=null;currentLine=null;
  }
  placed.forEach(el=>{
   el.addEventListener('pointerdown',e=>{
-   if(knowledgeLocked||el.classList.contains('connected'))return;
+   if(knowledgeLocked||completing||el.classList.contains('connected'))return;
    e.preventDefault();isDragging=true;activeItem=el;el.classList.add('dragging');currentLine=makeLine(el);
    document.addEventListener('pointermove',onMove);document.addEventListener('pointerup',onUp);
   });
