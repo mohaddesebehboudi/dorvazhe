@@ -1006,11 +1006,9 @@ function renderReview(){
 
           return `
             <button class="stage" data-review="${esc(k)}">
-              🔁 تمرین مرور ${fa(i+1)}
-              <small>
-                پاسخ صحیح: ${fa(correct)} از ${fa(required)}
-                · تعداد اشتباه‌ها: ${fa(item.count||1)}
-              </small>
+<button class="stage" data-review="${esc(k)}">
+  🔁 تمرین ${fa(i+1)}
+</button>
             </button>
           `;
         }).join('')}
