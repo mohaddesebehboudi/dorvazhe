@@ -301,7 +301,7 @@
   </div>
 </section>
 
-<section id="knowledgeStages" class="screen"><div class="subhead"><div class="title">🏛️ جزیره دانایی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="lab-banner"><div><div class="lab-title">🧠 سرزمین تیزبینی و تمرکز</div><p class="notice">۱۹ مرحله برای تقویت توجه، تشخیص دیداری و تصمیم‌گیری</p></div><div class="lab-scientist">🧠</div></div><div class="stage-list" id="knowledgeStageList"></div></div></section>
+<section id="knowledgeStages" class="screen"><div class="subhead"><div class="title">🏛️ جزیره دانایی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="lab-banner"><div><div class="lab-title">🧠 سرزمین تیزبینی و تمرکز</div></div><div class="lab-scientist">🧠</div></div><div class="stage-list" id="knowledgeStageList"></div></div></section>
 <section id="knowledgeGame" class="screen"><div class="subhead"><div class="title">🧠 جزیره دانایی</div><button class="action" id="backKnowledgeStages">فهرست مرحله‌ها</button></div><div class="card game-card"><div class="subhead"><b id="knowledgeStageLabel">مرحله ۱</b><span>⭐ <b id="knowledgeScoreLabel">۰</b></span></div><div class="progressline"><i id="knowledgeProgressBar" style="width:0%"></i></div><p class="prompt" id="knowledgePrompt"></p><div id="knowledgePlayArea"></div><div class="feedback" id="knowledgeFeedback" aria-live="polite"></div><div class="game-actions"><button class="action primary hidden" id="knowledgeNext">مرحله بعد ←</button><button class="action hidden" id="knowledgeRetry">تکرار مرحله</button></div></div></section>
 <section id="review" class="screen"><div class="subhead"><div class="title">🔁 مرور آموخته‌ها</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><p class="notice">تمرین‌هایی که قبلاً در آن‌ها اشتباه داشتی اینجا جمع می‌شوند. با تمرین دوباره می‌توانی آن‌ها را مرور کنی.</p><div id="reviewList"></div></div></section>
 <section id="adventure" class="screen"><div class="subhead"><div class="title">📖 دفترچه ماجراجویی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card" id="adventureContent"></div></section>
@@ -1584,8 +1584,7 @@ if(!data.knowledgeStageVersion){
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
-  const title=i===0?'توپ‌های تیزبین':i===1?'تاج «تا»':i===2?'توپ «تو»':i===3?'تاج «تَـ»':'تاس جادویی · '+knowledgeDiceWords[i-4].word;
-  return '<button class="stage '+(done?'done':'')+'" data-knowledge-stage="'+i+'" '+(unlocked?'':'disabled')+'>'+(done?'🦪':unlocked?'🐚':'🔒')+' مرحله '+fa(i+1)+'<small>'+esc(title)+'</small></button>';
+  return '<button class="stage '+(done?'done':'')+'" data-knowledge-stage="'+i+'" '+(unlocked?'':'disabled')+'>'+(done?'🦪':unlocked?'🐚':'🔒')+' مرحله '+fa(i+1)+'</button>';
  }).join('');
  document.querySelectorAll('[data-knowledge-stage]:not(:disabled)').forEach(b=>b.onclick=()=>startKnowledgeStage(+b.dataset.knowledgeStage));
 }
