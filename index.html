@@ -820,19 +820,52 @@ $('sentenceClear').onclick = () => {
 };
 
 
-// جمله بعدی
+// تمرین بعدی
 $('sentenceNext').onclick = () => {
 
+  // اگر در حالت مرور هستیم
+  if (sentenceReviewMode) {
+
+    let keys = Object.keys(data.mistakes);
+    let currentKey = 'sentence_' + sentenceIndex;
+
+    // تمرین فعلی را از انتخاب تصادفی کنار می‌گذاریم
+    let options = keys.filter(key => key !== currentKey);
+
+    // اگر فقط همین یک تمرین باقی مانده
+    if (options.length === 0 && keys.includes(currentKey)) {
+      options = [currentKey];
+    }
+
+    // اگر تمرینی برای مرور باقی نمانده
+    if (options.length === 0) {
+      renderReview();
+      show('review');
+      return;
+    }
+
+    // انتخاب تصادفی تمرین بعدی
+    let nextKey = options[Math.floor(Math.random() * options.length)];
+
+    // اگر تمرین بعدی جمله‌سازی است
+    if (nextKey.startsWith('sentence_')) {
+      startSentence(Number(nextKey.slice(9)), true);
+    }
+
+    // اگر تمرین بعدی واژه‌سازی است
+    else {
+      startStage(Number(nextKey), true);
+    }
+
+    return;
+  }
+
+  // حالت عادی جمله‌سازی
   if (sentenceIndex < sentences.length - 1) {
-
     startSentence(sentenceIndex + 1);
-
   } else {
-
     renderSentenceStages();
-
     show('sentenceStages');
-
   }
 
 };
