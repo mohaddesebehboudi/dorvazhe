@@ -1547,7 +1547,51 @@ function renderReview(){
   });
 }
 
-/* جزیره دانایی: دو بازی چندسؤالی + ۱۷ مرحله مستقل تاس */
+/* جزیره دانایی: ۲۰ مرحله نشانه‌های بـ و ب، سپس مراحل قبلی */
+const knowledgeLetterQuestions=[
+  { word: 'بابا', type: 'initial', img: 'baba' },
+  { word: 'آب', type: 'final', img: 'ab' },
+  { word: 'باد', type: 'initial', img: 'bad' },
+  { word: 'اسب', type: 'final', img: 'asb' },
+  { word: 'بشقاب', type: 'both', img: 'boshghab' },
+  { word: 'کتاب', type: 'final', img: 'ketab' },
+  { word: 'بادبادک', type: 'initial', img: 'badbadak' },
+  { word: 'سیب', type: 'final', img: 'sib' },
+  { word: 'ببر', type: 'initial', img: 'babr' },
+  { word: 'گلابی', type: 'initial', img: 'golabi' },
+  { word: 'سبزی', type: 'initial', img: 'sabzi' },
+  { word: 'باران', type: 'initial', img: 'baran' },
+  { word: 'توپ‌بازی', type: 'initial', img: 'toopbazi' },
+  { word: 'برف', type: 'initial', img: 'barf' },
+  { word: 'روباه', type: 'initial', img: 'roobah' },
+  { word: 'بستنی', type: 'initial', img: 'bastani' },
+  { word: 'عقاب', type: 'final', img: 'oghab' },
+  { word: 'ابر', type: 'initial', img: 'abr' },
+  { word: 'لباس', type: 'initial', img: 'lebas' },
+  { word: 'بادام', type: 'initial', img: 'badam' }
+];
+const knowledgeLetterImages={
+  baba: `<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="70" fill="#ffd6a5"/><path d="M 50 80 Q 100 40 150 80 Q 140 60 100 65 Q 60 60 50 80" fill="#5d4037"/><circle cx="75" cy="95" r="6" fill="#3a2a1a"/><circle cx="125" cy="95" r="6" fill="#3a2a1a"/><path d="M 70 130 Q 100 155 130 130 L 130 140 Q 100 160 70 140 Z" fill="#5d4037"/><path d="M 75 125 Q 100 140 125 125" stroke="#d63384" stroke-width="3" fill="none"/></svg>`,
+  ab: `<svg viewBox="0 0 200 200"><path d="M 100 30 Q 60 90 60 130 Q 60 170 100 170 Q 140 170 140 130 Q 140 90 100 30 Z" fill="#4fc3f7" stroke="#0288d1" stroke-width="3"/><ellipse cx="85" cy="110" rx="15" ry="25" fill="#b3e5fc" opacity="0.7"/></svg>`,
+  bad: `<svg viewBox="0 0 200 200"><path d="M 20 80 Q 60 60 100 80 Q 140 100 180 80" stroke="#90caf9" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M 30 120 Q 70 100 110 120 Q 150 140 170 120" stroke="#64b5f6" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M 40 160 Q 80 140 120 160 Q 160 180 180 160" stroke="#42a5f5" stroke-width="8" fill="none" stroke-linecap="round"/></svg>`,
+  asb: `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="120" rx="55" ry="40" fill="#8d6e63"/><path d="M 60 90 Q 50 50 80 40 Q 100 50 90 90" fill="#8d6e63"/><path d="M 80 40 L 75 25 M 90 40 L 95 25" stroke="#5d4037" stroke-width="4" stroke-linecap="round"/><circle cx="75" cy="70" r="4" fill="#3a2a1a"/><rect x="60" y="150" width="10" height="30" fill="#5d4037"/><rect x="85" y="150" width="10" height="30" fill="#5d4037"/><rect x="110" y="150" width="10" height="30" fill="#5d4037"/><rect x="135" y="150" width="10" height="30" fill="#5d4037"/><path d="M 145 100 Q 170 90 165 120" stroke="#5d4037" stroke-width="6" fill="none"/></svg>`,
+  boshghab: `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="110" rx="80" ry="20" fill="#e0e0e0" stroke="#9e9e9e" stroke-width="3"/><ellipse cx="100" cy="105" rx="80" ry="20" fill="#fff" stroke="#bdbdbd" stroke-width="3"/><ellipse cx="100" cy="105" rx="55" ry="12" fill="#f5f5f5"/><circle cx="85" cy="100" r="5" fill="#ff6b9d"/><circle cx="110" cy="108" r="4" fill="#4fc3f7"/><circle cx="100" cy="95" r="3" fill="#feca57"/></svg>`,
+  ketab: `<svg viewBox="0 0 200 200"><rect x="40" y="50" width="120" height="110" fill="#e53935" stroke="#b71c1c" stroke-width="3" rx="5"/><rect x="45" y="55" width="110" height="100" fill="#fff" stroke="#c62828" stroke-width="2"/><line x1="100" y1="55" x2="100" y2="155" stroke="#c62828" stroke-width="2"/><line x1="55" y1="75" x2="90" y2="75" stroke="#999" stroke-width="2"/><line x1="55" y1="90" x2="90" y2="90" stroke="#999" stroke-width="2"/><line x1="55" y1="105" x2="90" y2="105" stroke="#999" stroke-width="2"/><line x1="110" y1="75" x2="145" y2="75" stroke="#999" stroke-width="2"/><line x1="110" y1="90" x2="145" y2="90" stroke="#999" stroke-width="2"/></svg>`,
+  badbadak: `<svg viewBox="0 0 200 200"><path d="M 100 30 L 160 80 L 100 130 L 40 80 Z" fill="#ff6b9d" stroke="#c2185b" stroke-width="3"/><path d="M 100 30 L 100 130 M 40 80 L 160 80" stroke="#c2185b" stroke-width="2"/><path d="M 100 130 Q 110 150 100 170 Q 90 180 100 190" stroke="#5d4037" stroke-width="3" fill="none"/><path d="M 100 170 L 90 175 M 100 170 L 110 175" stroke="#5d4037" stroke-width="2"/></svg>`,
+  sib: `<svg viewBox="0 0 200 200"><circle cx="100" cy="115" r="55" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><ellipse cx="85" cy="100" rx="15" ry="25" fill="#ff8a80" opacity="0.6"/><path d="M 100 60 Q 95 45 105 40" stroke="#5d4037" stroke-width="4" fill="none"/><path d="M 105 45 Q 125 35 130 50 Q 115 55 105 45" fill="#43a047"/></svg>`,
+  babr: `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="120" rx="60" ry="45" fill="#ffb300"/><circle cx="100" cy="75" r="40" fill="#ffb300"/><path d="M 70 55 L 65 40 M 130 55 L 135 40" stroke="#5d4037" stroke-width="5" stroke-linecap="round"/><circle cx="85" cy="75" r="5" fill="#3a2a1a"/><circle cx="115" cy="75" r="5" fill="#3a2a1a"/><path d="M 95 90 L 100 95 L 105 90" stroke="#3a2a1a" stroke-width="2" fill="none"/><path d="M 70 100 L 60 105 M 130 100 L 140 105" stroke="#5d4037" stroke-width="2"/><path d="M 80 110 L 75 130 M 90 115 L 85 135 M 110 115 L 115 135 M 120 110 L 125 130" stroke="#5d4037" stroke-width="3" stroke-linecap="round"/><rect x="75" y="155" width="10" height="25" fill="#ffb300"/><rect x="115" y="155" width="10" height="25" fill="#ffb300"/></svg>`,
+  golabi: `<svg viewBox="0 0 200 200"><path d="M 100 40 Q 70 60 65 100 Q 55 150 100 170 Q 145 150 135 100 Q 130 60 100 40 Z" fill="#c5e1a5" stroke="#7cb342" stroke-width="3"/><path d="M 100 40 Q 95 25 105 20" stroke="#5d4037" stroke-width="4" fill="none"/><path d="M 105 25 Q 120 20 125 30 Q 115 35 105 25" fill="#43a047"/><ellipse cx="85" cy="100" rx="10" ry="20" fill="#dcedc8" opacity="0.6"/></svg>`,
+  sabzi: `<svg viewBox="0 0 200 200"><path d="M 100 170 Q 60 150 50 100 Q 45 60 70 40 Q 80 55 85 80 Q 90 60 100 50 Q 110 60 115 80 Q 120 55 130 40 Q 155 60 150 100 Q 140 150 100 170 Z" fill="#43a047" stroke="#2e7d32" stroke-width="3"/><path d="M 100 170 L 100 60" stroke="#2e7d32" stroke-width="2"/><path d="M 100 100 L 75 80 M 100 100 L 125 80 M 100 130 L 70 120 M 100 130 L 130 120" stroke="#2e7d32" stroke-width="2"/></svg>`,
+  baran: `<svg viewBox="0 0 200 200"><ellipse cx="70" cy="80" rx="40" ry="25" fill="#fff" stroke="#90caf9" stroke-width="2"/><ellipse cx="120" cy="75" rx="45" ry="30" fill="#fff" stroke="#90caf9" stroke-width="2"/><ellipse cx="100" cy="95" rx="55" ry="25" fill="#fff" stroke="#90caf9" stroke-width="2"/><path d="M 60 130 L 55 150 M 85 135 L 80 155 M 110 135 L 105 155 M 135 130 L 130 150 M 75 155 L 70 175 M 100 160 L 95 180 M 125 155 L 120 175" stroke="#4fc3f7" stroke-width="4" stroke-linecap="round"/></svg>`,
+  toopbazi: `<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="60" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><path d="M 100 40 Q 130 70 130 100 Q 130 130 100 160" stroke="#fff" stroke-width="4" fill="none"/><path d="M 100 40 Q 70 70 70 100 Q 70 130 100 160" stroke="#fff" stroke-width="4" fill="none"/><path d="M 40 100 Q 70 90 100 90 Q 130 90 160 100" stroke="#fff" stroke-width="4" fill="none"/><circle cx="100" cy="100" r="8" fill="#fff"/></svg>`,
+  barf: `<svg viewBox="0 0 200 200"><g stroke="#4fc3f7" stroke-width="6" stroke-linecap="round"><line x1="100" y1="30" x2="100" y2="170"/><line x1="30" y1="100" x2="170" y2="100"/><line x1="50" y1="50" x2="150" y2="150"/><line x1="150" y1="50" x2="50" y2="150"/><line x1="100" y1="50" x2="85" y2="65 M 100 50 L 115 65"/><line x1="100" y1="150" x2="85" y2="135 M 100 150 L 115 135"/><line x1="50" y1="100" x2="65" y2="85 M 50 100 L 65 115"/><line x1="150" y1="100" x2="135" y2="85 M 150 100 L 135 115"/></g><circle cx="100" cy="100" r="10" fill="#b3e5fc"/></svg>`,
+  roobah: `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="120" rx="55" ry="40" fill="#ff7043"/><path d="M 55 90 L 40 50 L 75 75 Z M 145 90 L 160 50 L 125 75 Z" fill="#ff7043" stroke="#d84315" stroke-width="2"/><path d="M 45 55 L 55 65 M 155 55 L 145 65" stroke="#fff" stroke-width="3"/><circle cx="80" cy="100" r="5" fill="#3a2a1a"/><circle cx="120" cy="100" r="5" fill="#3a2a1a"/><ellipse cx="100" cy="125" rx="8" ry="6" fill="#3a2a1a"/><path d="M 100 131 L 100 140 M 95 140 Q 100 145 105 140" stroke="#3a2a1a" stroke-width="2" fill="none"/><path d="M 100 160 Q 140 170 155 150 Q 160 165 140 175 Q 115 180 100 160" fill="#fff"/></svg>`,
+  bastani: `<svg viewBox="0 0 200 200"><path d="M 70 90 L 100 180 L 130 90 Z" fill="#d4a574" stroke="#8d6e63" stroke-width="3"/><circle cx="100" cy="70" r="35" fill="#f8bbd0" stroke="#ec407a" stroke-width="3"/><circle cx="100" cy="70" r="25" fill="#fce4ec"/><circle cx="90" cy="60" r="4" fill="#e91e63"/><circle cx="110" cy="75" r="3" fill="#e91e63"/><circle cx="100" cy="80" r="3" fill="#e91e63"/><circle cx="100" cy="35" r="6" fill="#e53935"/></svg>`,
+  oghab: `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="110" rx="35" ry="45" fill="#5d4037"/><path d="M 65 100 Q 20 80 15 110 Q 30 120 65 120 Z M 135 100 Q 180 80 185 110 Q 170 120 135 120 Z" fill="#5d4037"/><circle cx="100" cy="80" r="25" fill="#6d4c41"/><circle cx="92" cy="78" r="4" fill="#fff"/><circle cx="108" cy="78" r="4" fill="#fff"/><circle cx="92" cy="78" r="2" fill="#3a2a1a"/><circle cx="108" cy="78" r="2" fill="#3a2a1a"/><path d="M 100 85 L 95 95 L 105 95 Z" fill="#ffb300"/><path d="M 85 150 L 80 170 M 115 150 L 120 170" stroke="#ffb300" stroke-width="4" stroke-linecap="round"/></svg>`,
+  abr: `<svg viewBox="0 0 200 200"><ellipse cx="60" cy="100" rx="35" ry="25" fill="#fff" stroke="#90caf9" stroke-width="2"/><ellipse cx="110" cy="90" rx="45" ry="30" fill="#fff" stroke="#90caf9" stroke-width="2"/><ellipse cx="150" cy="105" rx="35" ry="25" fill="#fff" stroke="#90caf9" stroke-width="2"/><ellipse cx="100" cy="115" rx="60" ry="25" fill="#fff" stroke="#90caf9" stroke-width="2"/><circle cx="80" cy="100" r="3" fill="#3a2a1a"/><circle cx="120" cy="100" r="3" fill="#3a2a1a"/><path d="M 85 115 Q 100 125 115 115" stroke="#3a2a1a" stroke-width="2" fill="none"/></svg>`,
+  lebas: `<svg viewBox="0 0 200 200"><path d="M 70 50 L 50 70 L 60 90 L 75 80 L 75 170 L 125 170 L 125 80 L 140 90 L 150 70 L 130 50 Q 115 65 100 65 Q 85 65 70 50 Z" fill="#42a5f5" stroke="#1565c0" stroke-width="3"/><circle cx="100" cy="90" r="4" fill="#fff"/><circle cx="100" cy="115" r="4" fill="#fff"/><circle cx="100" cy="140" r="4" fill="#fff"/></svg>`,
+  badam: `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="100" rx="35" ry="55" fill="#a1887f" stroke="#6d4c41" stroke-width="3" transform="rotate(-15 100 100)"/><path d="M 85 60 Q 100 50 115 60 Q 110 70 100 70 Q 90 70 85 60" fill="#8d6e63"/><ellipse cx="95" cy="95" rx="8" ry="20" fill="#d7ccc8" opacity="0.6" transform="rotate(-15 95 95)"/><path d="M 70 100 Q 100 110 130 100" stroke="#6d4c41" stroke-width="2" fill="none"/></svg>`
+};
 const knowledgeGroups=[
  {target:'تا',targets:['تا','با','نا','یا','پا','ثا'],kind:'crown'},
  {target:'تو',targets:['تو','بو','نو','یو','ثو','پو'],kind:'ball'},
@@ -1565,7 +1609,7 @@ if(!Array.isArray(data.knowledgeDiceOrder)||data.knowledgeDiceOrder.length!==kno
  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
  data.knowledgeDiceOrder=order;save();
 }
-const knowledgeTotalStages=4+knowledgeDiceWords.length;
+const knowledgeTotalStages=20+4+knowledgeDiceWords.length;
 let knowledgeIndex=0,knowledgeProgress=0,knowledgeLocked=false,knowledgeSpinTimer=null,knowledgeRevealTimer=null;
 
 // انتقال پیشرفت نسخهٔ قبلی: مرحلهٔ ترکیبی تاج و توپ به سه مرحلهٔ مستقل تبدیل شده است.
@@ -1586,6 +1630,13 @@ if(!data.knowledgeStageVersion){
  data.knowledgeStageVersion=2;
  save();
 }
+// انتقال پیشرفت مراحل قبلی به بعد از ۲۰ مرحلهٔ جدید
+if((data.knowledgeStageVersion||0)<3){
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v)shiftedCompleted[Number(k)+20]=true;});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v)shiftedAwarded[Number(k)+20]=true;});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=3;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -1594,13 +1645,14 @@ function renderKnowledgeStages(){
  document.querySelectorAll('[data-knowledge-stage]:not(:disabled)').forEach(b=>b.onclick=()=>startKnowledgeStage(+b.dataset.knowledgeStage));
 }
 function startKnowledgeStage(i){
- const unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
- if(!unlocked){toast('اول مرحله‌های قبلی را کامل کن.');return;}
- clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;
- $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
- $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
- if(i===0)startKnowledgeBalloons();else if(i<=3)startKnowledgeCrowns(i-1);else startKnowledgeDiceWord(i-4);
- show('knowledgeGame');
+  const unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
+  if(!unlocked){toast('اول مرحله‌های قبلی را کامل کن.');return;}
+  clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;knowledgeLetterSelected=[];
+  $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
+  $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
+  if(i<20)startKnowledgeLetterStage(i);
+  else{const oldIndex=i-20;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
+  show('knowledgeGame');
 }
 function knowledgeProgressUpdate(done,total){knowledgeProgress=done;$('knowledgeProgressBar').style.width=(done/total*100)+'%';$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);}
 function knowledgeCorrect(){data.stats.attempts++;data.stats.correct++;data.streak++;data.knowledgeScore=(data.knowledgeScore||0)+1;}
@@ -1612,6 +1664,26 @@ function knowledgeFinishStage(){
  save();rainReward();$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
  $('knowledgeNext').classList.remove('hidden');$('knowledgeRetry').classList.remove('hidden');
  $('knowledgeNext').textContent=knowledgeIndex===knowledgeTotalStages-1?'پایان جزیره ←':'مرحله بعد ←';
+}
+let knowledgeLetterSelected=[];
+function startKnowledgeLetterStage(questionIndex){
+ const q=knowledgeLetterQuestions[questionIndex];
+ $('knowledgePrompt').textContent='';
+ $('knowledgePlayArea').innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px"><div style="width:170px;height:170px;max-width:55vw;max-height:55vw;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px #0002">'+knowledgeLetterImages[q.img]+'</div><div style="font-size:clamp(34px,8vw,52px);font-weight:900;color:#593c85">'+esc(q.word)+'</div><div id="knowledgeLetterChoices" style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap"></div></div>';
+ $('knowledgePlayArea').querySelector('svg').style.cssText='width:140px;height:140px;max-width:45vw;max-height:45vw';
+ [['initial','بـ'],['final','ب']].forEach(([choice,label])=>{
+  const b=document.createElement('button');b.type='button';b.className='knowledge-choice';b.textContent=label;
+  b.style.cssText='min-width:105px;min-height:90px;font-size:48px;font-weight:bold;border:3px solid #fff;border-radius:24px;cursor:pointer;background:linear-gradient(145deg,#fff,#e7dcff);color:#55347f;box-shadow:0 7px 16px #0002';
+  b.onclick=()=>checkKnowledgeLetterAnswer(choice,b,q);$('knowledgeLetterChoices').append(b);
+ });
+}
+function checkKnowledgeLetterAnswer(choice,button,q){
+ if(knowledgeLocked||button.disabled||knowledgeLetterSelected.includes(choice))return;
+ const correct=q.type==='both'||q.type===choice;
+ if(!correct){knowledgeWrong();$('knowledgeFeedback').textContent='این شکل درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';button.animate([{transform:'translateX(0)'},{transform:'translateX(-7px)'},{transform:'translateX(7px)'},{transform:'translateX(0)'}],{duration:260});return;}
+ knowledgeLetterSelected.push(choice);button.disabled=true;button.style.background='linear-gradient(145deg,#a8ff78,#78ffd6)';button.style.color='#17633b';knowledgeCorrect();knowledgeProgressUpdate(knowledgeLetterSelected.length,q.type==='both'?2:1);save();
+ if(q.type!=='both'||knowledgeLetterSelected.length===2){$('knowledgeLetterChoices').querySelectorAll('button').forEach(b=>b.disabled=true);knowledgeFinishStage();}
+ else{$('knowledgeFeedback').textContent='آفرین! حالا شکل دیگر را هم انتخاب کن.';$('knowledgeFeedback').className='feedback soft';}
 }
 function startKnowledgeBalloons(){
  $('knowledgePrompt').textContent='فقط توپ‌هایی را انتخاب کن که نشانه «تـ» یا «ت» دارند.';
