@@ -308,8 +308,91 @@ function wordNow(){return placed.filter(v=>v!==undefined).map(tileValue).join(''
       }
 $('undoBtn').onclick=()=>{if(success)return;let p=[...placed];for(let i=p.length-1;i>=0;i--)if(p[i]!==undefined){p[i]=undefined;break}placed=p;renderGame();persistSession()};$('clearBtn').onclick=()=>{if(success)return;placed=[];renderGame();persistSession()};
 $('hintBtn').onclick=()=>{if(success||hinted)return;hinted=true;let target=answerUnits;let idx=0;while(idx<target.length&&placed[idx]!==undefined&&tileValue(placed[idx])===target[idx])idx++;let needed=target[idx];let candidates=tiles.filter(t=>t.v===needed&&!placed.includes(t.id));if(!candidates.length){toast('راهنمایی آماده نیست؛ یک بار پاک کن و دوباره امتحان کن.');hinted=false;return}let id=candidates[0].id;let next=Array.from({length:answerUnits.length},(_,i)=>placed[i]);next[idx]=id;placed=next;$('feedback').textContent='یک حرف رو برات سر جاش گذاشتم!';$('feedback').className='feedback soft';renderGame();$('feedback').textContent='یک حرف رو برات سر جاش گذاشتم!';$('feedback').className='feedback soft';persistSession()};
-$('checkBtn').onclick=()=>{if(success)return;let w=wordNow();if(placed.filter(v=>v!==undefined).length!==answerUnits.length){$('feedback').textContent='همه‌ی حروف رو توی جای خودشون بذار.';$('feedback').className='feedback soft';return}data.stats.attempts++;if(stages[current].answers.some(a => normalizeWord(a) === normalizeWord(w))){let reward=hinted?1:(attempts===0?3:attempts===1?2:1);let paid=(!reviewMode&&!data.awarded[current])?reward:0;success=true;data.stats.correct++;data.streak++;if(!reviewMode){if(paid){data.pearls+=paid;data.awarded[current]=true}data.completed[current]=true}if(data.streak>=5&&!data.goldEarned){data.gold++;data.goldEarned=true}delete data.mistakes[current];data.session=null;save();$('feedback').textContent=`آفرین ${data.name}! «${w}» رو درست ساختی. ${paid?`🦪 ${fa(paid)} مروارید`:'این مرحله قبلاً جایزه‌اش رو گرفته بود.'}`;$('feedback').className='feedback good';$('successActions').classList.remove('hidden');$('hintBtn').disabled=true;$('tiles').innerHTML='';$('target').innerHTML=`<div style="font-size:36px;font-weight:900;color:#087c9d;padding:5px">${esc(w)} ✨</div>`;if(!reviewMode&&stages.length>0&&stages.every((_,i)=>!!data.completed[i]))setTimeout(showIslandCelebration,900);return}
-attempts++;data.stats.wrong++;data.streak=0;data.mistakes[current]={count:(data.mistakes[current]?.count||0)+1,last:Date.now()};save();$('feedback').textContent='اشکالی نداره! دوباره حروف رو مرتب کن.';$('feedback').className='feedback soft';persistSession()};
+$('checkBtn').onclick=()=>{
+  if(success)return;
+
+  let w=wordNow();
+
+  if(placed.filter(v=>v!==undefined).length!==answerUnits.length){
+    $('feedback').textContent='همه‌ی حروف رو توی جای خودشون بذار.';
+    $('feedback').className='feedback soft';
+    return;
+  }
+
+  data.stats.attempts++;
+
+  if(stages[current].answers.some(a=>normalizeWord(a)===normalizeWord(w))){
+
+    let reward=hinted?1:(attempts===0?3:attempts===1?2:1);
+    let paid=(!reviewMode&&!data.awarded[current])?reward:0;
+
+    success=true;
+    data.stats.correct++;
+    data.streak++;
+
+    if(!reviewMode){
+      if(paid){
+        data.pearls+=paid;
+        data.awarded[current]=true;
+      }
+      data.completed[current]=true;
+    }
+
+    if(reviewMode){
+      let item=data.mistakes[current];
+
+      if(item){
+        item.reviewCorrect=(item.reviewCorrect||0)+1;
+
+        if(item.reviewCorrect >= (item.count||1)*2){
+          delete data.mistakes[current];
+        }
+      }
+    }
+
+    if(data.streak>=5&&!data.goldEarned){
+      data.gold++;
+      data.goldEarned=true;
+    }
+
+    data.session=null;
+    save();
+
+    $('feedback').textContent=`آفرین ${data.name}! «${w}» رو درست ساختی. ${paid?`🦪 ${fa(paid)} مروارید`:'این مرحله قبلاً جایزه‌اش رو گرفته بود.'}`;
+    $('feedback').className='feedback good';
+    $('successActions').classList.remove('hidden');
+    $('hintBtn').disabled=true;
+    $('tiles').innerHTML='';
+    $('target').innerHTML=`<div style="font-size:36px;font-weight:900;color:#087c9d;padding:5px">${esc(w)} ✨</div>`;
+
+    if(!reviewMode&&stages.length>0&&stages.every((_,i)=>!!data.completed[i])){
+      setTimeout(showIslandCelebration,900);
+    }
+
+    return;
+  }
+
+  attempts++;
+  data.stats.wrong++;
+  data.streak=0;
+
+  if(reviewMode||attempts===1){
+    let item=data.mistakes[current]||(data.mistakes[current]={
+      count:0,
+      reviewCorrect:0
+    });
+
+    item.count=(item.count||0)+1;
+    item.last=Date.now();
+  }
+
+  save();
+
+  $('feedback').textContent='اشکالی نداره! دوباره حروف رو مرتب کن.';
+  $('feedback').className='feedback soft';
+
+  persistSession();
+};
 function showIslandCelebration(){modal(`<div class="chest">🎁</div><h2>جزیره واژه‌سازی رو به پایان رسوندی!</h2><p>آفرین ${esc(data.name)}! همه‌ی مراحل این جزیره رو انجام دادی.</p><p>🦪 مرواریدهای این جزیره: ${fa(Object.keys(data.awarded).length)}</p><p><button class="action primary" id="celebrateClose">ادامه ماجراجویی</button></p>`);$('celebrateClose').onclick=closeModal}
 $('nextBtn').onclick=()=>{if(current<stages.length-1)startStage(current+1);else{renderStages();show('stages')}};$('backStages').onclick=()=>{renderStages();show('stages')};
 // ===============================
@@ -361,6 +444,8 @@ let sentenceIndex = 0;
 let sentenceTokens = [];
 let sentencePlaced = [];
 let sentenceDone = false;
+let sentenceReviewMode = false;
+let sentenceAttempts = 0;
 
 
 // جدا کردن کلمه‌ها و نقطه
@@ -407,24 +492,28 @@ function renderSentenceStages(){
         b.onclick=()=>startSentence(+b.dataset.sentenceStage);
     });
 }
-function startSentence(i) {  let unlocked = i === 0 ||
-      sentences.slice(0,i).every((_,j)=>!!data.sentenceCompleted[j]);
+function startSentence(i,review=false){
 
-  if(!unlocked){
-      toast('برای باز شدن این جمله، اول جمله‌های قبلی را کامل کن.');
-      return;
+  let unlocked = i === 0 ||
+    sentences.slice(0,i).every((_,j)=>!!data.sentenceCompleted[j]);
+
+  if(!unlocked&&!review){
+    toast('برای باز شدن این جمله، اول جمله‌های قبلی را کامل کن.');
+    return;
   }
 
-  sentenceIndex = i;
-  sentenceDone = false;
-  sentencePlaced = [];
+  sentenceIndex=i;
+  sentenceReviewMode=review;
+  sentenceAttempts=0;
+  sentenceDone=false;
+  sentencePlaced=[];
 
-  let parts = sentenceParts(i).map((v, id) => ({
-    id: id,
-    v: v
+  let parts=sentenceParts(i).map((v,id)=>({
+    id:id,
+    v:v
   }));
 
-  sentenceTokens = shuffleSentence(parts);
+  sentenceTokens=shuffleSentence(parts);
 
   renderSentenceGame();
   show('sentenceGame');
@@ -574,58 +663,78 @@ function putSentence(id, pos) {
 
 // بررسی پاسخ
 $('sentenceCheck').onclick = () => {
+$('sentenceCheck').onclick=()=>{
 
-  if (sentenceDone) return;
+  if(sentenceDone)return;
 
-  let total = sentenceParts(sentenceIndex).length;
+  let total=sentenceParts(sentenceIndex).length;
 
-  if (sentencePlaced.filter(v => v !== undefined).length !== total) {
-
-    $('sentenceFeedback').textContent =
-      'همه‌ی کلمه‌ها و نقطه را در جای خود قرار بده.';
-
-    $('sentenceFeedback').className = 'feedback soft';
-
+  if(sentencePlaced.filter(v=>v!==undefined).length!==total){
+    $('sentenceFeedback').textContent='همه‌ی کلمه‌ها و نقطه را در جای خود قرار بده.';
+    $('sentenceFeedback').className='feedback soft';
     return;
   }
 
-
-  let answer = sentencePlaced.map(id =>
-    sentenceTokens.find(t => t.id === id).v
+  let answer=sentencePlaced.map(id=>
+    sentenceTokens.find(t=>t.id===id).v
   ).join(' ');
 
+  let reviewKey='sentence_'+sentenceIndex;
 
-  if (answer === sentences[sentenceIndex]) {
+  if(answer===sentences[sentenceIndex]){
 
-    sentenceDone = true;
-      data.sentenceCompleted[sentenceIndex] = true;
-save();
+    sentenceDone=true;
 
-    $('sentenceFeedback').textContent =
-      'آفرین! جمله را درست ساختی. 🌟';
+    if(sentenceReviewMode){
 
-    $('sentenceFeedback').className = 'feedback good';
+      let item=data.mistakes[reviewKey];
+
+      if(item){
+        item.reviewCorrect=(item.reviewCorrect||0)+1;
+
+        if(item.reviewCorrect >= (item.count||1)*2){
+          delete data.mistakes[reviewKey];
+        }
+      }
+
+    }else{
+      data.sentenceCompleted[sentenceIndex]=true;
+    }
+
+    save();
+
+    $('sentenceFeedback').textContent='آفرین! جمله را درست ساختی. 🌟';
+    $('sentenceFeedback').className='feedback good';
 
     $('sentenceSuccessActions').classList.remove('hidden');
+    $('sentenceHint').disabled=true;
+    $('sentenceTiles').innerHTML='';
 
-    $('sentenceHint').disabled = true;
-
-    $('sentenceTiles').innerHTML = '';
-
-    $('sentenceTarget').innerHTML = `
+    $('sentenceTarget').innerHTML=`
       <div style="font-size:clamp(20px,4vw,30px);
         font-weight:900;color:#087c9d;padding:12px">
         ${esc(answer)} ✨
       </div>
     `;
 
-  } else {
+  }else{
 
-    $('sentenceFeedback').textContent =
-      'ترتیب جمله هنوز درست نیست؛ دوباره امتحان کن.';
+    if(sentenceReviewMode||sentenceAttempts===0){
 
-    $('sentenceFeedback').className = 'feedback soft';
+      let item=data.mistakes[reviewKey]||(data.mistakes[reviewKey]={
+        count:0,
+        reviewCorrect:0
+      });
 
+      item.count=(item.count||0)+1;
+      item.last=Date.now();
+    }
+
+    sentenceAttempts++;
+    save();
+
+    $('sentenceFeedback').textContent='ترتیب جمله هنوز درست نیست؛ دوباره امتحان کن.';
+    $('sentenceFeedback').className='feedback soft';
   }
 
 };
@@ -742,7 +851,42 @@ $('backSentenceStages').onclick = () => {
 
   show('sentenceStages');
 
-};function renderReview(){let keys=Object.keys(data.mistakes);$('reviewList').innerHTML=keys.length?`<div class="stage-list">${keys.map(k=>`<button class="stage" data-review="${k}">🔁 مرحله ${fa(+k+1)}<small>نیاز به مرور · ${fa(data.mistakes[k].count)} اشتباه</small></button>`).join('')}</div>`:'<p class="notice">فعلاً تمرینی برای مرور نداری. عالی پیش می‌ری!</p>';document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>startStage(+b.dataset.review,true))}
+};
+function renderReview(){
+  let keys=Object.keys(data.mistakes);
+
+  $('reviewList').innerHTML=keys.length
+    ? `<div class="stage-list">
+        ${keys.map((k,i)=>{
+          let item=data.mistakes[k];
+          let required=(item.count||1)*2;
+          let correct=item.reviewCorrect||0;
+
+          return `
+            <button class="stage" data-review="${esc(k)}">
+              🔁 تمرین مرور ${fa(i+1)}
+              <small>
+                پاسخ صحیح: ${fa(correct)} از ${fa(required)}
+                · تعداد اشتباه‌ها: ${fa(item.count||1)}
+              </small>
+            </button>
+          `;
+        }).join('')}
+      </div>`
+    : '<p class="notice">فعلاً تمرینی برای مرور نداری. عالی پیش می‌ری!</p>';
+
+  document.querySelectorAll('[data-review]').forEach(b=>{
+    b.onclick=()=>{
+      let key=b.dataset.review;
+
+      if(key.startsWith('sentence_')){
+        startSentence(Number(key.slice('sentence_'.length)),true);
+      }else{
+        startStage(Number(key),true);
+      }
+    };
+  });
+}
 function renderAdventure(){
   let done=Object.values(data.completed).filter(Boolean).length;
   let wrong=Object.values(data.mistakes).reduce((a,b)=>a+(b.count||0),0);
