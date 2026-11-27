@@ -38,7 +38,7 @@
 .emoji-rain span {
   position: absolute;
   top: -60px;
-  animation: emojiDrop 1000ms linear forwards;
+  animation: emojiDrop 2800ms linear forwards;
   animation-delay: var(--delay);
   font-size: var(--size);
   will-change: transform;
@@ -174,18 +174,20 @@ const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d
   rain.className = 'emoji-rain';
 
   const emojis = [
-    ...Array(33).fill('🐚'),
-    ...Array(33).fill('🐳'),
-    ...Array(34).fill('🫧')
+    ...Array(10).fill('🐚'),
+    ...Array(10).fill('🐳'),
+    ...Array(10).fill('🫧')
   ];
-emojis.sort(() => Math.random() - 0.5);
-  emojis.forEach((emoji, index) => {
+
+  emojis.sort(() => Math.random() - 0.5);
+
+  emojis.forEach(emoji => {
     const item = document.createElement('span');
 
     item.textContent = emoji;
     item.style.left = Math.random() * 100 + '%';
     item.style.setProperty('--size', (20 + Math.random() * 20) + 'px');
-    item.style.setProperty('--delay', (index * 80) + 'ms');
+    item.style.setProperty('--delay', Math.random() * 700 + 'ms');
     item.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
 
     rain.appendChild(item);
@@ -193,8 +195,8 @@ emojis.sort(() => Math.random() - 0.5);
 
   document.body.appendChild(rain);
 
-  setTimeout(() => rain.remove(), 13200);
-      }
+  setTimeout(() => rain.remove(), 3700);
+    }
 const fresh=()=>({version:1,name:'',pearls:0,gold:0,completed:{},sentenceCompleted:{},awarded:{},mistakes:{},stats:{attempts:0,correct:0,wrong:0},streak:0,goldEarned:false,lastStage:0,session:null});
 let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{toast('فضای ذخیره‌سازی مرورگر کافی نیست. از پشتیبان‌گیری استفاده کن.')}updateHeader()}
