@@ -139,7 +139,7 @@ const stages = [
  {tiles:['آ','ن'],answers:['آن']}
 ];
 const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
-const fresh=()=>({version:1,name:'',pearls:0,gold:0,completed:{},awarded:{},mistakes:{},stats:{attempts:0,correct:0,wrong:0},streak:0,goldEarned:false,lastStage:0,session:null});
+const fresh=()=>({version:1,name:'',pearls:0,gold:0,completed:{},sentenceCompleted:{},awarded:{},mistakes:{},stats:{attempts:0,correct:0,wrong:0},streak:0,goldEarned:false,lastStage:0,session:null});
 let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{toast('فضای ذخیره‌سازی مرورگر کافی نیست. از پشتیبان‌گیری استفاده کن.')}updateHeader()}
 function updateHeader(){$('namePill').textContent='👤 '+(data.name||'مهمان');$('pearls').textContent=fa(data.pearls);$('goldPearls').textContent=fa(data.gold);$('gamePearls').textContent=fa(data.pearls)}
@@ -164,8 +164,21 @@ document.querySelectorAll('[data-island]').forEach(b=>b.onclick=()=>{
   }
 });
 $('adventureBtn').onclick=()=>{renderAdventure();show('adventure')};$('reviewBtn').onclick=()=>{renderReview();show('review')};
-function renderStages(){ $('stageList').innerHTML=stages.map((s,i)=>{let done=!!data.completed[i];return `<button class="stage ${done?'done':''}" data-stage="${i}">${done?'🦪':'🐚'} مرحله ${fa(i+1)}<small>${done?'تکمیل‌شده':'برای شروع لمس کن'}</small></button>`}).join('');document.querySelectorAll('[data-stage]').forEach(b=>b.onclick=()=>startStage(+b.dataset.stage))}
-let current=0,tiles=[],placed=[],hinted=false,attempts=0,success=false,reviewMode=false,reviewIndex=null,answerUnits=[];
+function renderStages(){
+    $('stageList').innerHTML = stages.map((s,i)=>{
+        let done = !!data.completed[i];
+        let unlocked = i === 0 || stages.slice(0,i).every((_,j)=>!!data.completed[j]);
+
+        return `<button class="stage ${done?'done':''}" data-stage="${i}" ${unlocked?'':'disabled'}>
+            ${done?'🦪':unlocked?'🐚':'🔒'} مرحله ${fa(i+1)}
+            <small>${done?'تکمیل‌شده':unlocked?'برای شروع لمس کن':'ابتدا مرحله‌های قبلی را کامل کن'}</small>
+        </button>`;
+    }).join('');
+
+    document.querySelectorAll('[data-stage]:not(:disabled)').forEach(b=>{
+        b.onclick=()=>startStage(+b.dataset.stage);
+    });
+}
 function shuffle(a){
     let x = [...a];
 
@@ -274,21 +287,26 @@ function shuffleSentence(array) {
 
 
 // نمایش فهرست جمله‌ها
-function renderSentenceStages() {
+function renderSentenceStages(){
 
-  $('sentenceStageList').innerHTML = sentences.map((s, i) => `
-  <button class="stage" data-sentence-stage="${i}">
-    🐚 جمله ${fa(i + 1)}
-  </button>
-`).join('');
+    $('sentenceStageList').innerHTML = sentences.map((s,i)=>{
 
-  document.querySelectorAll('[data-sentence-stage]').forEach(b => {
-    b.onclick = () => startSentence(+b.dataset.sentenceStage);
-  });
+        let done = !!data.sentenceCompleted[i];
+
+        let unlocked = i === 0 ||
+            sentences.slice(0,i).every((_,j)=>!!data.sentenceCompleted[j]);
+
+        return `<button class="stage ${done?'done':''}" data-sentence-stage="${i}" ${unlocked?'':'disabled'}>
+            ${done?'🦪':unlocked?'🐚':'🔒'} جمله ${fa(i+1)}
+            <small>${done?'تکمیل‌شده':unlocked?'برای شروع لمس کن':'ابتدا جمله‌های قبلی را کامل کن'}</small>
+        </button>`;
+
+    }).join('');
+
+    document.querySelectorAll('[data-sentence-stage]:not(:disabled)').forEach(b=>{
+        b.onclick=()=>startSentence(+b.dataset.sentenceStage);
+    });
 }
-
-
-// شروع یک جمله
 function startSentence(i) {
 
   sentenceIndex = i;
