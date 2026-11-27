@@ -255,6 +255,7 @@
  #combinationGame .daa-item-word{font-size:11px}
  #combinationGame .daa-center-target{width:98px;height:98px;font-size:36px}
 }
+#combinationGame.connect-mode .combination-options{display:block;max-width:560px;margin:18px auto;padding:0}
 /* دنیای کیهانی جزیره دانایی */
 body.cosmic-knowledge{
   color:#eaf7ff;
@@ -1193,6 +1194,7 @@ function startCombinationDaaStage(stageIndex){
  const q=combinationRounds[stageIndex],total=q.items.filter(x=>x[2]).length;
  let selected=0,isDragging=false,activeItem=null,currentLine=null,completing=false;
  const game=$('combinationGame'),board=document.createElement('div');
+ game.classList.add('connect-mode');
  $('combinationStudentLabel').textContent='دانشمند '+(data.name||'کوچولو')+' 🔬';
  $('combinationStageLabel').textContent='آزمایش '+fa(stageIndex+1);
  $('combinationRoundCount').textContent=fa(stageIndex+1)+' از '+fa(combinationRounds.length);
@@ -1263,6 +1265,7 @@ function startCombinationDaaStage(stageIndex){
 
 function renderCombinationGame(){
 
+  $('combinationGame').classList.remove('connect-mode');
   $('combinationGame').querySelector('.combination-target').style.display='';
   const round=combinationRounds[combinationIndex];
 
