@@ -1055,6 +1055,27 @@ function onWrong() {
   
   setTimeout(() => {
     hideMessage();
+
+    // جایگاه‌های اشتباه را خالی کن و کارت‌هایشان را به بخش انتخاب برگردان
+    // تا دانش‌آموز بتواند همان مرحله را اصلاح کند.
+    circleStates.forEach((state, index) => {
+      if (!state || state.sound === level.sounds[index]) return;
+
+      const circle = circles[index];
+      const card = document.querySelector('[data-card-id="' + state.cardId + '"]');
+
+      circleStates[index] = null;
+      circle.textContent = '';
+      circle.classList.remove('filled', 'wrong', 'highlight');
+
+      if (card) {
+        card.classList.remove('used', 'selected', 'dragging');
+        card.textContent = state.sound;
+      }
+    });
+
+    document.querySelectorAll('.sound-circle').forEach(c => c.classList.remove('highlight'));
+    selectedCard = null;
     isAnimating = false;
   }, 2000);
 }
