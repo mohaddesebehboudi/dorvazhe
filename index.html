@@ -1560,6 +1560,12 @@ const knowledgeDiceWords=[
  {word:'باد',has:false},{word:'بام',has:false},{word:'بادام',has:false},{word:'اَسب',has:false},
  {word:'بوس',has:false},{word:'سود',has:false},{word:'آدَم',has:false},{word:'دام',has:false},{word:'داماد',has:false}
 ];
+// ترتیب واژه‌های مراحل ۵ تا ۲۱ برای هر بازیکن یک‌بار تصادفی می‌شود و ثابت می‌ماند.
+if(!Array.isArray(data.knowledgeDiceOrder)||data.knowledgeDiceOrder.length!==knowledgeDiceWords.length||new Set(data.knowledgeDiceOrder).size!==knowledgeDiceWords.length||data.knowledgeDiceOrder.some(i=>!Number.isInteger(i)||i<0||i>=knowledgeDiceWords.length)){
+ const order=knowledgeDiceWords.map((_,i)=>i);
+ for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+ data.knowledgeDiceOrder=order;save();
+}
 const knowledgeTotalStages=4+knowledgeDiceWords.length;
 let knowledgeIndex=0,knowledgeProgress=0,knowledgeLocked=false,knowledgeSpinTimer=null,knowledgeRevealTimer=null;
 
@@ -1609,7 +1615,7 @@ function knowledgeFinishStage(){
  $('knowledgeNext').textContent=knowledgeIndex===knowledgeTotalStages-1?'پایان جزیره ←':'مرحله بعد ←';
 }
 function startKnowledgeBalloons(){
- $('knowledgePrompt').textContent='فقط توپ‌هایی را انتخاب کن که نشانهٔ «تـ» یا «ت» دارند. ۱۵ توپ درست پیدا کن!';
+ $('knowledgePrompt').textContent='فقط توپ‌هایی را انتخاب کن که نشانه «تـ» یا «ت» دارند.';
  $('knowledgePlayArea').innerHTML='<p class="notice" id="knowledgeCount">توپ درست: ۰ از ۱۵</p><div class="knowledge-field" id="knowledgeField"></div>';
  const field=$('knowledgeField');let found=0;
  function spawn(){
@@ -1628,7 +1634,7 @@ function startKnowledgeCrowns(groupIndex){
  shuffle(g.targets).forEach((w,i)=>{const b=document.createElement('button');b.className='knowledge-choice '+(g.kind==='crown'?'crown':'ball');b.textContent=w;b.style.filter='hue-rotate('+(i*43)+'deg)';b.onclick=()=>{if(knowledgeLocked||b.disabled)return;if(w===x.target){b.disabled=true;knowledgeCorrect();knowledgeProgressUpdate(1,1);save();knowledgeFinishStage();}else{knowledgeWrong();$('knowledgeFeedback').textContent='این گزینه درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}};$('knowledgeChoices').append(b);});
 }
 function startKnowledgeDiceWord(wordIndex){
- const x=knowledgeDiceWords[wordIndex];$('knowledgePrompt').textContent='پس از چرخیدن تاس، تشخیص بده این کلمه نشانهٔ «تـ» یا «ت» دارد یا نه.';
+ const x=knowledgeDiceWords[data.knowledgeDiceOrder[wordIndex]??wordIndex];$('knowledgePrompt').textContent='این واژه نشانه «تـ» یا «ت» دارد؟';
  $('knowledgePlayArea').innerHTML='<div class="knowledge-dice" id="knowledgeDice">🎲</div><div class="knowledge-word" id="knowledgeWord">؟</div><div><button class="knowledge-answer" id="knowledgeYes" disabled>✅ دارد</button><button class="knowledge-answer" id="knowledgeNo" disabled>❌ ندارد</button></div>';
  let ticks=0;const faces=['⚀','⚁','⚂','⚃','⚄','⚅'],dice=$('knowledgeDice');
  knowledgeSpinTimer=setInterval(()=>{dice.textContent=faces[ticks++%6];},90);
