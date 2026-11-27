@@ -1,0 +1,21 @@
+name: Automatic Code Backup
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository
+        uses: actions/checkout@v4
+
+      - name: Save backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-backup-${{ github.sha }}
+          path: index.html
+          retention-days: 90
