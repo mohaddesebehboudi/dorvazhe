@@ -1713,7 +1713,7 @@ function startKnowledgeStage(i){
 }
 function startKnowledgeSoundStage(level){
  $('knowledgePrompt').textContent='';
- $('knowledgePlayArea').innerHTML='<iframe id="knowledgeSoundFrame" title="بازی تشخیص صداها" src="knowledge-sound.html?level='+level+'&v=3'" style="display:block;width:100%;height:min(760px,calc(100dvh - 190px));min-height:440px;border:0;border-radius:20px;background:#0a0e2a" allow="autoplay"></iframe>';
+ $('knowledgePlayArea').innerHTML='<iframe id="knowledgeSoundFrame" title="بازی تشخیص صداها" src="knowledge-sound.html?level='+level+'&v=3" style="display:block;width:100%;height:min(760px,calc(100dvh - 190px));min-height:440px;border:0;border-radius:20px;background:#0a0e2a" allow="autoplay"></iframe>';
 }
 function knowledgeProgressUpdate(done,total){knowledgeProgress=done;$('knowledgeProgressBar').style.width=(done/total*100)+'%';$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);}
 function knowledgeCorrect(){data.stats.attempts++;data.stats.correct++;data.streak++;data.knowledgeScore=(data.knowledgeScore||0)+1;}
