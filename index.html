@@ -463,6 +463,52 @@ body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progre
   #home.active .map-world::before,#home.active .island::before,#home.active .island::after{animation:none!important}
 }
 
+
+/* Hotspots نامرئی؛ دقیقاً منطبق با محدوده‌ی خشکی جزیره‌ها در نقشه‌ی جدید */
+#home.active .island[data-island]{
+  position:absolute;
+  z-index:8;
+  display:block;
+  min-width:0!important;
+  max-width:none!important;
+  width:auto;
+  height:auto;
+  padding:0!important;
+  margin:0;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:transparent!important;
+  opacity:0;
+  transform:none!important;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#home.active .island[data-island] span,
+#home.active .island[data-island]::before,
+#home.active .island[data-island]::after{display:none!important;content:none!important}
+#home.active .island[data-island="combinations"]{
+  left:5%;top:3%;width:31%;height:38%;
+  clip-path:polygon(35% 0,70% 5%,92% 32%,100% 69%,80% 91%,48% 100%,15% 88%,0 55%,12% 20%);
+}
+#home.active .island[data-island="active"]{
+  left:69%;top:2%;width:30%;height:40%;
+  clip-path:polygon(35% 0,68% 7%,91% 28%,100% 57%,87% 83%,59% 100%,23% 92%,0 64%,8% 30%);
+}
+#home.active .island[data-island="knowledge"]{
+  left:32%;top:26%;width:37%;height:45%;
+  clip-path:polygon(35% 0,54% 7%,68% 16%,100% 28%,86% 48%,97% 68%,66% 76%,54% 100%,38% 78%,7% 84%,17% 60%,0 42%,28% 30%);
+}
+#home.active .island[data-island="sentences"]{
+  left:2%;top:44%;width:35%;height:47%;
+  clip-path:polygon(25% 0,65% 8%,91% 29%,100% 58%,80% 88%,50% 100%,16% 86%,0 56%,8% 22%);
+}
+#home.active .island[data-island="soon"]{
+  left:68%;top:52%;width:31%;height:42%;
+  clip-path:polygon(43% 0,78% 12%,100% 43%,90% 75%,65% 100%,27% 94%,0 65%,8% 28%);
+}
+
 </style></head>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     <body><div class="app">
 <header class="topbar"><div class="brand">🌊 دریای پارسی</div><div class="stats"><div class="pill" id="namePill">👤 مهمان</div><div class="pill">🦪 <b id="pearls">۰</b></div><div class="pill gold">🌟 <b id="goldPearls">۰</b></div><button class="iconbtn" id="editName">ویرایش نام</button></div></header>
