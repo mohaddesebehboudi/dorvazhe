@@ -1592,6 +1592,12 @@ const knowledgeLetterImages={
   lebas: `<svg viewBox="0 0 200 200"><path d="M 70 50 L 50 70 L 60 90 L 75 80 L 75 170 L 125 170 L 125 80 L 140 90 L 150 70 L 130 50 Q 115 65 100 65 Q 85 65 70 50 Z" fill="#42a5f5" stroke="#1565c0" stroke-width="3"/><circle cx="100" cy="90" r="4" fill="#fff"/><circle cx="100" cy="115" r="4" fill="#fff"/><circle cx="100" cy="140" r="4" fill="#fff"/></svg>`,
   badam: `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="100" rx="35" ry="55" fill="#a1887f" stroke="#6d4c41" stroke-width="3" transform="rotate(-15 100 100)"/><path d="M 85 60 Q 100 50 115 60 Q 110 70 100 70 Q 90 70 85 60" fill="#8d6e63"/><ellipse cx="95" cy="95" rx="8" ry="20" fill="#d7ccc8" opacity="0.6" transform="rotate(-15 95 95)"/><path d="M 70 100 Q 100 110 130 100" stroke="#6d4c41" stroke-width="2" fill="none"/></svg>`
 };
+const knowledgeLetterEmojis={
+ baba:'🧔🏻',ab:'💧',bad:'💨',asb:'🐎',boshghab:'🍽️',
+ ketab:'📚',badbadak:'🪁',sib:'🍎',babr:'🐯',golabi:'🍐',
+ sabzi:'🥕',baran:'🌧️',toopbazi:'⚽',barf:'❄️',roobah:'🦊',
+ bastani:'🍦',oghab:'🦅',abr:'☁️',lebas:'👕',badam:'🌰'
+};
 const knowledgeGroups=[
  {target:'تا',targets:['تا','با','نا','یا','پا','ثا'],kind:'crown'},
  {target:'تو',targets:['تو','بو','نو','یو','ثو','پو'],kind:'ball'},
@@ -1669,8 +1675,12 @@ let knowledgeLetterSelected=[];
 function startKnowledgeLetterStage(questionIndex){
  const q=knowledgeLetterQuestions[questionIndex];
  $('knowledgePrompt').textContent='';
- $('knowledgePlayArea').innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px"><div style="width:170px;height:170px;max-width:55vw;max-height:55vw;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px #0002">'+knowledgeLetterImages[q.img]+'</div><div style="font-size:clamp(34px,8vw,52px);font-weight:900;color:#593c85">'+esc(q.word)+'</div><div id="knowledgeLetterChoices" style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap"></div></div>';
- $('knowledgePlayArea').querySelector('svg').style.cssText='width:140px;height:140px;max-width:45vw;max-height:45vw';
+ const picture=knowledgeLetterEmojis[q.img]
+  ? '<span aria-label="'+esc(q.word)+'" style="font-size:clamp(88px,22vw,132px);line-height:1.2">'+knowledgeLetterEmojis[q.img]+'</span>'
+  : knowledgeLetterImages[q.img];
+ $('knowledgePlayArea').innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px"><div style="width:170px;height:170px;max-width:55vw;max-height:55vw;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px #0002">'+picture+'</div><div style="font-size:clamp(34px,8vw,52px);font-weight:900;color:#593c85">'+esc(q.word)+'</div><div id="knowledgeLetterChoices" style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap"></div></div>';
+ const svg=$('knowledgePlayArea').querySelector('svg');
+ if(svg)svg.style.cssText='width:140px;height:140px;max-width:45vw;max-height:45vw';
  [['initial','بـ'],['final','ب']].forEach(([choice,label])=>{
   const b=document.createElement('button');b.type='button';b.className='knowledge-choice';b.textContent=label;
   b.style.cssText='min-width:105px;min-height:90px;font-size:48px;font-weight:bold;border:3px solid #fff;border-radius:24px;cursor:pointer;background:linear-gradient(145deg,#fff,#e7dcff);color:#55347f;box-shadow:0 7px 16px #0002';
