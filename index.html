@@ -539,6 +539,33 @@ body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progre
 
 
 
+/* دو مرحلهٔ آغازین جزیره دانایی: بازی آ و ا با ظاهر کیهانی */
+#knowledgeGame .alef-hunt,#knowledgeGame .alef-quiz{max-width:560px;margin:10px auto;padding:12px}
+#knowledgeGame .alef-hunt-target{text-align:center;font-size:clamp(20px,4vw,27px);font-weight:900;margin:5px 0 18px;color:#eaf7ff}
+#knowledgeGame .alef-hunt-target strong{font-size:2.1em;text-shadow:0 0 20px currentColor}
+#knowledgeGame .alef-hunt-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#knowledgeGame .alef-hunt-cell{aspect-ratio:1;border-radius:18px;border:2px solid #9edfff88;background:linear-gradient(145deg,#253b70,#14244e);box-shadow:0 5px 0 #080f2b,0 0 16px #60cfff20;color:#fff;font-size:clamp(28px,7vw,43px);font-weight:900;transition:transform .15s,background .2s}
+#knowledgeGame .alef-hunt-cell:active{transform:translateY(3px)}
+#knowledgeGame .alef-hunt-cell.alef-a{color:#55bdff;text-shadow:0 0 15px #39aaff88}
+#knowledgeGame .alef-hunt-cell.alef-e{color:#ff6876;text-shadow:0 0 15px #ff526888}
+#knowledgeGame .alef-hunt-cell.found{background:linear-gradient(145deg,#145d65,#138d82);border-color:#6bffe0;color:#fff;box-shadow:0 0 20px #38e6c688}
+#knowledgeGame .alef-hunt-cell.miss{background:#71334d;border-color:#ff8da0;animation:alefMiss .35s}
+#knowledgeGame .alef-hunt-count{text-align:center;margin:15px 0 0;color:#d9f3ff;font-size:18px;font-weight:900}
+#knowledgeGame .alef-quiz-progress{text-align:center;color:#a9dfff;font-weight:900;margin-bottom:12px}
+#knowledgeGame .alef-quiz-question{text-align:center;color:#f0f8ff;font-size:clamp(21px,4vw,29px);font-weight:900;margin:12px 0 20px}
+#knowledgeGame .alef-quiz-question strong{font-size:1.55em}
+#knowledgeGame .alef-a{color:#55bdff!important;text-shadow:0 0 12px #39aaff88}
+#knowledgeGame .alef-e{color:#ff6876!important;text-shadow:0 0 12px #ff526888}
+#knowledgeGame .alef-quiz-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#knowledgeGame .alef-quiz-option{min-height:130px;padding:12px 8px;border:2px solid #8bdcff88;border-radius:20px;background:linear-gradient(145deg,#253b70,#14244e);color:#f4fbff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font:900 clamp(17px,3vw,23px) inherit;box-shadow:0 5px 0 #080f2b,0 0 18px #60cfff18;transition:.18s}
+#knowledgeGame .alef-quiz-emoji{font-size:clamp(32px,7vw,48px)}
+#knowledgeGame .alef-quiz-option.correct{background:linear-gradient(145deg,#176c68,#164e61);border-color:#6bffe0;box-shadow:0 0 22px #38e6c688}
+#knowledgeGame .alef-quiz-option.wrong{border-color:#ff7188;background:#63334e;animation:alefMiss .35s}
+#knowledgeGame .alef-quiz-option:disabled{opacity:1}
+#knowledgeGame .alef-quiz-result{min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#eaf7ff;font-size:30px}
+#knowledgeGame .alef-quiz-result strong{font-size:42px;color:#70d5ff}
+@keyframes alefMiss{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media(max-width:600px){#knowledgeGame .alef-hunt-grid{gap:7px}#knowledgeGame .alef-hunt-cell{border-radius:13px}#knowledgeGame .alef-quiz-option{min-height:112px}}
 </style></head>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     <body><div class="app">
 <header class="topbar"><div class="brand">🌊 دریای پارسی</div><div class="stats"><div class="pill" id="namePill">👤 مهمان</div><div class="pill">🦪 <b id="pearls">۰</b></div><div class="pill gold">🌟 <b id="goldPearls">۰</b></div><button class="iconbtn" id="editName">ویرایش نام</button></div></header>
@@ -2086,8 +2113,8 @@ const knowledgeDifferenceQuestions=[
  {options:['داد','دام','داد','داد'],correct:1},
  {options:['آدَم','آمَد','آمَد','آمَد'],correct:0}
 ];
-const knowledgeSoundStagePositions=[2,5,8,11,14,17,20,23,26,29];
-const knowledgeTotalStages=59;
+const knowledgeSoundStagePositions=[4,7,10,13,16,19,22,25,28,31];
+const knowledgeTotalStages=61;
 function isKnowledgeSoundStage(i){return knowledgeSoundStagePositions.includes(i);}
 function knowledgeLetterIndex(i){
  for(let old=0;old<20;old++)if(old+Math.floor(old/2)===i)return old;
@@ -2155,6 +2182,13 @@ if((data.knowledgeStageVersion||0)<7){
  Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);if(n<30)shiftedAwarded[n]=true;else if(n>31)shiftedAwarded[n-2]=true;}});
  data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=7;save();
 }
+// نسخهٔ ۸: دو تمرین «پیدا کن» و «کدام کلمه؟» به ابتدای جزیره اضافه شدند؛ تمام مراحل قبلی دو شماره جابه‌جا می‌شوند.
+if((data.knowledgeStageVersion||0)<8){
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v)shiftedCompleted[Number(k)+2]=true;});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v)shiftedAwarded[Number(k)+2]=true;});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=8;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -2168,12 +2202,78 @@ function startKnowledgeStage(i){
   clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;knowledgeLetterSelected=[];$('knowledgeGame').classList.toggle('sound-game-mode',isKnowledgeSoundStage(i));
   $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
-  if(isKnowledgeSoundStage(i))startKnowledgeSoundStage(knowledgeSoundStagePositions.indexOf(i));
-  else if(i<30)startKnowledgeLetterStage(knowledgeLetterIndex(i));
-  
-  else if(i<30+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-30);
-  else{const oldIndex=i-30-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
+  if(i===0)startKnowledgeAlefFindStage('آ');
+  else if(i===1)startKnowledgeAlefQuizStage();
+  else{
+   const oldIndex=i-2;
+   if(isKnowledgeSoundStage(i))startKnowledgeSoundStage(knowledgeSoundStagePositions.indexOf(i));
+   else if(oldIndex<30)startKnowledgeLetterStage(knowledgeLetterIndex(oldIndex));
+   else if(oldIndex<30+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(oldIndex-30);
+   else{const previousIndex=oldIndex-30-knowledgeDifferenceQuestions.length;if(previousIndex===0)startKnowledgeBalloons();else if(previousIndex<=3)startKnowledgeCrowns(previousIndex-1);else startKnowledgeDiceWord(previousIndex-4);}
+  }
   show('knowledgeGame');
+}
+function knowledgeAlefShuffle(arr){
+ const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;
+}
+function startKnowledgeAlefFindStage(target){
+ $('knowledgePrompt').textContent='همهٔ «'+target+'»ها را پیدا کن.';
+ const other=target==='آ'?'ا':'آ',count=4+Math.floor(Math.random()*2),letters=[];
+ for(let i=0;i<count;i++)letters.push(target);
+ for(let i=0;i<5;i++)letters.push(other);
+ const extras=['ب','م','ن','د'];while(letters.length<16)letters.push(extras[Math.floor(Math.random()*extras.length)]);
+ const colors=target==='آ'?'#45baff':'#ff626f';
+ $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">همهٔ <strong style="color:'+colors+'">'+target+'</strong>ها را پیدا کن</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
+ const grid=$('knowledgeAlefGrid');let left=count;
+ knowledgeAlefShuffle(letters).forEach(letter=>{
+  const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell '+(letter==='آ'?'alef-a':'alef-e');b.textContent=letter;
+  b.onclick=()=>{
+   if(knowledgeLocked||b.disabled)return;
+   if(letter===target){b.disabled=true;b.classList.add('found');left--;knowledgeCorrect();knowledgeProgressUpdate(count-left,count);save();$('knowledgeAlefCount').textContent=left?'باقی‌مانده: '+fa(left):'آفرین! همه را پیدا کردی';
+    if(!left)knowledgeFinishStage();
+   }else{knowledgeWrong();b.classList.add('miss');$('knowledgeFeedback').textContent='این حرف «'+letter+'» است؛ دنبال «'+target+'» بگرد.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('miss'),450);}
+  };grid.append(b);
+ });
+}
+function startKnowledgeAlefQuizStage(){
+ const AI=[['آدم','🧑'],['آدم برفی','⛄'],['آش','🍲'],['آتش','🔥'],['آب','💧'],['آینه','🪞'],['آهو','🦌'],['آلو','🍑'],['آبی','🔵'],['آرد','🌾'],['آجیل','🥜'],['آزاده','👧'],['آسمان','🌤️'],['آفتاب','☀️'],['آبشار','🏞️']];
+ const AP=AI.slice(0,11);
+ const AN=[['بابا','👨'],['کتاب','📚'],['نان','🍞'],['ماه','🌙'],['ماشین','🚗'],['گاو','🐄'],['ماهی','🐟'],['باران','🌧️'],['مادر','👩'],['پا','🦶'],['باد','💨'],['بادبادک','🪁'],['بازی','🎮'],['خانه','🏠'],['ساعت','⏰'],['جارو','🧹']];
+ const NO=[['سیب','🍎'],['گل','🌸'],['موز','🍌'],['چشم','👁️'],['ستاره','⭐'],['خرس','🐻'],['فیل','🐘'],['برف','❄️'],['دست','✋'],['توپ','⚽'],['گربه','🐱'],['خورشید','🌞'],['شیر','🦁'],['کفش','👟']];
+ const pa=knowledgeAlefShuffle(AI),pb=knowledgeAlefShuffle(AN),questions=[];
+ for(let i=0;i<30;i++){
+  const type=i%2===0?'first':'notfirst';let right,wrong;
+  if(type==='first'){right=pa[i>>1];wrong=knowledgeAlefShuffle(AN.concat(NO)).slice(0,3);}
+  else{right=pb[i>>1];wrong=knowledgeAlefShuffle(AP.concat(NO)).slice(0,3);}
+  questions.push({type,right,options:knowledgeAlefShuffle([right,...wrong])});
+ }
+ let index=0,score=0;
+ function render(){
+  if(index>=questions.length){knowledgeFinishStage();$('knowledgePrompt').textContent='آفرین! هر ۳۰ پرسش را پاسخ دادی.';$('knowledgePlayArea').innerHTML='<div class="alef-quiz-result">🌟<strong>'+fa(score)+' از ۳۰</strong><span>مرحله با موفقیت کامل شد.</span></div>';return;}
+  const q=questions[index],isA=q.type==='first';
+  const letter=isA?'آ':'ا',colorClass=isA?'alef-a':'alef-e';
+  $('knowledgePrompt').textContent=isA?'کدام کلمه با «آ» شروع می‌شود؟':'کدام کلمه «ا» غیرِ اول دارد؟';
+  $('knowledgePlayArea').innerHTML='<div class="alef-quiz"><div class="alef-quiz-progress">پرسش '+fa(index+1)+' از ۳۰</div><div class="alef-quiz-question">کدام کلمه <strong class="'+colorClass+'">'+letter+'</strong> '+(isA?'اول دارد؟':'غیرِ اول دارد؟')+'</div><div class="alef-quiz-options" id="knowledgeAlefOptions"></div></div>';
+  const options=$('knowledgeAlefOptions');
+  q.options.forEach(option=>{
+   const b=document.createElement('button');b.type='button';b.className='alef-quiz-option';b.innerHTML='<span class="alef-quiz-emoji">'+option[1]+'</span><span>'+esc(option[0])+'</span>';
+   b.onclick=()=>{
+    if(knowledgeLocked||b.disabled)return;
+    if(option===q.right){
+     b.classList.add('correct');b.disabled=true;options.querySelectorAll('button').forEach(x=>x.disabled=true);
+     score++;knowledgeCorrect();knowledgeProgressUpdate(index+1,30);save();
+     const word=b.querySelector('span:last-child');
+     if(q.type==='first')word.innerHTML='<b class="alef-a">'+esc(option[0][0])+'</b>'+esc(option[0].slice(1));
+     else word.innerHTML=esc(option[0]).replace(/ا/g,'<b class="alef-e">ا</b>');
+     $('knowledgeFeedback').textContent='آفرین!';$('knowledgeFeedback').className='feedback good';
+     setTimeout(()=>{if(!knowledgeLocked){index++;render();}},550);
+    }else{
+     knowledgeWrong();b.classList.add('wrong');$('knowledgeFeedback').textContent='نه، دوباره با دقت نگاه کن.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('wrong'),450);
+    }
+   };options.append(b);
+  });
+ }
+ render();
 }
 function startKnowledgeSoundStage(level){
  $('knowledgePrompt').textContent='';
