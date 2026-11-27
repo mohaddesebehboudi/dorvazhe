@@ -839,7 +839,7 @@ rainReward();
     $('successActions').classList.remove('hidden');
     $('hintBtn').disabled=true;
     $('tiles').innerHTML='';
-    $('target').innerHTML=`<div style="font-size:36px;font-weight:900;color:#087c9d;padding:5px">${esc(w)} ✨</div>`;
+    $('target').innerHTML=`<div style="font-size:36px;font-weight:900;color:#ffe36e;text-shadow:0 0 14px #ffc94a88;padding:5px">${esc(w)} ✨</div>`;
 
     if(!reviewMode&&stages.length>0&&stages.every((_,i)=>!!data.completed[i])){
       setTimeout(showIslandCelebration,900);
