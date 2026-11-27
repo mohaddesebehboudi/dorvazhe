@@ -3,16 +3,16 @@
 <title id="title">نقشه‌ی سه‌بعدی دریای پارسی</title>
 <desc id="desc">پنج جزیره‌ی شناور در دریایی جادویی با قلعه، کارخانه‌ی واژه‌ها، رصدخانه، شهر قصه‌ها و آزمایشگاه کیمیاگری.</desc>
 <defs>
- <linearGradient id="sea" x2="0.9" y2="1"><stop stop-color="#081b45"/><stop offset=".48" stop-color="#123c70"/><stop offset="1" stop-color="#091a3e"/></linearGradient>
+ <linearGradient id="sea" x2="0.9" y2="1"><stop stop-color="#18c9ed"/><stop offset=".48" stop-color="#079bd1"/><stop offset="1" stop-color="#32d5df"/></linearGradient>
  <radialGradient id="seaGlow"><stop stop-color="#39d9ed" stop-opacity=".38"/><stop offset=".55" stop-color="#386cbb" stop-opacity=".14"/><stop offset="1" stop-color="#091a3e" stop-opacity="0"/></radialGradient>
  <linearGradient id="islandTop" x2=".2" y2="1"><stop stop-color="#fff3c9"/><stop offset=".38" stop-color="#f6c978"/><stop offset="1" stop-color="#b87551"/></linearGradient>
- <linearGradient id="islandSide" x2="0" y2="1"><stop stop-color="#8d7c9f"/><stop offset=".45" stop-color="#354c79"/><stop offset="1" stop-color="#101e48"/></linearGradient>
- <linearGradient id="iceEdge" x2="1" y2="1"><stop stop-color="#bafcff"/><stop offset=".5" stop-color="#65cfff"/><stop offset="1" stop-color="#b89aff"/></linearGradient>
- <linearGradient id="violet" x2="1" y2="1"><stop stop-color="#e4b7ff"/><stop offset=".55" stop-color="#9269d9"/><stop offset="1" stop-color="#433b91"/></linearGradient>
- <linearGradient id="cyan" x2="1" y2="1"><stop stop-color="#b5ffff"/><stop offset=".55" stop-color="#36c8e8"/><stop offset="1" stop-color="#2862a8"/></linearGradient>
- <linearGradient id="gold" x2="1" y2="1"><stop stop-color="#fff2a7"/><stop offset=".55" stop-color="#ffbf55"/><stop offset="1" stop-color="#d97839"/></linearGradient>
- <linearGradient id="pink" x2="1" y2="1"><stop stop-color="#ffd4f1"/><stop offset=".55" stop-color="#ef8fc9"/><stop offset="1" stop-color="#a95ca9"/></linearGradient>
- <linearGradient id="green" x2="1" y2="1"><stop stop-color="#d7ffb0"/><stop offset=".55" stop-color="#69d6a5"/><stop offset="1" stop-color="#277c82"/></linearGradient>
+ <linearGradient id="islandSide" x2="0" y2="1"><stop stop-color="#b98761"/><stop offset=".45" stop-color="#936044"/><stop offset="1" stop-color="#694632"/></linearGradient>
+ <linearGradient id="iceEdge" x2="1" y2="1"><stop stop-color="#fff5d5"/><stop offset=".5" stop-color="#8be7e5"/><stop offset="1" stop-color="#55bfc8"/></linearGradient>
+ <linearGradient id="violet" x2="1" y2="1"><stop stop-color="#fff0a8"/><stop offset=".55" stop-color="#e9a94f"/><stop offset="1" stop-color="#bd713c"/></linearGradient>
+ <linearGradient id="cyan" x2="1" y2="1"><stop stop-color="#c5ffff"/><stop offset=".55" stop-color="#48d7d4"/><stop offset="1" stop-color="#168eaa"/></linearGradient>
+ <linearGradient id="gold" x2="1" y2="1"><stop stop-color="#fff2a7"/><stop offset=".55" stop-color="#ffbf45"/><stop offset="1" stop-color="#e27a27"/></linearGradient>
+ <linearGradient id="pink" x2="1" y2="1"><stop stop-color="#ffd8ad"/><stop offset=".55" stop-color="#f6a17e"/><stop offset="1" stop-color="#d66b55"/></linearGradient>
+ <linearGradient id="green" x2="1" y2="1"><stop stop-color="#d7ffb0"/><stop offset=".55" stop-color="#75ce65"/><stop offset="1" stop-color="#348b55"/></linearGradient>
  <radialGradient id="glowCyan"><stop stop-color="#7df7ff" stop-opacity=".8"/><stop offset="1" stop-color="#48d9ff" stop-opacity="0"/></radialGradient>
  <radialGradient id="glowGold"><stop stop-color="#ffe89a" stop-opacity=".75"/><stop offset="1" stop-color="#ffbf55" stop-opacity="0"/></radialGradient>
  <filter id="shadow" x="-40%" y="-50%" width="180%" height="220%"><feGaussianBlur stdDeviation="20"/></filter>
@@ -26,18 +26,18 @@
 <!-- deep cinematic ocean -->
 <rect width="1536" height="1024" fill="url(#sea)"/>
 <ellipse cx="760" cy="480" rx="760" ry="520" fill="url(#seaGlow)"/>
-<ellipse cx="170" cy="180" rx="390" ry="250" fill="#7b73ff" opacity=".12"/>
-<ellipse cx="1370" cy="820" rx="430" ry="300" fill="#23d8d2" opacity=".11"/>
+<ellipse cx="170" cy="180" rx="390" ry="250" fill="#fff1b0" opacity=".18"/>
+<ellipse cx="1370" cy="820" rx="430" ry="300" fill="#a9fff1" opacity=".18"/>
 <path d="M-50 330 Q260 180 520 340 T1060 310 T1600 260 M-50 760 Q240 620 510 760 T1060 730 T1600 680" fill="none" stroke="#77eaff" stroke-opacity=".2" stroke-width="3"/>
 <rect width="1536" height="1024" fill="url(#waterLines)"/>
 <!-- luminous currents linking the worlds -->
-<g fill="none" stroke="#a8f7ff" stroke-width="7" stroke-linecap="round" stroke-dasharray="2 24" opacity=".75" filter="url(#smallGlow)">
+<g fill="none" stroke="#fff8d8" stroke-width="8" stroke-linecap="round" stroke-dasharray="2 24" opacity=".92" filter="url(#smallGlow)">
  <path d="M300 250 C480 140 590 250 760 510"/>
  <path d="M1220 190 C1030 150 900 290 780 500"/>
  <path d="M275 730 C470 810 610 700 760 530"/>
  <path d="M1240 770 C1050 840 900 690 780 530"/>
 </g>
-<g fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" stroke-dasharray="3 24">
+<g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="3" stroke-dasharray="3 24">
  <path d="M300 250 C480 140 590 250 760 510"/>
  <path d="M1220 190 C1030 150 900 290 780 500"/>
  <path d="M275 730 C470 810 610 700 760 530"/>
@@ -54,7 +54,7 @@
 </g>
 <!-- TOP LEFT: enchanted spelling castle island -->
 <g transform="translate(295 245)">
- <ellipse cy="125" rx="230" ry="65" fill="#02091e" opacity=".65" filter="url(#shadow)"/>
+ <ellipse cy="125" rx="230" ry="65" fill="#164c60" opacity=".28" filter="url(#shadow)"/>
  <ellipse cy="102" rx="205" ry="48" fill="#65dfff" opacity=".22" filter="url(#softGlow)"/>
  <path d="M-205 10 Q-160 -52 -70 -55 Q0 -88 85 -48 Q175 -45 208 8 L180 58 Q95 120 0 126 Q-120 115 -190 65Z" fill="url(#islandSide)" stroke="url(#iceEdge)" stroke-width="8"/>
  <path d="M-205 7 Q-140 -65 -55 -65 Q15 -100 100 -51 Q175 -42 208 7 Q135 58 45 64 Q-85 80 -205 7Z" fill="url(#islandTop)" stroke="#fff2c9" stroke-width="4"/>
@@ -74,7 +74,7 @@
 </g>
 <!-- TOP RIGHT: magical Persian word factory island -->
 <g transform="translate(1220 185)">
- <ellipse cy="120" rx="220" ry="62" fill="#02091e" opacity=".65" filter="url(#shadow)"/>
+ <ellipse cy="120" rx="220" ry="62" fill="#164c60" opacity=".28" filter="url(#shadow)"/>
  <ellipse cy="96" rx="205" ry="50" fill="#4beaff" opacity=".2" filter="url(#softGlow)"/>
  <path d="M-200 5Q-140 -65 -55 -50Q35 -92 115 -40Q185 -30 205 20L175 65Q65 125 -45 112Q-150 98 -200 5Z" fill="url(#islandSide)" stroke="url(#iceEdge)" stroke-width="8"/>
  <path d="M-200 4Q-145 -55 -55 -56Q30 -94 120 -42Q185 -28 205 17Q120 66 25 64Q-105 78 -200 4Z" fill="url(#islandTop)" stroke="#fff1cb" stroke-width="4"/>
@@ -94,7 +94,7 @@
 </g>
 <!-- CENTER: cosmic observatory island -->
 <g transform="translate(768 525)">
- <ellipse cy="145" rx="265" ry="70" fill="#02091e" opacity=".7" filter="url(#shadow)"/>
+ <ellipse cy="145" rx="265" ry="70" fill="#164c60" opacity=".3" filter="url(#shadow)"/>
  <ellipse cy="120" rx="240" ry="65" fill="#ffe49a" opacity=".19" filter="url(#softGlow)"/>
  <path d="M-250 0Q-190 -80 -90 -72Q0 -112 90 -70Q190 -70 250 0L210 72Q110 135 0 135Q-130 130 -225 65Z" fill="url(#islandSide)" stroke="url(#iceEdge)" stroke-width="10"/>
  <path d="M-250 0Q-180 -75 -90 -80Q0 -120 90 -72Q190 -72 250 0Q150 75 40 77Q-120 92 -250 0Z" fill="url(#gold)" stroke="#fff3bd" stroke-width="5"/>
@@ -114,7 +114,7 @@
 </g>
 <!-- BOTTOM LEFT: storybook village island -->
 <g transform="translate(280 755)">
- <ellipse cy="120" rx="220" ry="62" fill="#02091e" opacity=".65" filter="url(#shadow)"/>
+ <ellipse cy="120" rx="220" ry="62" fill="#164c60" opacity=".28" filter="url(#shadow)"/>
  <ellipse cy="96" rx="195" ry="48" fill="#ffb5e7" opacity=".2" filter="url(#softGlow)"/>
  <path d="M-200 0Q-145 -65 -60 -52Q35 -85 115 -40Q185 -25 205 12L175 65Q75 118 -35 112Q-145 102 -200 0Z" fill="url(#islandSide)" stroke="url(#iceEdge)" stroke-width="8"/>
  <path d="M-200 0Q-145 -58 -60 -60Q30 -90 120 -42Q185 -28 205 12Q110 70 15 64Q-110 78 -200 0Z" fill="url(#pink)" stroke="#ffe2f5" stroke-width="4"/>
@@ -133,7 +133,7 @@
 </g>
 <!-- BOTTOM RIGHT: alchemy laboratory island -->
 <g transform="translate(1240 760)">
- <ellipse cy="125" rx="220" ry="62" fill="#02091e" opacity=".65" filter="url(#shadow)"/>
+ <ellipse cy="125" rx="220" ry="62" fill="#164c60" opacity=".28" filter="url(#shadow)"/>
  <ellipse cy="98" rx="200" ry="50" fill="#63ffca" opacity=".2" filter="url(#softGlow)"/>
  <path d="M-205 0Q-150 -65 -60 -56Q25 -90 115 -42Q185 -30 205 10L178 68Q75 120 -35 115Q-145 103 -205 0Z" fill="url(#islandSide)" stroke="url(#iceEdge)" stroke-width="8"/>
  <path d="M-205 0Q-145 -62 -60 -62Q30 -92 120 -45Q185 -30 205 10Q115 70 12 68Q-115 82 -205 0Z" fill="url(#green)" stroke="#e0ffe6" stroke-width="4"/>
