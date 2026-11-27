@@ -1546,12 +1546,31 @@ const knowledgeDiceWords=[
  {word:'باد',has:false},{word:'بام',has:false},{word:'بادام',has:false},{word:'اَسب',has:false},
  {word:'بوس',has:false},{word:'سود',has:false},{word:'آدَم',has:false},{word:'دام',has:false},{word:'داماد',has:false}
 ];
-const knowledgeTotalStages=2+knowledgeDiceWords.length;
+const knowledgeTotalStages=4+knowledgeDiceWords.length;
 let knowledgeIndex=0,knowledgeProgress=0,knowledgeLocked=false,knowledgeSpinTimer=null,knowledgeRevealTimer=null;
+
+// انتقال پیشرفت نسخهٔ قبلی: مرحلهٔ ترکیبی تاج و توپ به سه مرحلهٔ مستقل تبدیل شده است.
+if(!data.knowledgeStageVersion){
+ const oldCompleted={...(data.knowledgeCompleted||{})};
+ const oldAwarded={...(data.knowledgeAwarded||{})};
+ const nextCompleted={},nextAwarded={};
+ if(oldCompleted[0])nextCompleted[0]=true;
+ if(oldAwarded[0])nextAwarded[0]=true;
+ if(oldCompleted[1]){nextCompleted[1]=true;nextCompleted[2]=true;nextCompleted[3]=true;}
+ if(oldAwarded[1]){nextAwarded[1]=true;nextAwarded[2]=true;nextAwarded[3]=true;}
+ for(let i=2;i<19;i++){
+  if(oldCompleted[i])nextCompleted[i+2]=true;
+  if(oldAwarded[i])nextAwarded[i+2]=true;
+ }
+ data.knowledgeCompleted=nextCompleted;
+ data.knowledgeAwarded=nextAwarded;
+ data.knowledgeStageVersion=2;
+ save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
-  const title=i===0?'توپ‌های تیزبین':i===1?'تاج و توپ':'تاس جادویی · '+knowledgeDiceWords[i-2].word;
+  const title=i===0?'توپ‌های تیزبین':i===1?'تاج «تا»':i===2?'توپ «تو»':i===3?'تاج «تَـ»':'تاس جادویی · '+knowledgeDiceWords[i-4].word;
   return '<button class="stage '+(done?'done':'')+'" data-knowledge-stage="'+i+'" '+(unlocked?'':'disabled')+'>'+(done?'🦪':unlocked?'🐚':'🔒')+' مرحله '+fa(i+1)+'<small>'+esc(title)+'</small></button>';
  }).join('');
  document.querySelectorAll('[data-knowledge-stage]:not(:disabled)').forEach(b=>b.onclick=()=>startKnowledgeStage(+b.dataset.knowledgeStage));
@@ -1562,7 +1581,7 @@ function startKnowledgeStage(i){
  clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;
  $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
  $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
- if(i===0)startKnowledgeBalloons();else if(i===1)startKnowledgeCrowns();else startKnowledgeDiceWord(i-2);
+ if(i===0)startKnowledgeBalloons();else if(i<=3)startKnowledgeCrowns(i-1);else startKnowledgeDiceWord(i-4);
  show('knowledgeGame');
 }
 function knowledgeProgressUpdate(done,total){knowledgeProgress=done;$('knowledgeProgressBar').style.width=(done/total*100)+'%';$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);}
@@ -1589,17 +1608,11 @@ function startKnowledgeBalloons(){
  }
  spawn();knowledgeSpinTimer=setInterval(spawn,720);
 }
-function startKnowledgeCrowns(){
+function startKnowledgeCrowns(groupIndex){
  $('knowledgePrompt').textContent='ترکیب خواسته‌شده را از میان تاج‌ها و توپ‌ها پیدا کن.';
- const questions=shuffle([{target:'تا',group:0},{target:'تَـ',group:2},{target:'تو',group:1}]);
- let qi=0;
- function question(){
-  if(knowledgeLocked)return;
-  const x=questions[qi],g=knowledgeGroups[x.group];
-  $('knowledgePlayArea').innerHTML='<h2 class="knowledge-word">ترکیب «'+x.target+'» را پیدا کن</h2><p class="notice">مرحله '+fa(qi+1)+' از ۳</p><div class="knowledge-choice-grid" id="knowledgeChoices"></div>';
-  shuffle(g.targets).forEach((w,i)=>{const b=document.createElement('button');b.className='knowledge-choice '+(g.kind==='crown'?'crown':'ball');b.textContent=w;b.style.filter='hue-rotate('+(i*43)+'deg)';b.onclick=()=>{if(knowledgeLocked||b.disabled)return;if(w===x.target){b.disabled=true;knowledgeCorrect();qi++;knowledgeProgressUpdate(qi,3);save();if(qi===3)knowledgeFinishStage();else setTimeout(question,420);}else{knowledgeWrong();$('knowledgeFeedback').textContent='این گزینه درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}};$('knowledgeChoices').append(b);});
- }
- question();
+ const x=knowledgeGroups[groupIndex],g=x;
+ $('knowledgePlayArea').innerHTML='<h2 class="knowledge-word">ترکیب «'+x.target+'» را پیدا کن</h2><p class="notice">یک پاسخ درست پیدا کن.</p><div class="knowledge-choice-grid" id="knowledgeChoices"></div>';
+ shuffle(g.targets).forEach((w,i)=>{const b=document.createElement('button');b.className='knowledge-choice '+(g.kind==='crown'?'crown':'ball');b.textContent=w;b.style.filter='hue-rotate('+(i*43)+'deg)';b.onclick=()=>{if(knowledgeLocked||b.disabled)return;if(w===x.target){b.disabled=true;knowledgeCorrect();knowledgeProgressUpdate(1,1);save();knowledgeFinishStage();}else{knowledgeWrong();$('knowledgeFeedback').textContent='این گزینه درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}};$('knowledgeChoices').append(b);});
 }
 function startKnowledgeDiceWord(wordIndex){
  const x=knowledgeDiceWords[wordIndex];$('knowledgePrompt').textContent='پس از چرخیدن تاس، تشخیص بده این کلمه نشانهٔ «تـ» یا «ت» دارد یا نه.';
