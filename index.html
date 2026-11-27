@@ -219,6 +219,42 @@
  #knowledgeGame .daa-item-word{font-size:11px}
  #knowledgeGame .daa-center-target{width:98px;height:98px;font-size:36px}
 }
+/* تمرین وصل‌کردنی ترکیب‌ها؛ چیدمان حلقه‌ای با هدف در مرکز */
+#combinationGame .daa-match-board{
+ position:relative;width:min(100%,560px);height:min(58vh,510px);min-height:390px;margin:8px auto 0;
+ overflow:hidden;border:1px solid #8bdcff88;border-radius:24px;
+ background:radial-gradient(circle at 50% 50%,#ffffff12 0 2px,transparent 3px),radial-gradient(ellipse at 50% 110%,#1b7a8a99,transparent 60%),linear-gradient(160deg,#101d49,#172d5c 65%,#102d48);
+ box-shadow:inset 0 0 35px #60d9ff20,0 8px 25px #02071966;touch-action:none;
+}
+#combinationGame .daa-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:2}
+#combinationGame .daa-center-target{
+ position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:112px;height:112px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+ color:#fff;font-size:42px;font-weight:900;border:3px solid #e6fbff;
+ background:radial-gradient(circle at 35% 30%,#ff9da9,#e94e79 68%,#9f285d);
+ box-shadow:0 0 28px #ff82b588,inset 0 0 20px #ffffff44;
+ text-shadow:0 2px 5px #76234b;animation:daaTargetPulse 2s ease-in-out infinite;
+}
+@keyframes daaTargetPulse{50%{box-shadow:0 0 40px #ff82b5cc,inset 0 0 24px #ffffff66;transform:translate(-50%,-50%) scale(1.05)}}
+#combinationGame .daa-match-item{
+ position:absolute;z-index:5;width:76px;height:76px;border-radius:50%;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+ color:#18324f;background:linear-gradient(145deg,#fff,#dceeff);
+ border:2px solid #ffffff;box-shadow:0 5px 15px #02071966,inset 0 2px 5px #fff;
+ cursor:grab;touch-action:none;user-select:none;transition:transform .18s,box-shadow .18s,background .18s;
+}
+#combinationGame .daa-match-item.dragging{z-index:8;transform:scale(1.12);box-shadow:0 0 24px #72dcffcc;cursor:grabbing}
+#combinationGame .daa-match-item.connected{background:linear-gradient(145deg,#d9fff0,#8de8c5);border-color:#8effdc;box-shadow:0 0 22px #58f0d599;cursor:default}
+#combinationGame .daa-item-emoji{font-size:27px;line-height:1.05}
+#combinationGame .daa-item-word{font-size:12px;font-weight:900;line-height:1.2;white-space:nowrap}
+#combinationGame .daa-match-item svg{width:37px;height:37px}
+@media(max-width:600px){
+ #combinationGame .daa-match-board{height:min(58vh,460px);min-height:370px;border-radius:20px}
+ #combinationGame .daa-match-item{width:68px;height:68px}
+ #combinationGame .daa-item-emoji{font-size:24px}
+ #combinationGame .daa-item-word{font-size:11px}
+ #combinationGame .daa-center-target{width:98px;height:98px;font-size:36px}
+}
 /* دنیای کیهانی جزیره دانایی */
 body.cosmic-knowledge{
   color:#eaf7ff;
@@ -1043,9 +1079,9 @@ const combinationRounds = [
 {t:"با",items:[["باران","🌧️",1],["بابا","👨🏻",1],["بادبادک","🪁",1],["دَست","✋",0],["ماه","🌙",0],["سَبَد","🧺",0]]},
 {t:"بَ",items:[["بَبر","🐯",1],["بَدن","🧍🏻",1],["سَبَد","🧺",1],["بابا","👨🏻",0],["دَفتر","📒",0],["ماه","🌙",0]]},
 {t:"دا",items:[["دارو","💊",1],["دانِه","🌱",1],["داد","🎁",1],["دَر","🚪",0],["مادَر","👩🏻",0],["ساعت","🕒",0]]},
-{t:"دا",items:[["دارو","💊",1],["دَست","✋",0],["داغ","🌶️",1],["دَفتَر","📓",0],["دارکوب","🐦",1],["دَر","🚪",0],["داد","🗣️",1],["بَرف","❄️",0],["دام","🐑",1],["بادام","🌰",1]]},
+{t:"دا",items:[["دارو","💊",1],["دَست","✋",0],["داغ","🌶️",1],["دَفتَر","📓",0],["دارکوب","🐦",1],["دَر","🚪",0],["داد","🗣️",1],["بَرف","❄️",0],["دام","🐑",1],["بادام","🌰",1]],connect:true},
 {t:"دَ",items:[["دَر","🚪",1],["دَست","✋",1],["دَفتر","📒",1],["دارو","💊",0],["باران","🌧️",0],["ماه","🌙",0]]},
-{t:"دَ",items:[["دَست","✋",1],["دارو","💊",0],["دَریا","🌊",1],["داغ","🌶️",0],["دَفتَر","📓",1],["دام","🐑",0],["دَر","🚪",1],["بَرف","❄️",0],["داستان","📖",0],["دَرد","🤕",1]]},
+{t:"دَ",items:[["دَست","✋",1],["دارو","💊",0],["دَریا","🌊",1],["داغ","🌶️",0],["دَفتَر","📓",1],["دام","🐑",0],["دَر","🚪",1],["بَرف","❄️",0],["داستان","📖",0],["دَرد","🤕",1]],connect:true},
 {t:"ما",items:[["ماه","🌙",1],["مادَر","👩🏻",1],["ماشین","🚗",1],["مَرد","🧔🏻",0],["سَبَد","🧺",0],["دَست","✋",0]]},
 {t:"مَ",items:[["مَرد","🧔🏻",1],["مَدرِسه","🏫",1],["مَسیر","🛣️",1],["ماه","🌙",0],["ماشین","🚗",0],["دارو","💊",0]]},
 {t:"سا",items:[["ساعت","🕒",1],["ساحِل","🏖️",1],["سالاد","🥗",1],["سَبَد","🧺",0],["سَنگ","🪨",0],["مادَر","👩🏻",0]]},
@@ -1134,6 +1170,8 @@ function startCombinationStage(i){
   combinationAttempts=0;
   combinationSolved=false;
 
+  if(combinationRounds[i].connect){startCombinationDaaStage(i);show('combinationGame');return;}
+
   combinationItems=shuffleCombination(
     combinationRounds[i].items.map((item,id)=>({
       id:id,
@@ -1149,8 +1187,83 @@ function startCombinationStage(i){
 
 
 // نمایش بازی
+
+// اجرای مراحل وصل‌کردنی منتقل‌شده از جزیره دانایی
+function startCombinationDaaStage(stageIndex){
+ const q=combinationRounds[stageIndex],total=q.items.filter(x=>x[2]).length;
+ let selected=0,isDragging=false,activeItem=null,currentLine=null,completing=false;
+ const game=$('combinationGame'),board=document.createElement('div');
+ $('combinationStudentLabel').textContent='دانشمند '+(data.name||'کوچولو')+' 🔬';
+ $('combinationStageLabel').textContent='آزمایش '+fa(stageIndex+1);
+ $('combinationRoundCount').textContent=fa(stageIndex+1)+' از '+fa(combinationRounds.length);
+ $('combinationProgressBar').style.width='0%';
+ $('combinationTarget').textContent=q.t;
+ game.querySelector('.combination-target').style.display='none';
+ $('combinationFeedback').textContent='هر کلمه‌ای را که ترکیبِ وسط را دارد، به آن وصل کن.';
+ $('combinationFeedback').className='feedback';
+ $('combinationCheck').classList.add('hidden');
+ $('combinationNext').classList.add('hidden');
+ board.className='daa-match-board';
+ board.innerHTML='<svg class="daa-lines" aria-hidden="true"><defs><filter id="comboDaaGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg><div class="daa-center-target">'+esc(q.t)+'</div><div class="daa-match-items"></div>';
+ $('combinationOptions').replaceChildren(board);
+ const lines=board.querySelector('.daa-lines'),target=board.querySelector('.daa-center-target'),itemsBox=board.querySelector('.daa-match-items');
+ const birdSvg='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="55" rx="25" ry="30" fill="#1a1a1a"/><ellipse cx="45" cy="50" rx="8" ry="12" fill="#fff"/><ellipse cx="55" cy="60" rx="6" ry="10" fill="#fff"/><circle cx="50" cy="30" r="18" fill="#1a1a1a"/><path d="M40 20 Q45 10 50 15 Q55 10 60 20" fill="#e74c3c"/><ellipse cx="50" cy="18" rx="12" ry="6" fill="#e74c3c"/><circle cx="45" cy="28" r="4" fill="#fff"/><circle cx="45" cy="28" r="2.5" fill="#000"/><path d="M55 30 L75 28 L75 32 Z" fill="#f39c12"/><line x1="45" y1="80" x2="45" y2="90" stroke="#7f8c8d" stroke-width="2"/><line x1="55" y1="80" x2="55" y2="90" stroke="#7f8c8d" stroke-width="2"/><path d="M45 90 L42 93 M45 90 L45 93 M45 90 L48 93 M55 90 L52 93 M55 90 L55 93 M55 90 L58 93" stroke="#7f8c8d" stroke-width="1.5"/></svg>';
+ const shuffled=shuffleCombination(q.items.map((x,index)=>({word:x[0],emoji:x[1],correct:!!x[2],id:index})));
+ const placed=[],rotationOffset=Math.random()*360,radiusFactor=.38;
+ shuffled.forEach((item,index)=>{
+  const el=document.createElement('div');el.className='daa-match-item';el.dataset.correct=String(item.correct);el.dataset.word=item.word;
+  el.innerHTML=(item.word==='دارکوب'?birdSvg:'<span class="daa-item-emoji">'+item.emoji+'</span>')+'<span class="daa-item-word">'+esc(item.word)+'</span>';
+  el.dataset.angle=String((index*(360/shuffled.length)-90+rotationOffset)*(Math.PI/180));
+  itemsBox.append(el);placed.push(el);
+ });
+ function positionItems(){
+  const rect=board.getBoundingClientRect(),radius=Math.min(rect.width,rect.height)*radiusFactor,cx=rect.width/2,cy=rect.height/2;
+  placed.forEach(el=>{const a=Number(el.dataset.angle);el.style.left=(cx+radius*Math.cos(a)-el.offsetWidth/2)+'px';el.style.top=(cy+radius*Math.sin(a)-el.offsetHeight/2)+'px';});
+  lines.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);lines.setAttribute('width',rect.width);lines.setAttribute('height',rect.height);
+ }
+ positionItems();
+ const resizeObserver=new ResizeObserver(positionItems);resizeObserver.observe(board);
+ function makeLine(item){
+  const br=board.getBoundingClientRect(),ir=item.getBoundingClientRect(),line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',ir.left+ir.width/2-br.left);line.setAttribute('y1',ir.top+ir.height/2-br.top);line.setAttribute('x2',ir.left+ir.width/2-br.left);line.setAttribute('y2',ir.top+ir.height/2-br.top);
+  line.setAttribute('stroke','rgba(255,255,255,.9)');line.setAttribute('stroke-width','5');line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-dasharray','9 8');lines.append(line);return line;
+ }
+ function pointerPos(e){const r=board.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
+ function onMove(e){if(!isDragging||!currentLine)return;const p=pointerPos(e);currentLine.setAttribute('x2',p.x);currentLine.setAttribute('y2',p.y);}
+ function onUp(e){
+  if(!isDragging)return;isDragging=false;document.removeEventListener('pointermove',onMove);document.removeEventListener('pointerup',onUp);activeItem.classList.remove('dragging');
+  const p=pointerPos(e),tr=target.getBoundingClientRect(),br=board.getBoundingClientRect(),tx=tr.left+tr.width/2-br.left,ty=tr.top+tr.height/2-br.top;
+  if(Math.hypot(p.x-tx,p.y-ty)<Math.max(58,tr.width*.58)){
+   if(activeItem.dataset.correct==='true'){
+    currentLine.setAttribute('x2',tx);currentLine.setAttribute('y2',ty);currentLine.setAttribute('stroke','#42e6a4');currentLine.setAttribute('stroke-width','7');currentLine.setAttribute('stroke-dasharray','none');currentLine.setAttribute('filter','url(#comboDaaGlow)');
+    activeItem.classList.add('connected');activeItem.style.pointerEvents='none';selected++;data.stats.attempts++;data.stats.correct++;data.streak++;save();
+    $('combinationProgressBar').style.width=(selected/total*100)+'%';
+    $('combinationFeedback').textContent='آفرین! درست وصل کردی.';$('combinationFeedback').className='feedback good';
+    if(selected===total){
+     completing=true;resizeObserver.disconnect();combinationSolved=true;
+     const wasCompleted=!!data.combinationCompleted[combinationIndex];
+     if(!wasCompleted&&combinationAttempts===0)data.combinationScore++;
+     if(!data.combinationAwarded[combinationIndex]){data.pearls+=combinationAttempts===0?3:combinationAttempts===1?2:1;data.combinationAwarded[combinationIndex]=true;}
+     data.combinationCompleted[combinationIndex]=true;save();rainReward();
+     $('combinationFeedback').textContent='آفرین دانشمند کوچولو! همه کلمه‌ها را درست وصل کردی! 🧪✨';
+     $('combinationNext').classList.remove('hidden');
+    }
+   }else{
+    combinationAttempts++;data.stats.attempts++;data.stats.wrong++;data.streak=0;save();
+    const failedLine=currentLine;failedLine.style.transition='opacity .35s';failedLine.style.opacity='0';setTimeout(()=>failedLine.remove(),380);
+    $('combinationFeedback').textContent='این کلمه ترکیبِ وسط را ندارد؛ دوباره با دقت امتحان کن.';$('combinationFeedback').className='feedback soft';
+   }
+  }else{const cancelledLine=currentLine;cancelledLine.style.transition='opacity .25s';cancelledLine.style.opacity='0';setTimeout(()=>cancelledLine.remove(),280);}
+  activeItem=null;currentLine=null;
+ }
+ placed.forEach(el=>el.addEventListener('pointerdown',e=>{
+  if(completing||el.classList.contains('connected'))return;e.preventDefault();isDragging=true;activeItem=el;el.classList.add('dragging');currentLine=makeLine(el);document.addEventListener('pointermove',onMove);document.addEventListener('pointerup',onUp);
+ }));
+}
+
 function renderCombinationGame(){
 
+  $('combinationGame').querySelector('.combination-target').style.display='';
   const round=combinationRounds[combinationIndex];
 
   $('combinationStudentLabel').textContent=
