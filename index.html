@@ -762,7 +762,6 @@ function renderCombinationStages(){
 
     return `<button class="stage ${done?'done':''}" data-combination-stage="${i}" ${unlocked?'':'disabled'}>
       ${done?'🦪':unlocked?'🧪':'🔒'} آزمایش ${fa(i+1)}
-      ${done?'<small>تکمیل شد</small>':''}
     </button>`;
 
   }).join('');
