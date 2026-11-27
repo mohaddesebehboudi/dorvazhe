@@ -191,7 +191,17 @@ function shuffle(a){
     }
 
     return x;
-     }
+     }// متغیرهای مربوط به جزیره واژه‌سازی
+let current = 0;
+let reviewMode = false;
+let reviewIndex = null;
+let answer = '';
+let answerUnits = [];
+let attempts = 0;
+let hinted = false;
+let success = false;
+let placed = [];
+let tiles = [];
 function targetAnswer(){let s=stages[current];if(current===2)return s.answers[Math.random()<.5?0:1];return s.answers[0]}
 function unitsFor(i,word){
     return [...stages[i].tiles];
