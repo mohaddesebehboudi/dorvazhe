@@ -2185,8 +2185,7 @@ data.combinationScore=Math.max(
   data.combinationScore||0,
   d.combinationScore||0
 );data.awarded={...(d.awarded||{}),...(data.awarded||{})};data.mistakes={...(d.mistakes||{}),...(data.mistakes||{})};data.stats={attempts:Math.max(data.stats.attempts||0,d.stats.attempts||0),correct:Math.max(data.stats.correct||0,d.stats.correct||0),wrong:Math.max(data.stats.wrong||0,d.stats.wrong||0)};data.goldEarned=data.goldEarned||d.goldEarned;data.streak=Math.max(data.streak||0,d.streak||0);save();closeModal();toast('اطلاعات پشتیبان با اطلاعات فعلی ادغام شد.');};}catch{toast('این فایل پشتیبان معتبر نیست.')}e.target.value=''};
-// Resume the exact in-progress exercise if one was saved.
-if(data.session&&Number.isInteger(data.session.stage)&&data.session.stage>=0&&data.session.stage<stages.length){let s=data.session;current=s.stage;reviewMode=!!s.review;answer=s.answer||stages[current].answers[0];answerUnits=s.answerUnits||unitsFor(current,answer);tiles=(s.tiles||stages[current].tiles.map((v,id)=>id)).map(id=>({id,v:stages[current].tiles[id]}));placed=s.placed||[];attempts=s.attempts||0;hinted=!!s.hinted;success=false;renderGame();show('game');}
+// پس از بارگذاری مجدد، بازی از نقشه اصلی شروع می‌شود؛ پیشرفت مرحله در حافظه حفظ می‌شود.
 updateHeader();
 // Pan and pinch zoom on the map; wheel zoom is supported on desktop. No +/- controls.
 const view=$('mapView'),world=$('mapWorld');let scale=1,tx=0,ty=0,pointers=new Map(),start=null,initialPinch=0,initialScale=1,baseTx=0,baseTy=0;function apply(){world.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`}function clamp(){scale=Math.max(1,Math.min(2.6,scale));let r=view.getBoundingClientRect(),w=r.width,h=r.height;tx=Math.min(0,Math.max(w-w*scale,tx));ty=Math.min(0,Math.max(h-h*scale,ty));if(scale===1){tx=0;ty=0}}
