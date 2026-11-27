@@ -431,77 +431,25 @@ body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progre
   from{opacity:.48;filter:hue-rotate(0deg);transform:translate3d(-.4%,0,0)}
   to{opacity:.9;filter:hue-rotate(24deg);transform:translate3d(.4%,-.5%,0)}
 }
+
+/* نقاط لمس جزیره‌ها کاملاً نامرئی‌اند؛ خود تصویر نقشه جزیره‌ها را نشان می‌دهد. */
 #home.active .island{
   z-index:4;
-  width:20%;
-  height:24%;
   min-width:0;
-  max-width:none;
   padding:0;
-  border:0;
-  background:transparent!important;
-  color:transparent;
-  overflow:visible;
-}
-#home.active .island::before{
-  content:"";
-  position:absolute;
-  inset:9% 4%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  white-space:pre-line;
-  text-align:center;
-  direction:rtl;
-  padding:5px 3px;
-  border:1px solid #d8f8ffbb;
-  border-radius:22px;
-  color:#f5fcff;
-  font-size:clamp(10px,1.35vw,16px);
-  line-height:1.55;
-  font-weight:900;
-  text-shadow:0 2px 7px #06142c,0 0 12px #9deeffaa;
-  background:
-    linear-gradient(145deg,#ffffff38,#a8dfff16 45%,#111d48a8),
-    radial-gradient(circle at 50% 0%,#ffffff66,transparent 65%);
-  -webkit-backdrop-filter:blur(12px) saturate(1.5);
-  backdrop-filter:blur(12px) saturate(1.5);
-  box-shadow:
-    inset 0 1px 1px #ffffff88,
-    inset 0 -12px 25px #06132d55,
-    0 8px 18px #02081788,
-    0 0 20px #70e7ff55;
-  transform:perspective(500px) rotateX(7deg);
-  animation:islandLevitate 4.2s ease-in-out infinite;
-}
-#home.active .island::after{
-  content:"";
-  position:absolute;
-  width:9px;height:9px;
-  top:5%;left:17%;
+  border:0!important;
   border-radius:50%;
-  background:#e9ffff;
-  box-shadow:0 0 8px 3px #8df2ff,0 0 22px 7px #62dfff99;
-  pointer-events:none;
-  animation:islandSpark 2.4s ease-in-out infinite alternate;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:transparent!important;
+  opacity:0;
+  -webkit-tap-highlight-color:transparent;
 }
-#home.active .island.tr::before{content:"🪄\A کارخانه‌ی واژه‌ها";border-color:#82efff;background:linear-gradient(145deg,#35d9ff55,#192c65c9 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #36dfff88}
-#home.active .island.tl::before{content:"🏰\A قلعه‌ی املا";border-color:#d5b9ff;background:linear-gradient(145deg,#b88aff55,#272052d9 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #b58aff88}
-#home.active .island.center::before{content:"🔭\A رصدخانه‌ی دانایی";border-color:#ffe69a;background:linear-gradient(145deg,#ffe17b66,#30417bcf 72%);box-shadow:inset 0 1px #fff9,0 8px 22px #02081799,0 0 30px #ffe17b99}
-#home.active .island.bl::before{content:"📖\A شهر قصه‌ها";border-color:#ffb8e4;background:linear-gradient(145deg,#ff9bd455,#243d70d9 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #ff8ed688}
-#home.active .island.br::before{content:"⚗️\A آزمایشگاه واژه‌ها";border-color:#9affd5;background:linear-gradient(145deg,#6effc455,#153f55dc 72%);box-shadow:inset 0 1px #fff9,0 8px 18px #02081788,0 0 25px #68ffc288}
-#home.active .island.tr::before{animation-delay:-.8s}
-#home.active .island.tl::before{animation-delay:-1.6s}
-#home.active .island.center::before{animation-delay:-2.4s}
-#home.active .island.bl::before{animation-delay:-3.2s}
-@keyframes islandLevitate{
-  0%,100%{translate:0 0;filter:brightness(1)}
-  50%{translate:0 -7px;filter:brightness(1.16)}
-}
-@keyframes islandSpark{
-  from{opacity:.35;transform:scale(.75)}
-  to{opacity:1;transform:scale(1.25)}
+#home.active .island span,
+#home.active .island::before,
+#home.active .island::after{
+  display:none!important;
+  content:none!important;
 }
 #home.active .map-hint{
   width:fit-content;
