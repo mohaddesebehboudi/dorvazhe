@@ -115,75 +115,6 @@
     50% { transform: translateY(-10px); }
   }
 
-  /* === TOP BAR === */
-  .top-bar {
-    position: relative;
-    z-index: 10;
-    padding: 8px 16px 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .stage-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .stage-badge {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 700;
-    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
-  }
-
-  .back-btn {
-    background: rgba(255,255,255,0.15);
-    border: 2px solid rgba(255,255,255,0.3);
-    color: #fff;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Vazirmatn', sans-serif;
-    transition: all 0.3s;
-    backdrop-filter: blur(5px);
-  }
-
-  .back-btn:active {
-    transform: scale(0.95);
-    background: rgba(255,255,255,0.25);
-  }
-
-  .progress-container {
-    width: 100%;
-    height: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #00e676, #69f0ae, #00e676);
-    border-radius: 10px;
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 10px rgba(0,230,118,0.5);
-    background-size: 200% 100%;
-    animation: shimmer 2s linear infinite;
-  }
-
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
   /* === BUS === */
   .bus-area {
     position: relative;
@@ -623,7 +554,7 @@
     .bus { height: 110px; }
     .bus-body { height: 85px; }
     .bus-word { font-size: 24px; }
-    .top-bar { padding: 6px 12px 4px; }
+
   }
 
   /* Drag ghost */
@@ -667,17 +598,6 @@
   <div class="moon"></div>
   <div class="planet planet-1"></div>
   <div class="planet planet-2"></div>
-
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <div class="stage-info">
-      <div class="stage-badge" id="stageBadge">مرحله ۱ از ۱۰</div>
-      <button class="back-btn" id="backBtn" onclick="goBack()">⟫ مرحله قبل</button>
-    </div>
-    <div class="progress-container">
-      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-    </div>
-  </div>
 
   <!-- Bus Area -->
   <div class="bus-area">
@@ -827,10 +747,9 @@ function shuffle(arr) {
 // === RENDER LEVEL ===
 function renderLevel() {
   const level = levels[currentLevel];
-  
-  document.getElementById('stageBadge').textContent = `مرحله ${toPersianNum(requestedLevel + 1)} از ۱۰`;
-  document.getElementById('backBtn').style.display = 'none';
-  document.getElementById('progressFill').style.width = `${((requestedLevel + 1) / 10) * 100}%`;
+
+
+
   document.getElementById('busWord').textContent = level.word;
   
   circleStates = new Array(level.sounds.length).fill(null);
@@ -1097,7 +1016,7 @@ function onCorrect() {
     document.getElementById('busWrapper').classList.add('driving');
     setTimeout(() => {
       isAnimating = false;
-      document.getElementById('progressFill').style.width = '100%';
+
       window.parent.postMessage({ type: 'knowledge-sound-game-complete' }, '*');
     }, 1500);
   }, circles.length * 200 + 500);
