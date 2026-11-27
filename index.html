@@ -54,7 +54,126 @@
     opacity: 0.9;
   }
 }
-</style>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }</style></head>
+.lab-banner {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  margin-bottom:15px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#e1f8f6,#fff1c8);
+  border:2px solid #b8e4df;
+}
+
+.lab-title {
+  color:#075b91;
+  font-size:clamp(18px,3vw,24px);
+  font-weight:900;
+}
+
+.lab-scientist {
+  font-size:clamp(35px,7vw,55px);
+  animation:scientistBob 2s ease-in-out infinite;
+}
+
+@keyframes scientistBob {
+  50% {
+    transform:translateY(-6px) rotate(4deg);
+  }
+}
+
+.combination-target {
+  width:min(190px,65%);
+  min-height:135px;
+  margin:18px auto;
+  border-radius:28px;
+  border:4px solid #ffcf54;
+  background:linear-gradient(145deg,#fffdf0,#ffe8a8);
+  box-shadow:0 6px 0 #d9ad43;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+}
+
+.combination-target small {
+  color:#548092;
+  font-size:14px;
+}
+
+.combination-target strong {
+  color:#075b91;
+  font-size:clamp(35px,7vw,48px);
+  font-weight:900;
+}
+
+.combination-options {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:11px;
+  margin:18px auto;
+  max-width:650px;
+}
+
+.combination-option {
+  min-height:112px;
+  padding:10px 5px;
+  border-radius:20px;
+  border:2px solid #a9d8da;
+  background:linear-gradient(145deg,#fff,#e2f8f5);
+  color:#075b91;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  box-shadow:0 4px 0 #b8dce2;
+  transition:.18s;
+}
+
+.combination-option .combo-emoji {
+  font-size:32px;
+  line-height:1.3;
+}
+
+.combination-option .combo-word {
+  font-size:clamp(15px,2.5vw,19px);
+  font-weight:900;
+}
+
+.combination-option.selected {
+  background:#d7efff;
+  border-color:#078ac8;
+  transform:translateY(-2px);
+}
+
+.combination-option.correct {
+  background:#d9fff0;
+  border-color:#42bd8a;
+}
+
+.combination-option.wrong {
+  background:#ffe4df;
+  border-color:#e58b7d;
+}
+
+.combination-option:disabled {
+  cursor:default;
+  opacity:1;
+}
+
+@media(max-width:600px) {
+  .combination-options {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+  }
+
+  .combination-option {
+    min-height:105px;
+  }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }</style>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }</style></head>
 <body><div class="app">
 <header class="topbar"><div class="brand">🌊 دریای پارسی</div><div class="stats"><div class="pill" id="namePill">👤 مهمان</div><div class="pill">🦪 <b id="pearls">۰</b></div><div class="pill gold">🌟 <b id="goldPearls">۰</b></div><button class="iconbtn" id="editName">ویرایش نام</button></div></header>
 <main class="main">
@@ -66,7 +185,7 @@
 
 <button class="island bl" data-island="sentences" aria-label="جزیره جمله‌سازی"><span>🏡</span></button>
 
-<button class="island br" data-island="soon" aria-label="جزیره املا"><span>🏰</span></button></div></div><div class="map-hint">برای جابه‌جایی نقشه یک انگشت بکشید؛ برای بزرگ‌نمایی دو انگشت را باز و بسته کنید.</div><div class="home-actions"><button class="action" id="adventureBtn">📖 دفترچه ماجراجویی</button><button class="action" id="reviewBtn">🔁 مرور آموخته‌ها</button><button class="action" id="backupBtn">⬇️ پشتیبان‌گیری</button><button class="action" id="restoreBtn">⬆️ بازیابی پشتیبان</button><input id="restoreFile" type="file" accept="application/json,.json" class="hidden"></div></section>
+<button class="island tl" data-island="soon" aria-label="جزیره املا"><span>🏰</span></button></div></div><div class="map-hint">برای جابه‌جایی نقشه یک انگشت بکشید؛ برای بزرگ‌نمایی دو انگشت را باز و بسته کنید.</div><div class="home-actions"><button class="action" id="adventureBtn">📖 دفترچه ماجراجویی</button><button class="action" id="reviewBtn">🔁 مرور آموخته‌ها</button><button class="action" id="backupBtn">⬇️ پشتیبان‌گیری</button><button class="action" id="restoreBtn">⬆️ بازیابی پشتیبان</button><input id="restoreFile" type="file" accept="application/json,.json" class="hidden"></div></section>
 <section id="stages" class="screen"><div class="subhead"><div><div class="title">🧩 جزیره واژه‌سازی</div></div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><div class="stage-list" id="stageList"></div></div></section>
 <section id="game" class="screen"><div class="subhead"><div class="title">🧩 واژه‌سازی</div><button class="action" data-stages>فهرست مرحله‌ها</button></div><div class="card game-card"><div class="subhead"><b id="stageLabel">مرحله ۱ </b><span>🦪 <b id="gamePearls">۰</b></span></div><div class="progressline"><i id="progressBar" style="width:0%"></i></div><p class="prompt">حروف را به ترتیب درست بچین تا کلمه ساخته شود.</p><div class="target" id="target"></div><div class="tiles" id="tiles"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="game-actions"><button class="action" id="hintBtn">💡 راهنمایی</button><button class="action" id="undoBtn">↩️ یکی برگرد</button><button class="action" id="clearBtn">پاک کردن</button><button class="action primary" id="checkBtn">بررسی پاسخ</button></div><div class="game-actions hidden" id="successActions"><button class="action primary" id="nextBtn">مرحله بعد ←</button><button class="action" id="backStages">فهرست مرحله‌ها</button></div></div></section>
 <section id="sentenceStages" class="screen">
@@ -116,6 +235,67 @@
       <button class="action" id="sentenceRepeat">دوباره همین جمله</button>
     </div>
   </div>
+    <!-- جزیره ترکیب‌ها -->
+<section id="combinationStages" class="screen">
+  <div class="subhead">
+    <div class="title">🌋 جزیره ترکیب‌ها</div>
+    <button class="action" data-home>نقشه اصلی</button>
+  </div>
+
+  <div class="card">
+    <div class="lab-banner">
+      <div>
+        <div class="lab-title">🔬 آزمایشگاه کوچک واژه‌ها</div>
+        <p class="notice">دانشمند کوچولو، آماده‌ی کشف ترکیب‌ها هستی؟</p>
+      </div>
+      <div class="lab-scientist">👩🏻‍🔬</div>
+    </div>
+
+    <div class="stage-list" id="combinationStageList"></div>
+  </div>
+</section>
+
+<section id="combinationGame" class="screen">
+  <div class="subhead">
+    <div class="title">🔬 آزمایشگاه ترکیب‌ها</div>
+    <button class="action" id="backCombinationStages">فهرست مرحله‌ها</button>
+  </div>
+
+  <div class="card game-card">
+    <div class="lab-banner">
+      <div>
+        <b id="combinationStudentLabel"></b>
+        <p class="notice">با دقت آزمایش کن و واژه‌های درست را پیدا کن.</p>
+      </div>
+      <div class="lab-scientist">🧑🏻‍🔬</div>
+    </div>
+
+    <div class="subhead">
+      <b id="combinationStageLabel">آزمایش ۱</b>
+      <span id="combinationRoundCount"></span>
+    </div>
+
+    <div class="progressline">
+      <i id="combinationProgressBar" style="width:0%"></i>
+    </div>
+
+    <div class="combination-target">
+      <small>ترکیب مورد نظر</small>
+      <strong id="combinationTarget">با</strong>
+    </div>
+
+    <p class="prompt">کدام واژه‌ها این ترکیب را دارند؟ روی واژه‌های درست بزن.</p>
+
+    <div class="combination-options" id="combinationOptions"></div>
+
+    <div class="feedback" id="combinationFeedback" aria-live="polite"></div>
+
+    <div class="game-actions">
+      <button class="action primary" id="combinationCheck">بررسی پاسخ‌ها</button>
+      <button class="action primary hidden" id="combinationNext">آزمایش بعدی ←</button>
+    </div>
+  </div>
+</section>
 </section><section id="review" class="screen"><div class="subhead"><div class="title">🔁 مرور آموخته‌ها</div><button class="action" data-home>نقشه اصلی</button></div><div class="card"><p class="notice">تمرین‌هایی که قبلاً در آن‌ها اشتباه داشتی اینجا جمع می‌شوند. با تمرین دوباره می‌توانی آن‌ها را مرور کنی.</p><div id="reviewList"></div></div></section>
 <section id="adventure" class="screen"><div class="subhead"><div class="title">📖 دفترچه ماجراجویی</div><button class="action" data-home>نقشه اصلی</button></div><div class="card" id="adventureContent"></div></section>
 </main><footer class="footer">🎨 طراح بازی: محدثه بهبودی</footer></div>
@@ -197,8 +377,25 @@ const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d
 
   setTimeout(() => rain.remove(), 3700);
     }
-const fresh=()=>({version:1,name:'',pearls:0,gold:0,completed:{},sentenceCompleted:{},awarded:{},mistakes:{},stats:{attempts:0,correct:0,wrong:0},streak:0,goldEarned:false,lastStage:0,session:null});
-let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
+const fresh=()=>({
+  version:1,
+  name:'',
+  pearls:0,
+  gold:0,
+  completed:{},
+  sentenceCompleted:{},
+  combinationCompleted:{},
+  awarded:{},
+  combinationAwarded:{},
+  combinationScore:0,
+  mistakes:{},
+  stats:{attempts:0,correct:0,wrong:0},
+  streak:0,
+  goldEarned:false,
+  lastStage:0,
+  session:null
+});
+      let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{toast('فضای ذخیره‌سازی مرورگر کافی نیست. از پشتیبان‌گیری استفاده کن.')}updateHeader()}
 function updateHeader(){$('namePill').textContent='👤 '+(data.name||'مهمان');$('pearls').textContent=fa(data.pearls);$('goldPearls').textContent=fa(data.gold);$('gamePearls').textContent=fa(data.pearls)}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
@@ -217,6 +414,10 @@ document.querySelectorAll('[data-island]').forEach(b=>b.onclick=()=>{
     renderSentenceStages();
     show('sentenceStages');
   }
+        else if(b.dataset.island==='combinations'){
+    renderCombinationStages();
+    show('combinationStages');
+        }
   else {
     toast('این جزیره به‌زودی باز می‌شود!');
   }
@@ -495,6 +696,290 @@ $('nextBtn').onclick = () => {
 $('backStages').onclick = () => {
   renderStages();
   show('stages');
+};
+      // ===============================
+// Combination Island
+// ===============================
+
+const combinationRounds = [
+{t:"با",items:[["باران","🌧️",1],["بابا","👨🏻",1],["بادبادک","🪁",1],["دَست","✋",0],["ماه","🌙",0],["سَبَد","🧺",0]]},
+{t:"بَ",items:[["بَبر","🐯",1],["بَدن","🧍🏻",1],["سَبَد","🧺",1],["بابا","👨🏻",0],["دَفتر","📒",0],["ماه","🌙",0]]},
+{t:"دا",items:[["دارو","💊",1],["دانِه","🌱",1],["داد","🎁",1],["دَر","🚪",0],["مادَر","👩🏻",0],["ساعت","🕒",0]]},
+{t:"دَ",items:[["دَر","🚪",1],["دَست","✋",1],["دَفتر","📒",1],["دارو","💊",0],["باران","🌧️",0],["ماه","🌙",0]]},
+{t:"ما",items:[["ماه","🌙",1],["مادَر","👩🏻",1],["ماشین","🚗",1],["مَرد","🧔🏻",0],["سَبَد","🧺",0],["دَست","✋",0]]},
+{t:"مَ",items:[["مَرد","🧔🏻",1],["مَدرَسه","🏫",1],["مَسیر","🛣️",1],["ماه","🌙",0],["ماشین","🚗",0],["دارو","💊",0]]},
+{t:"سا",items:[["ساعت","🕒",1],["ساحِل","🏖️",1],["سالاد","🥗",1],["سَبَد","🧺",0],["سَنگ","🪨",0],["مادَر","👩🏻",0]]},
+{t:"سَ",items:[["سَبَد","🧺",1],["سَنگ","🪨",1],["سَفر","🧳",1],["ساعت","🕒",0],["ساحِل","🏖️",0],["بابا","👨🏻",0]]}
+];
+
+let combinationIndex=0;
+let combinationChosen=new Set();
+let combinationItems=[];
+let combinationAttempts=0;
+let combinationSolved=false;
+
+
+// مخلوط کردن گزینه‌ها بدون دستکاری آرایه اصلی
+function shuffleCombination(array){
+  let result=[...array];
+
+  for(let i=result.length-1;i>0;i--){
+    let j=Math.floor(Math.random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];
+  }
+
+  if(result.length>1&&result.every((item,i)=>item.id===array[i].id)){
+    [result[0],result[1]]=[result[1],result[0]];
+  }
+
+  return result;
+}
+
+
+// نمایش فهرست آزمایش‌ها
+function renderCombinationStages(){
+
+  $('combinationStageList').innerHTML=combinationRounds.map((round,i)=>{
+
+    let done=!!data.combinationCompleted[i];
+
+    let unlocked=i===0||
+      combinationRounds.slice(0,i).every((_,j)=>!!data.combinationCompleted[j]);
+
+    return `<button class="stage ${done?'done':''}" data-combination-stage="${i}" ${unlocked?'':'disabled'}>
+      ${done?'🦪':unlocked?'🧪':'🔒'} آزمایش ${fa(i+1)}
+      ${done?'<small>تکمیل شد</small>':''}
+    </button>`;
+
+  }).join('');
+
+  document.querySelectorAll('[data-combination-stage]:not(:disabled)').forEach(button=>{
+    button.onclick=()=>startCombinationStage(Number(button.dataset.combinationStage));
+  });
+}
+
+
+// شروع آزمایش
+function startCombinationStage(i){
+
+  let unlocked=i===0||
+    combinationRounds.slice(0,i).every((_,j)=>!!data.combinationCompleted[j]);
+
+  if(!unlocked){
+    toast('برای باز شدن این آزمایش، اول آزمایش‌های قبلی را کامل کن.');
+    return;
+  }
+
+  combinationIndex=i;
+  combinationChosen=new Set();
+  combinationAttempts=0;
+  combinationSolved=false;
+
+  combinationItems=shuffleCombination(
+    combinationRounds[i].items.map((item,id)=>({
+      id:id,
+      word:item[0],
+      emoji:item[1],
+      correct:!!item[2]
+    }))
+  );
+
+  renderCombinationGame();
+  show('combinationGame');
+}
+
+
+// نمایش بازی
+function renderCombinationGame(){
+
+  const round=combinationRounds[combinationIndex];
+
+  $('combinationStudentLabel').textContent=
+    'دانشمند '+(data.name||'کوچولو')+' 🔬';
+
+  $('combinationStageLabel').textContent=
+    'آزمایش '+fa(combinationIndex+1);
+
+  $('combinationRoundCount').textContent=
+    fa(combinationIndex+1)+' از '+fa(combinationRounds.length);
+
+  $('combinationProgressBar').style.width=
+    ((combinationIndex+1)/combinationRounds.length*100)+'%';
+
+  $('combinationTarget').textContent=round.t;
+
+  $('combinationFeedback').textContent='';
+  $('combinationFeedback').className='feedback';
+
+  $('combinationCheck').classList.remove('hidden');
+  $('combinationNext').classList.add('hidden');
+
+  $('combinationOptions').innerHTML=combinationItems.map(item=>`
+    <button class="combination-option" data-combination-option="${item.id}">
+      <span class="combo-emoji">${item.emoji}</span>
+      <span class="combo-word">${esc(item.word)}</span>
+    </button>
+  `).join('');
+
+  document.querySelectorAll('[data-combination-option]').forEach(button=>{
+
+    button.onclick=()=>{
+
+      if(combinationSolved)return;
+
+      let id=Number(button.dataset.combinationOption);
+
+      if(combinationChosen.has(id)){
+        combinationChosen.delete(id);
+      }else{
+        combinationChosen.add(id);
+      }
+
+      document.querySelectorAll('[data-combination-option]').forEach(el=>{
+        el.classList.remove('correct','wrong');
+        el.classList.toggle(
+          'selected',
+          combinationChosen.has(Number(el.dataset.combinationOption))
+        );
+      });
+
+      $('combinationFeedback').textContent='';
+      $('combinationFeedback').className='feedback';
+    };
+
+  });
+}
+
+
+// بررسی پاسخ
+function checkCombination(){
+
+  if(combinationSolved)return;
+
+  const round=combinationRounds[combinationIndex];
+
+  const correctIds=new Set(
+    round.items.map((item,i)=>item[2]?i:null).filter(id=>id!==null)
+  );
+
+  data.stats.attempts++;
+
+  let isCorrect=
+    combinationChosen.size===correctIds.size&&
+    [...correctIds].every(id=>combinationChosen.has(id));
+
+  if(!isCorrect){
+
+    combinationAttempts++;
+    data.stats.wrong++;
+    data.streak=0;
+
+    document.querySelectorAll('[data-combination-option]').forEach(button=>{
+
+      let id=Number(button.dataset.combinationOption);
+      let item=combinationItems.find(x=>x.id===id);
+
+      if(item.correct){
+        button.classList.add('correct');
+      }
+      else if(combinationChosen.has(id)){
+        button.classList.add('wrong');
+      }
+
+    });
+
+    $('combinationFeedback').textContent=
+      'هنوز درست نشده! دوباره به ترکیب نگاه کن.';
+
+    $('combinationFeedback').className='feedback soft';
+
+    save();
+    return;
+  }
+
+
+  // پاسخ صحیح
+  combinationSolved=true;
+
+  data.stats.correct++;
+  data.streak++;
+
+  let wasCompleted=!!data.combinationCompleted[combinationIndex];
+
+  if(!wasCompleted&&combinationAttempts===0){
+    data.combinationScore++;
+  }
+
+  if(!data.combinationAwarded[combinationIndex]){
+
+    let reward=
+      combinationAttempts===0?3:
+      combinationAttempts===1?2:1;
+
+    data.pearls+=reward;
+    data.combinationAwarded[combinationIndex]=true;
+  }
+
+  data.combinationCompleted[combinationIndex]=true;
+
+  if(data.streak>=5&&!data.goldEarned){
+    data.gold++;
+    data.goldEarned=true;
+  }
+
+  save();
+
+  $('combinationFeedback').textContent=
+    'آفرین دانشمند کوچولو! آزمایش با موفقیت انجام شد! 🧪✨';
+
+  $('combinationFeedback').className='feedback good';
+
+  document.querySelectorAll('[data-combination-option]').forEach(button=>{
+
+    let id=Number(button.dataset.combinationOption);
+    let item=combinationItems.find(x=>x.id===id);
+
+    button.classList.remove('selected');
+
+    if(item.correct){
+      button.classList.add('correct');
+    }
+
+    button.disabled=true;
+  });
+
+  rainReward();
+
+  $('combinationCheck').classList.add('hidden');
+  $('combinationNext').classList.remove('hidden');
+}
+
+
+// آزمایش بعدی
+function nextCombinationStage(){
+
+  if(combinationIndex<combinationRounds.length-1){
+
+    startCombinationStage(combinationIndex+1);
+
+  }else{
+
+    renderCombinationStages();
+    show('combinationStages');
+
+    toast('همه‌ی آزمایش‌ها را با موفقیت انجام دادی! 🏆');
+  }
+}
+
+
+// دکمه‌ها
+$('combinationCheck').onclick=checkCombination;
+
+$('combinationNext').onclick=nextCombinationStage;
+
+$('backCombinationStages').onclick=()=>{
+  renderCombinationStages();
+  show('combinationStages');
 };
       // ===============================
 // Sentence Building Island
@@ -1032,7 +1517,8 @@ function renderReview(){
 function renderAdventure(){
   let done=
   Object.values(data.completed).filter(Boolean).length+
-  Object.values(data.sentenceCompleted).filter(Boolean).length;
+    Object.values(data.sentenceCompleted).filter(Boolean).length+
+  Object.values(data.combinationCompleted).filter(Boolean).length;
   let wrong=Object.values(data.mistakes).reduce((a,b)=>a+(b.count||0),0);
 
   const islands=[...document.querySelectorAll('[data-island]')];
@@ -1050,7 +1536,10 @@ function renderAdventure(){
       total=sentences.length;
       completed=Object.values(data.sentenceCompleted).filter(Boolean).length;
     }
-
+else if(button.dataset.island==='combinations'){
+  total=combinationRounds.length;
+  completed=Object.values(data.combinationCompleted).filter(Boolean).length;
+    }
     const percent=total
       ? Math.round(Math.min(completed,total)/total*100)
       : 0;
@@ -1078,7 +1567,10 @@ function renderAdventure(){
       <div class="bookitem">مراحل تکمیل‌شده<br><b>${fa(done)}</b></div>
       <div class="bookitem">تمرین‌های نیازمند مرور<br><b>${fa(Object.keys(data.mistakes).length)}</b></div>
       <div class="bookitem">مرواریدهای طلایی<br><b>${fa(data.gold)}</b></div>
-      <div class="bookitem">رکورد پاسخ صحیح متوالی<br><b>${fa(data.streak)}</b></div>
+      <div class="bookitem">رکورد پاسخ صحیح متوالی<br><b>${fa(data.streak)}</b></div><div class="bookitem">
+  امتیاز آزمایشگاه ترکیب‌ها<br>
+  <b>${fa(data.combinationScore||0)}</b>
+</div>
     </div>
 
     <h2>پیشرفت جزیره‌ها</h2>
@@ -1086,7 +1578,20 @@ function renderAdventure(){
   `;
 }
       $('backupBtn').onclick=()=>{let blob=new Blob([JSON.stringify({app:'DaryayeParsi',schema:1,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='daryaye-parsi-backup.json';a.click();URL.revokeObjectURL(a.href);toast('فایل پشتیبان آماده شد.')};
-$('restoreBtn').onclick=()=>$('restoreFile').click();$('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let incoming=JSON.parse(await f.text());let d=incoming.data||incoming;if(!d||typeof d!=='object'||!d.stats)throw Error();modal(`<h2>بازیابی اطلاعات</h2><p>اطلاعات پشتیبان با اطلاعات فعلی ادغام می‌شوند؛ اطلاعات فعلی پاک نخواهد شد.</p><p class="notice">در صورت وجود مرحله‌های مشترک، تکمیل‌شده‌ها و پاداش‌های قبلی حفظ می‌شوند و تعداد مرواریدها کمتر نخواهد شد.</p><button class="action primary" id="mergeBackup">ادغام و بازیابی</button> <button class="action" id="cancelRestore">انصراف</button>`);$('cancelRestore').onclick=closeModal;$('mergeBackup').onclick=()=>{data.name=data.name||d.name||'';data.pearls=Math.max(data.pearls||0,d.pearls||0);data.gold=Math.max(data.gold||0,d.gold||0);data.completed={...(d.completed||{}),...(data.completed||{})};data.sentenceCompleted={...(d.sentenceCompleted||{}),...(data.sentenceCompleted||{})};data.awarded={...(d.awarded||{}),...(data.awarded||{})};data.mistakes={...(d.mistakes||{}),...(data.mistakes||{})};data.stats={attempts:Math.max(data.stats.attempts||0,d.stats.attempts||0),correct:Math.max(data.stats.correct||0,d.stats.correct||0),wrong:Math.max(data.stats.wrong||0,d.stats.wrong||0)};data.goldEarned=data.goldEarned||d.goldEarned;data.streak=Math.max(data.streak||0,d.streak||0);save();closeModal();toast('اطلاعات پشتیبان با اطلاعات فعلی ادغام شد.');};}catch{toast('این فایل پشتیبان معتبر نیست.')}e.target.value=''};
+$('restoreBtn').onclick=()=>$('restoreFile').click();$('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let incoming=JSON.parse(await f.text());let d=incoming.data||incoming;if(!d||typeof d!=='object'||!d.stats)throw Error();modal(`<h2>بازیابی اطلاعات</h2><p>اطلاعات پشتیبان با اطلاعات فعلی ادغام می‌شوند؛ اطلاعات فعلی پاک نخواهد شد.</p><p class="notice">در صورت وجود مرحله‌های مشترک، تکمیل‌شده‌ها و پاداش‌های قبلی حفظ می‌شوند و تعداد مرواریدها کمتر نخواهد شد.</p><button class="action primary" id="mergeBackup">ادغام و بازیابی</button> <button class="action" id="cancelRestore">انصراف</button>`);$('cancelRestore').onclick=closeModal;$('mergeBackup').onclick=()=>{data.name=data.name||d.name||'';data.pearls=Math.max(data.pearls||0,d.pearls||0);data.gold=Math.max(data.gold||0,d.gold||0);data.completed={...(d.completed||{}),...(data.completed||{})};data.sentenceCompleted={...(d.sentenceCompleted||{}),...(data.sentenceCompleted||{})};data.combinationCompleted={
+  ...(d.combinationCompleted||{}),
+  ...(data.combinationCompleted||{})
+};
+
+data.combinationAwarded={
+  ...(d.combinationAwarded||{}),
+  ...(data.combinationAwarded||{})
+};
+
+data.combinationScore=Math.max(
+  data.combinationScore||0,
+  d.combinationScore||0
+);data.awarded={...(d.awarded||{}),...(data.awarded||{})};data.mistakes={...(d.mistakes||{}),...(data.mistakes||{})};data.stats={attempts:Math.max(data.stats.attempts||0,d.stats.attempts||0),correct:Math.max(data.stats.correct||0,d.stats.correct||0),wrong:Math.max(data.stats.wrong||0,d.stats.wrong||0)};data.goldEarned=data.goldEarned||d.goldEarned;data.streak=Math.max(data.streak||0,d.streak||0);save();closeModal();toast('اطلاعات پشتیبان با اطلاعات فعلی ادغام شد.');};}catch{toast('این فایل پشتیبان معتبر نیست.')}e.target.value=''};
 // Resume the exact in-progress exercise if one was saved.
 if(data.session&&Number.isInteger(data.session.stage)&&data.session.stage>=0&&data.session.stage<stages.length){let s=data.session;current=s.stage;reviewMode=!!s.review;answer=s.answer||stages[current].answers[0];answerUnits=s.answerUnits||unitsFor(current,answer);tiles=(s.tiles||stages[current].tiles.map((v,id)=>id)).map(id=>({id,v:stages[current].tiles[id]}));placed=s.placed||[];attempts=s.attempts||0;hinted=!!s.hinted;success=false;renderGame();show('game');}
 updateHeader();
