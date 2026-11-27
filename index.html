@@ -82,7 +82,7 @@
     </div>
 
     <div class="game-actions hidden" id="sentenceSuccessActions">
-      <button class="action primary" id="sentenceNext">جمله بعد ←</button>
+      <button class="action primary" id="sentenceNext">تمرین بعدی ←</button>
       <button class="action" id="sentenceRepeat">دوباره همین جمله</button>
     </div>
   </div>
@@ -358,8 +358,10 @@ $('checkBtn').onclick=()=>{
     data.session=null;
     save();
 
-    $('feedback').textContent=`آفرین ${data.name}! «${w}» رو درست ساختی. ${paid?`🦪 ${fa(paid)} مروارید`:'این مرحله قبلاً جایزه‌اش رو گرفته بود.'}`;
-    $('feedback').className='feedback good';
+$('feedback').textContent = reviewMode
+  ? `آفرین ${data.name}! «${w}» رو در تمرین مرور درست ساختی. 🌟`
+  : `آفرین ${data.name}! «${w}» رو درست ساختی. ${paid ? `🦪 ${fa(paid)} مروارید` : 'این مرحله قبلاً جایزه‌اش رو گرفته بود.'}`;
+      $('feedback').className='feedback good';
     $('successActions').classList.remove('hidden');
     $('hintBtn').disabled=true;
     $('tiles').innerHTML='';
@@ -394,8 +396,50 @@ $('checkBtn').onclick=()=>{
   persistSession();
 };
 function showIslandCelebration(){modal(`<div class="chest">🎁</div><h2>جزیره واژه‌سازی رو به پایان رسوندی!</h2><p>آفرین ${esc(data.name)}! همه‌ی مراحل این جزیره رو انجام دادی.</p><p>🦪 مرواریدهای این جزیره: ${fa(Object.keys(data.awarded).length)}</p><p><button class="action primary" id="celebrateClose">ادامه ماجراجویی</button></p>`);$('celebrateClose').onclick=closeModal}
-$('nextBtn').onclick=()=>{if(current<stages.length-1)startStage(current+1);else{renderStages();show('stages')}};$('backStages').onclick=()=>{renderStages();show('stages')};
-// ===============================
+$('nextBtn').onclick = () => {
+
+  if (reviewMode) {
+
+    let keys = Object.keys(data.mistakes);
+    let currentKey = String(current);
+
+    let options = keys.filter(key => key !== currentKey);
+
+    if (options.length === 0 && keys.includes(currentKey)) {
+      options = [currentKey];
+    }
+
+    if (options.length === 0) {
+      renderReview();
+      show('review');
+      return;
+    }
+
+    let nextKey = options[Math.floor(Math.random() * options.length)];
+
+    if (nextKey.startsWith('sentence_')) {
+      startSentence(Number(nextKey.slice(9)), true);
+    } else {
+      startStage(Number(nextKey), true);
+    }
+
+    return;
+  }
+
+  if (current < stages.length - 1) {
+    startStage(current + 1);
+  } else {
+    renderStages();
+    show('stages');
+  }
+
+};
+
+$('backStages').onclick = () => {
+  renderStages();
+  show('stages');
+};
+      // ===============================
 // Sentence Building Island
 // ===============================
 
@@ -683,7 +727,13 @@ $('sentenceCheck').onclick=()=>{
 
   if(answer===sentences[sentenceIndex]){
 
-    sentenceDone=true;
+    sentenceDone=true;data.stats.correct++;
+data.streak++;
+
+if(data.streak>=5&&!data.goldEarned){
+  data.gold++;
+  data.goldEarned=true;
+}
 
     if(sentenceReviewMode){
 
@@ -717,7 +767,8 @@ $('sentenceCheck').onclick=()=>{
       </div>
     `;
 
-  }else{
+  }else{data.stats.wrong++;
+data.streak=0;
 
     if(sentenceReviewMode||sentenceAttempts===0){
 
@@ -873,7 +924,7 @@ $('sentenceNext').onclick = () => {
 
 // تکرار جمله
 $('sentenceRepeat').onclick = () => {
-  startSentence(sentenceIndex);
+  startSentence(sentenceIndex, sentenceReviewMode);
 };
 
 
@@ -921,7 +972,9 @@ function renderReview(){
   });
 }
 function renderAdventure(){
-  let done=Object.values(data.completed).filter(Boolean).length;
+  let done=
+  Object.values(data.completed).filter(Boolean).length+
+  Object.values(data.sentenceCompleted).filter(Boolean).length;
   let wrong=Object.values(data.mistakes).reduce((a,b)=>a+(b.count||0),0);
 
   const islands=[...document.querySelectorAll('[data-island]')];
@@ -975,7 +1028,7 @@ function renderAdventure(){
   `;
 }
       $('backupBtn').onclick=()=>{let blob=new Blob([JSON.stringify({app:'DaryayeParsi',schema:1,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='daryaye-parsi-backup.json';a.click();URL.revokeObjectURL(a.href);toast('فایل پشتیبان آماده شد.')};
-$('restoreBtn').onclick=()=>$('restoreFile').click();$('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let incoming=JSON.parse(await f.text());let d=incoming.data||incoming;if(!d||typeof d!=='object'||!d.stats)throw Error();modal(`<h2>بازیابی اطلاعات</h2><p>اطلاعات پشتیبان با اطلاعات فعلی ادغام می‌شوند؛ اطلاعات فعلی پاک نخواهد شد.</p><p class="notice">در صورت وجود مرحله‌های مشترک، تکمیل‌شده‌ها و پاداش‌های قبلی حفظ می‌شوند و تعداد مرواریدها کمتر نخواهد شد.</p><button class="action primary" id="mergeBackup">ادغام و بازیابی</button> <button class="action" id="cancelRestore">انصراف</button>`);$('cancelRestore').onclick=closeModal;$('mergeBackup').onclick=()=>{data.name=data.name||d.name||'';data.pearls=Math.max(data.pearls||0,d.pearls||0);data.gold=Math.max(data.gold||0,d.gold||0);data.completed={...(d.completed||{}),...(data.completed||{})};data.awarded={...(d.awarded||{}),...(data.awarded||{})};data.mistakes={...(d.mistakes||{}),...(data.mistakes||{})};data.stats={attempts:Math.max(data.stats.attempts||0,d.stats.attempts||0),correct:Math.max(data.stats.correct||0,d.stats.correct||0),wrong:Math.max(data.stats.wrong||0,d.stats.wrong||0)};data.goldEarned=data.goldEarned||d.goldEarned;data.streak=Math.max(data.streak||0,d.streak||0);save();closeModal();toast('اطلاعات پشتیبان با اطلاعات فعلی ادغام شد.');};}catch{toast('این فایل پشتیبان معتبر نیست.')}e.target.value=''};
+$('restoreBtn').onclick=()=>$('restoreFile').click();$('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let incoming=JSON.parse(await f.text());let d=incoming.data||incoming;if(!d||typeof d!=='object'||!d.stats)throw Error();modal(`<h2>بازیابی اطلاعات</h2><p>اطلاعات پشتیبان با اطلاعات فعلی ادغام می‌شوند؛ اطلاعات فعلی پاک نخواهد شد.</p><p class="notice">در صورت وجود مرحله‌های مشترک، تکمیل‌شده‌ها و پاداش‌های قبلی حفظ می‌شوند و تعداد مرواریدها کمتر نخواهد شد.</p><button class="action primary" id="mergeBackup">ادغام و بازیابی</button> <button class="action" id="cancelRestore">انصراف</button>`);$('cancelRestore').onclick=closeModal;$('mergeBackup').onclick=()=>{data.name=data.name||d.name||'';data.pearls=Math.max(data.pearls||0,d.pearls||0);data.gold=Math.max(data.gold||0,d.gold||0);data.completed={...(d.completed||{}),...(data.completed||{})};data.sentenceCompleted={...(d.sentenceCompleted||{}),...(data.sentenceCompleted||{})};data.awarded={...(d.awarded||{}),...(data.awarded||{})};data.mistakes={...(d.mistakes||{}),...(data.mistakes||{})};data.stats={attempts:Math.max(data.stats.attempts||0,d.stats.attempts||0),correct:Math.max(data.stats.correct||0,d.stats.correct||0),wrong:Math.max(data.stats.wrong||0,d.stats.wrong||0)};data.goldEarned=data.goldEarned||d.goldEarned;data.streak=Math.max(data.streak||0,d.streak||0);save();closeModal();toast('اطلاعات پشتیبان با اطلاعات فعلی ادغام شد.');};}catch{toast('این فایل پشتیبان معتبر نیست.')}e.target.value=''};
 // Resume the exact in-progress exercise if one was saved.
 if(data.session&&Number.isInteger(data.session.stage)&&data.session.stage>=0&&data.session.stage<stages.length){let s=data.session;current=s.stage;reviewMode=!!s.review;answer=s.answer||stages[current].answers[0];answerUnits=s.answerUnits||unitsFor(current,answer);tiles=(s.tiles||stages[current].tiles.map((v,id)=>id)).map(id=>({id,v:stages[current].tiles[id]}));placed=s.placed||[];attempts=s.attempts||0;hinted=!!s.hinted;success=false;renderGame();show('game');}
 updateHeader();
