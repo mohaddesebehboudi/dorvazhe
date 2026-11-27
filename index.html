@@ -205,6 +205,8 @@ let tiles = [];
 function targetAnswer(){let s=stages[current];if(current===2)return s.answers[Math.random()<.5?0:1];return s.answers[0]}
 function unitsFor(i,word){
     return [...stages[i].tiles];
+    }function tileValue(id) {
+    return tiles.find(t => t.id === id)?.v ?? '';
     }
 function startStage(i,review=false){
     let unlocked = i === 0 || stages.slice(0,i).every((_,j)=>!!data.completed[j]);
