@@ -1591,13 +1591,13 @@ function startKnowledgeBalloons(){
 }
 function startKnowledgeCrowns(){
  $('knowledgePrompt').textContent='ترکیب خواسته‌شده را از میان تاج‌ها و توپ‌ها پیدا کن.';
- const questions=shuffle([{target:'تا',group:0},{target:'تَـ',group:2},{target:'تو',group:1}].flatMap(x=>Array.from({length:5},()=>({...x}))));
+ const questions=shuffle([{target:'تا',group:0},{target:'تَـ',group:2},{target:'تو',group:1}]);
  let qi=0;
  function question(){
   if(knowledgeLocked)return;
   const x=questions[qi],g=knowledgeGroups[x.group];
-  $('knowledgePlayArea').innerHTML='<h2 class="knowledge-word">ترکیب «'+x.target+'» را پیدا کن</h2><p class="notice">سؤال '+fa(qi+1)+' از ۱۵</p><div class="knowledge-choice-grid" id="knowledgeChoices"></div>';
-  shuffle(g.targets).forEach((w,i)=>{const b=document.createElement('button');b.className='knowledge-choice '+(g.kind==='crown'?'crown':'ball');b.textContent=w;b.style.filter='hue-rotate('+(i*43)+'deg)';b.onclick=()=>{if(knowledgeLocked||b.disabled)return;if(w===x.target){b.disabled=true;knowledgeCorrect();qi++;knowledgeProgressUpdate(qi,15);save();if(qi===15)knowledgeFinishStage();else setTimeout(question,420);}else{knowledgeWrong();$('knowledgeFeedback').textContent='این گزینه درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}};$('knowledgeChoices').append(b);});
+  $('knowledgePlayArea').innerHTML='<h2 class="knowledge-word">ترکیب «'+x.target+'» را پیدا کن</h2><p class="notice">مرحله '+fa(qi+1)+' از ۳</p><div class="knowledge-choice-grid" id="knowledgeChoices"></div>';
+  shuffle(g.targets).forEach((w,i)=>{const b=document.createElement('button');b.className='knowledge-choice '+(g.kind==='crown'?'crown':'ball');b.textContent=w;b.style.filter='hue-rotate('+(i*43)+'deg)';b.onclick=()=>{if(knowledgeLocked||b.disabled)return;if(w===x.target){b.disabled=true;knowledgeCorrect();qi++;knowledgeProgressUpdate(qi,3);save();if(qi===3)knowledgeFinishStage();else setTimeout(question,420);}else{knowledgeWrong();$('knowledgeFeedback').textContent='این گزینه درست نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}};$('knowledgeChoices').append(b);});
  }
  question();
 }
