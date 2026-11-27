@@ -26,7 +26,7 @@
     display: none;
           }
 
-/* انیمیشن بارش ایموجی */
+/* حرکت آرام حباب‌ها از پایین به بالا */
 .emoji-rain {
   position: fixed;
   inset: 0;
@@ -37,20 +37,23 @@
 
 .emoji-rain span {
   position: absolute;
-  top: -60px;
-  animation: emojiDrop 1000ms linear forwards;
+  bottom: -60px;
+  animation: bubbleRise 3000ms ease-out forwards;
   animation-delay: var(--delay);
   font-size: var(--size);
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
-@keyframes emojiDrop {
+@keyframes bubbleRise {
   0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  12% {
     opacity: 1;
   }
   100% {
-    transform: translate3d(var(--drift), 110vh, 0) rotate(540deg);
+    transform: translate3d(var(--drift), -110vh, 0);
     opacity: 0.9;
   }
 }
@@ -359,11 +362,7 @@ const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d
   const rain = document.createElement('div');
   rain.className = 'emoji-rain';
 
-  const emojis = [
-    ...Array(10).fill('🐚'),
-    ...Array(10).fill('🐳'),
-    ...Array(10).fill('🫧')
-  ];
+  const emojis = Array(30).fill('🫧');
 
   emojis.sort(() => Math.random() - 0.5);
 
@@ -374,7 +373,7 @@ const $=id=>document.getElementById(id);const fa=n=>String(n).replace(/[0-9]/g,d
     item.style.left = Math.random() * 100 + '%';
     item.style.setProperty('--size', (20 + Math.random() * 20) + 'px');
     item.style.setProperty('--delay', Math.random() * 700 + 'ms');
-    item.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
+    item.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
 
     rain.appendChild(item);
   });
