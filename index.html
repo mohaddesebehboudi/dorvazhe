@@ -1043,7 +1043,9 @@ const combinationRounds = [
 {t:"با",items:[["باران","🌧️",1],["بابا","👨🏻",1],["بادبادک","🪁",1],["دَست","✋",0],["ماه","🌙",0],["سَبَد","🧺",0]]},
 {t:"بَ",items:[["بَبر","🐯",1],["بَدن","🧍🏻",1],["سَبَد","🧺",1],["بابا","👨🏻",0],["دَفتر","📒",0],["ماه","🌙",0]]},
 {t:"دا",items:[["دارو","💊",1],["دانِه","🌱",1],["داد","🎁",1],["دَر","🚪",0],["مادَر","👩🏻",0],["ساعت","🕒",0]]},
+{t:"دا",items:[["دارو","💊",1],["دَست","✋",0],["داغ","🌶️",1],["دَفتَر","📓",0],["دارکوب","🐦",1],["دَر","🚪",0],["داد","🗣️",1],["بَرف","❄️",0],["دام","🐑",1],["بادام","🌰",1]]},
 {t:"دَ",items:[["دَر","🚪",1],["دَست","✋",1],["دَفتر","📒",1],["دارو","💊",0],["باران","🌧️",0],["ماه","🌙",0]]},
+{t:"دَ",items:[["دَست","✋",1],["دارو","💊",0],["دَریا","🌊",1],["داغ","🌶️",0],["دَفتَر","📓",1],["دام","🐑",0],["دَر","🚪",1],["بَرف","❄️",0],["داستان","📖",0],["دَرد","🤕",1]]},
 {t:"ما",items:[["ماه","🌙",1],["مادَر","👩🏻",1],["ماشین","🚗",1],["مَرد","🧔🏻",0],["سَبَد","🧺",0],["دَست","✋",0]]},
 {t:"مَ",items:[["مَرد","🧔🏻",1],["مَدرِسه","🏫",1],["مَسیر","🛣️",1],["ماه","🌙",0],["ماشین","🚗",0],["دارو","💊",0]]},
 {t:"سا",items:[["ساعت","🕒",1],["ساحِل","🏖️",1],["سالاد","🥗",1],["سَبَد","🧺",0],["سَنگ","🪨",0],["مادَر","👩🏻",0]]},
@@ -1060,6 +1062,15 @@ const combinationRounds = [
 {t:"نَـ",items:[["نَفَس","🌬️",1],["نَمَک","🧂",1],["نَهنگ","🐋",1],["نان","🍞",0],["نور","💡",0],["نوزاد","👶",0]]},
 {t:"نو",items:[["نور","💡",1],["نوشابه","🥤",1],["نوشیدنی","🧃",1],["نان","🍞",0],["نارنج","🍊",0],["نَمَک","🧂",0]]}
 ];
+
+// انتقال شماره‌های قبلی جزیره ترکیب‌ها پس از افزودن دو مرحله در جایگاه‌های ۴ و ۶.
+if((data.combinationStageVersion||0)<2){
+ const movedCompleted={},movedAwarded={};
+ const moveCombinationIndex=n=>n<3?n:n===3?4:n+2;
+ Object.entries(data.combinationCompleted||{}).forEach(([k,v])=>{if(v)movedCompleted[moveCombinationIndex(Number(k))]=true;});
+ Object.entries(data.combinationAwarded||{}).forEach(([k,v])=>{if(v)movedAwarded[moveCombinationIndex(Number(k))]=true;});
+ data.combinationCompleted=movedCompleted;data.combinationAwarded=movedAwarded;data.combinationStageVersion=2;save();
+}
 
 let combinationIndex=0;
 let combinationChosen=new Set();
@@ -1960,8 +1971,7 @@ const knowledgeDifferenceQuestions=[
  {options:['آدَم','آمَد','آمَد','آمَد'],correct:0}
 ];
 const knowledgeSoundStagePositions=[2,5,8,11,14,17,20,23,26,29];
-const knowledgeDaaLevels=[{target:'دا',items:[['دارو','💊',true],['دَست','✋',false],['داغ','🌶️',true],['دَفتَر','📓',false],['دارکوب','🐦',true],['دَر','🚪',false],['داد','🗣️',true],['بَرف','❄️',false],['دام','🐑',true],['بادام','🌰',true]]},{target:'دَ',items:[['دَست','✋',true],['دارو','💊',false],['دَریا','🌊',true],['داغ','🌶️',false],['دَفتَر','📓',true],['دام','🐑',false],['دَر','🚪',true],['بَرف','❄️',false],['داستان','📖',false],['دَرد','🤕',true]]}];
-const knowledgeTotalStages=61;
+const knowledgeTotalStages=59;
 function isKnowledgeSoundStage(i){return knowledgeSoundStagePositions.includes(i);}
 function knowledgeLetterIndex(i){
  for(let old=0;old<20;old++)if(old+Math.floor(old/2)===i)return old;
@@ -2022,6 +2032,13 @@ if((data.knowledgeStageVersion||0)<6){
  Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedAwarded[n>=30?n+2:n]=true;}});
  data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=6;save();
 }
+// نسخهٔ ۷: دو مرحلهٔ «دا/دَ» به جزیره ترکیب‌ها منتقل شدند؛ مراحل بعدی دانایی دو شماره جلو می‌آیند.
+if((data.knowledgeStageVersion||0)<7){
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v){const n=Number(k);if(n<30)shiftedCompleted[n]=true;else if(n>31)shiftedCompleted[n-2]=true;}});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);if(n<30)shiftedAwarded[n]=true;else if(n>31)shiftedAwarded[n-2]=true;}});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=7;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -2037,94 +2054,10 @@ function startKnowledgeStage(i){
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
   if(isKnowledgeSoundStage(i))startKnowledgeSoundStage(knowledgeSoundStagePositions.indexOf(i));
   else if(i<30)startKnowledgeLetterStage(knowledgeLetterIndex(i));
-  else if(i===30||i===31)startKnowledgeDaaStage(i-30);
-  else if(i<32+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-32);
-  else{const oldIndex=i-32-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
+  
+  else if(i<30+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-30);
+  else{const oldIndex=i-30-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
   show('knowledgeGame');
-}
-function startKnowledgeDaaStage(levelIndex){
- const q=knowledgeDaaLevels[levelIndex];
- const total=q.items.filter(x=>x[2]).length;
- let selected=0,isDragging=false,activeItem=null,currentLine=null,completing=false;
-  $('knowledgePrompt').textContent='هر تصویری را که ترکیبِ وسط را دارد، به آن وصل کن.';
- const birdSvg='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="55" rx="25" ry="30" fill="#1a1a1a"/><ellipse cx="45" cy="50" rx="8" ry="12" fill="#fff"/><ellipse cx="55" cy="60" rx="6" ry="10" fill="#fff"/><circle cx="50" cy="30" r="18" fill="#1a1a1a"/><path d="M40 20 Q45 10 50 15 Q55 10 60 20" fill="#e74c3c"/><ellipse cx="50" cy="18" rx="12" ry="6" fill="#e74c3c"/><circle cx="45" cy="28" r="4" fill="#fff"/><circle cx="45" cy="28" r="2.5" fill="#000"/><path d="M55 30 L75 28 L75 32 Z" fill="#f39c12"/><line x1="45" y1="80" x2="45" y2="90" stroke="#7f8c8d" stroke-width="2"/><line x1="55" y1="80" x2="55" y2="90" stroke="#7f8c8d" stroke-width="2"/><path d="M45 90 L42 93 M45 90 L45 93 M45 90 L48 93 M55 90 L52 93 M55 90 L55 93 M55 90 L58 93" stroke="#7f8c8d" stroke-width="1.5"/></svg>';
- const board=document.createElement('div');
- board.className='daa-match-board';
- board.innerHTML='<svg class="daa-lines" aria-hidden="true"><defs><filter id="daaGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg><div class="daa-center-target">'+esc(q.target)+'</div><div class="daa-match-items"></div>';
- $('knowledgePlayArea').replaceChildren(board);
- const lines=board.querySelector('.daa-lines'),target=board.querySelector('.daa-center-target'),itemsBox=board.querySelector('.daa-match-items');
- const shuffled=shuffle(q.items.map((x,index)=>({word:x[0],emoji:x[1],correct:x[2],originalIndex:index})));
- const placed=[];
- const radiusFactor=.38;
- const rotationOffset=Math.random()*360;
- shuffled.forEach((item,index)=>{
-  const el=document.createElement('div');
-  el.className='daa-match-item';
-  el.dataset.correct=String(item.correct);
-  el.dataset.word=item.word;
-  const visual=item.word==='دارکوب'?birdSvg:'<span class="daa-item-emoji">'+item.emoji+'</span>';
-  el.innerHTML=visual+'<span class="daa-item-word">'+esc(item.word)+'</span>';
-  const angle=(index*(360/shuffled.length)-90+rotationOffset)*(Math.PI/180);
-  el.dataset.angle=String(angle);
-  itemsBox.append(el);placed.push(el);
- });
- function positionItems(){
-  const rect=board.getBoundingClientRect();
-  const radius=Math.min(rect.width,rect.height)*radiusFactor;
-  const cx=rect.width/2,cy=rect.height/2;
-  placed.forEach(el=>{
-   const a=Number(el.dataset.angle);
-   el.style.left=(cx+radius*Math.cos(a)-38)+'px';
-   el.style.top=(cy+radius*Math.sin(a)-38)+'px';
-  });
-  lines.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);
-  lines.setAttribute('width',rect.width);lines.setAttribute('height',rect.height);
- }
- positionItems();
- const resizeObserver=new ResizeObserver(positionItems);resizeObserver.observe(board);
- function makeLine(item){
-  const br=board.getBoundingClientRect(),ir=item.getBoundingClientRect();
-  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1',ir.left+ir.width/2-br.left);line.setAttribute('y1',ir.top+ir.height/2-br.top);
-  line.setAttribute('x2',ir.left+ir.width/2-br.left);line.setAttribute('y2',ir.top+ir.height/2-br.top);
-  line.setAttribute('stroke','rgba(255,255,255,.9)');line.setAttribute('stroke-width','5');line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-dasharray','9 8');
-  lines.append(line);return line;
- }
- function pointerPos(e){const r=board.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
- function onMove(e){
-  if(!isDragging||!currentLine)return;
-  const p=pointerPos(e);currentLine.setAttribute('x2',p.x);currentLine.setAttribute('y2',p.y);
- }
- function onUp(e){
-  if(!isDragging)return;
-  isDragging=false;document.removeEventListener('pointermove',onMove);document.removeEventListener('pointerup',onUp);
-  activeItem.classList.remove('dragging');
-  const p=pointerPos(e),tr=target.getBoundingClientRect(),br=board.getBoundingClientRect();
-  const tx=tr.left+tr.width/2-br.left,ty=tr.top+tr.height/2-br.top;
-  if(Math.hypot(p.x-tx,p.y-ty)<Math.max(58,tr.width*.58)){
-   if(activeItem.dataset.correct==='true'){
-    currentLine.setAttribute('x2',tx);currentLine.setAttribute('y2',ty);currentLine.setAttribute('stroke','#42e6a4');currentLine.setAttribute('stroke-width','7');currentLine.setAttribute('stroke-dasharray','none');currentLine.setAttribute('filter','url(#daaGlow)');
-    activeItem.classList.add('connected');activeItem.style.pointerEvents='none';
-    selected++;knowledgeCorrect();knowledgeProgressUpdate(selected,total);save();
-    $('knowledgeFeedback').textContent='آفرین! درست وصل کردی.';$('knowledgeFeedback').className='feedback good';
-    if(selected===total){completing=true;resizeObserver.disconnect();setTimeout(()=>knowledgeFinishStage(),650);}
-   }else{
-    const failedLine=currentLine;failedLine.style.transition='opacity .35s';failedLine.style.opacity='0';setTimeout(()=>failedLine.remove(),380);
-    knowledgeWrong();$('knowledgeFeedback').textContent='این کلمه ترکیبِ وسط را ندارد؛ دوباره با دقت امتحان کن.';$('knowledgeFeedback').className='feedback soft';
-   }
-  }else{
-   const cancelledLine=currentLine;cancelledLine.style.transition='opacity .25s';cancelledLine.style.opacity='0';setTimeout(()=>cancelledLine.remove(),280);
-  }
-  activeItem=null;currentLine=null;
- }
- placed.forEach(el=>{
-  el.addEventListener('pointerdown',e=>{
-   if(knowledgeLocked||completing||el.classList.contains('connected'))return;
-   e.preventDefault();isDragging=true;activeItem=el;el.classList.add('dragging');currentLine=makeLine(el);
-   document.addEventListener('pointermove',onMove);document.addEventListener('pointerup',onUp);
-  });
- });
- knowledgeProgressUpdate(0,total);
 }
 function startKnowledgeSoundStage(level){
  $('knowledgePrompt').textContent='';
