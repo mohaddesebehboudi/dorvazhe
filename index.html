@@ -1615,7 +1615,17 @@ if(!Array.isArray(data.knowledgeDiceOrder)||data.knowledgeDiceOrder.length!==kno
  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
  data.knowledgeDiceOrder=order;save();
 }
-const knowledgeTotalStages=20+4+knowledgeDiceWords.length;
+const knowledgeDifferenceQuestions=[
+ {options:['آداب','آداب','آباد','آداب'],correct:2},
+ {options:['اَبَد','اَبَد','اَبَد','اَدَب'],correct:3},
+ {options:['بام','باد','باد','باد'],correct:0},
+ {options:['داماد','داد','داماد','داماد'],correct:1},
+ {options:['دَم','دَم','بَم','دَم'],correct:2},
+ {options:['بابا','بابا','بادام','بابا'],correct:2},
+ {options:['داد','دام','داد','داد'],correct:1},
+ {options:['آدَم','آمَد','آمَد','آمَد'],correct:0}
+];
+const knowledgeTotalStages=20+knowledgeDifferenceQuestions.length+4+knowledgeDiceWords.length;
 let knowledgeIndex=0,knowledgeProgress=0,knowledgeLocked=false,knowledgeSpinTimer=null,knowledgeRevealTimer=null;
 
 // انتقال پیشرفت نسخهٔ قبلی: مرحلهٔ ترکیبی تاج و توپ به سه مرحلهٔ مستقل تبدیل شده است.
@@ -1643,6 +1653,13 @@ if((data.knowledgeStageVersion||0)<3){
  Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v)shiftedAwarded[Number(k)+20]=true;});
  data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=3;save();
 }
+// نسخهٔ ۴: هشت مرحلهٔ تازه در جایگاه ۲۱ تا ۲۸ قرار گرفتند؛ پیشرفت مراحل قبلی از ۲۱ به بعد حفظ و ۸ شماره جابه‌جا می‌شود.
+if((data.knowledgeStageVersion||0)<4){
+ const shiftedCompleted={},shiftedAwarded={};
+ Object.entries(data.knowledgeCompleted||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedCompleted[n>=20?n+8:n]=true;}});
+ Object.entries(data.knowledgeAwarded||{}).forEach(([k,v])=>{if(v){const n=Number(k);shiftedAwarded[n>=20?n+8:n]=true;}});
+ data.knowledgeCompleted=shiftedCompleted;data.knowledgeAwarded=shiftedAwarded;data.knowledgeStageVersion=4;save();
+}
 function renderKnowledgeStages(){
  $('knowledgeStageList').innerHTML=Array.from({length:knowledgeTotalStages},(_,i)=>{
   const done=!!data.knowledgeCompleted[i],unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
@@ -1657,7 +1674,8 @@ function startKnowledgeStage(i){
   $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
   if(i<20)startKnowledgeLetterStage(i);
-  else{const oldIndex=i-20;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
+  else if(i<20+knowledgeDifferenceQuestions.length)startKnowledgeDifferenceStage(i-20);
+  else{const oldIndex=i-20-knowledgeDifferenceQuestions.length;if(oldIndex===0)startKnowledgeBalloons();else if(oldIndex<=3)startKnowledgeCrowns(oldIndex-1);else startKnowledgeDiceWord(oldIndex-4);}
   show('knowledgeGame');
 }
 function knowledgeProgressUpdate(done,total){knowledgeProgress=done;$('knowledgeProgressBar').style.width=(done/total*100)+'%';$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);}
@@ -1694,6 +1712,20 @@ function checkKnowledgeLetterAnswer(choice,button,q){
  knowledgeLetterSelected.push(choice);button.disabled=true;button.style.background='linear-gradient(145deg,#a8ff78,#78ffd6)';button.style.color='#17633b';knowledgeCorrect();knowledgeProgressUpdate(knowledgeLetterSelected.length,q.type==='both'?2:1);save();
  if(q.type!=='both'||knowledgeLetterSelected.length===2){$('knowledgeLetterChoices').querySelectorAll('button').forEach(b=>b.disabled=true);knowledgeFinishStage();}
  else{$('knowledgeFeedback').textContent='آفرین! حالا شکل دیگر را هم انتخاب کن.';$('knowledgeFeedback').className='feedback soft';}
+}
+function startKnowledgeDifferenceStage(questionIndex){
+ const q=knowledgeDifferenceQuestions[questionIndex];
+ const choices=q.options.map((word,index)=>({word,correct:index===q.correct}));
+ for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
+ $('knowledgePrompt').textContent='کلمه‌ای را پیدا کن که با سه کلمهٔ دیگر متفاوت است.';
+ $('knowledgePlayArea').innerHTML='<div class="knowledge-choice-grid" id="knowledgeDifferenceChoices" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:520px"></div>';
+ const grid=$('knowledgeDifferenceChoices');
+ choices.forEach((choice,index)=>{
+  const b=document.createElement('button');b.type='button';b.className='knowledge-choice';b.textContent=choice.word;
+  b.style.cssText='min-height:112px;border-radius:48% 48% 44% 44%;background:radial-gradient(circle at 30% 25%,#ffb3d9,#ff6b9d 65%,#d63384);font-size:clamp(20px,4vw,27px);padding:10px 5px;text-shadow:0 2px 3px #8b2455;';
+  b.onclick=()=>{if(knowledgeLocked||b.disabled)return;if(choice.correct){b.classList.add('correct');b.disabled=true;grid.querySelectorAll('button').forEach(x=>x.disabled=true);knowledgeCorrect();knowledgeProgressUpdate(1,1);save();knowledgeFinishStage();}else{knowledgeWrong();b.classList.add('wrong');$('knowledgeFeedback').textContent='این کلمه متفاوت نیست؛ دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';setTimeout(()=>b.classList.remove('wrong'),500);}};
+  grid.append(b);
+ });
 }
 function startKnowledgeBalloons(){
  $('knowledgePrompt').textContent='فقط توپ‌هایی را انتخاب کن که نشانه «تـ» یا «ت» دارند.';
