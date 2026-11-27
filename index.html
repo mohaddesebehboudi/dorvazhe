@@ -183,6 +183,42 @@
 #knowledgeGame.sound-game-mode .game-card > .subhead,
 #knowledgeGame.sound-game-mode .game-card > .progressline{display:none!important}
 
+/* تمرین وصل‌کردنی ترکیب‌ها؛ چیدمان حلقه‌ای با هدف در مرکز */
+#knowledgeGame .daa-match-board{
+ position:relative;width:min(100%,560px);height:min(58vh,510px);min-height:390px;margin:8px auto 0;
+ overflow:hidden;border:1px solid #8bdcff88;border-radius:24px;
+ background:radial-gradient(circle at 50% 50%,#ffffff12 0 2px,transparent 3px),radial-gradient(ellipse at 50% 110%,#1b7a8a99,transparent 60%),linear-gradient(160deg,#101d49,#172d5c 65%,#102d48);
+ box-shadow:inset 0 0 35px #60d9ff20,0 8px 25px #02071966;touch-action:none;
+}
+#knowledgeGame .daa-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:2}
+#knowledgeGame .daa-center-target{
+ position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:112px;height:112px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+ color:#fff;font-size:42px;font-weight:900;border:3px solid #e6fbff;
+ background:radial-gradient(circle at 35% 30%,#ff9da9,#e94e79 68%,#9f285d);
+ box-shadow:0 0 28px #ff82b588,inset 0 0 20px #ffffff44;
+ text-shadow:0 2px 5px #76234b;animation:daaTargetPulse 2s ease-in-out infinite;
+}
+@keyframes daaTargetPulse{50%{box-shadow:0 0 40px #ff82b5cc,inset 0 0 24px #ffffff66;transform:translate(-50%,-50%) scale(1.05)}}
+#knowledgeGame .daa-match-item{
+ position:absolute;z-index:5;width:76px;height:76px;border-radius:50%;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+ color:#18324f;background:linear-gradient(145deg,#fff,#dceeff);
+ border:2px solid #ffffff;box-shadow:0 5px 15px #02071966,inset 0 2px 5px #fff;
+ cursor:grab;touch-action:none;user-select:none;transition:transform .18s,box-shadow .18s,background .18s;
+}
+#knowledgeGame .daa-match-item.dragging{z-index:8;transform:scale(1.12);box-shadow:0 0 24px #72dcffcc;cursor:grabbing}
+#knowledgeGame .daa-match-item.connected{background:linear-gradient(145deg,#d9fff0,#8de8c5);border-color:#8effdc;box-shadow:0 0 22px #58f0d599;cursor:default}
+#knowledgeGame .daa-item-emoji{font-size:27px;line-height:1.05}
+#knowledgeGame .daa-item-word{font-size:12px;font-weight:900;line-height:1.2;white-space:nowrap}
+#knowledgeGame .daa-match-item svg{width:37px;height:37px}
+@media(max-width:600px){
+ #knowledgeGame .daa-match-board{height:min(58vh,460px);min-height:370px;border-radius:20px}
+ #knowledgeGame .daa-match-item{width:68px;height:68px}
+ #knowledgeGame .daa-item-emoji{font-size:24px}
+ #knowledgeGame .daa-item-word{font-size:11px}
+ #knowledgeGame .daa-center-target{width:98px;height:98px;font-size:36px}
+}
 /* دنیای کیهانی جزیره دانایی */
 body.cosmic-knowledge{
   color:#eaf7ff;
@@ -2007,14 +2043,88 @@ function startKnowledgeStage(i){
   show('knowledgeGame');
 }
 function startKnowledgeDaaStage(levelIndex){
- const q=knowledgeDaaLevels[levelIndex],total=q.items.filter(x=>x[2]).length;let selected=0;const locked=new Set();
- $('knowledgePrompt').textContent='تصویرهایی را انتخاب کن که صدای «'+q.target+'» را دارند.';
- $('knowledgePlayArea').innerHTML='<div class="knowledge-word" style="font-size:clamp(34px,9vw,54px);margin:8px auto 18px">🔊 '+q.target+'</div><div class="knowledge-choice-grid" id="daaChoices">'+q.items.map((x,i)=>'<button class="knowledge-choice" data-daa="'+i+'" style="min-height:105px"><span style="display:block;font-size:36px">'+x[1]+'</span><span>'+esc(x[0])+'</span></button>').join('')+'</div><p class="notice" style="text-align:center;margin-top:12px">تصویرهای درست: '+fa(total)+' مورد</p>';
- document.querySelectorAll('[data-daa]').forEach(btn=>btn.onclick=()=>{
-  if(knowledgeLocked||locked.has(+btn.dataset.daa))return;const x=q.items[+btn.dataset.daa];
-  if(x[2]){locked.add(+btn.dataset.daa);btn.classList.add('correct');btn.disabled=true;selected++;knowledgeCorrect();knowledgeProgressUpdate(selected,total);save();if(selected===total)knowledgeFinishStage();}
-  else{btn.classList.add('wrong');knowledgeWrong();setTimeout(()=>btn.classList.remove('wrong'),550);$('knowledgeFeedback').textContent='این تصویر صدای «'+q.target+'» را ندارد. دوباره دقت کن.';$('knowledgeFeedback').className='feedback soft';}
+ const q=knowledgeDaaLevels[levelIndex];
+ const total=q.items.filter(x=>x[2]).length;
+ let selected=0,isDragging=false,activeItem=null,currentLine=null;
+ const boardWidth='100%';
+ $('knowledgePrompt').textContent='هر تصویری را که ترکیبِ وسط را دارد، به آن وصل کن.';
+ const birdSvg='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="55" rx="25" ry="30" fill="#1a1a1a"/><ellipse cx="45" cy="50" rx="8" ry="12" fill="#fff"/><ellipse cx="55" cy="60" rx="6" ry="10" fill="#fff"/><circle cx="50" cy="30" r="18" fill="#1a1a1a"/><path d="M40 20 Q45 10 50 15 Q55 10 60 20" fill="#e74c3c"/><ellipse cx="50" cy="18" rx="12" ry="6" fill="#e74c3c"/><circle cx="45" cy="28" r="4" fill="#fff"/><circle cx="45" cy="28" r="2.5" fill="#000"/><path d="M55 30 L75 28 L75 32 Z" fill="#f39c12"/><line x1="45" y1="80" x2="45" y2="90" stroke="#7f8c8d" stroke-width="2"/><line x1="55" y1="80" x2="55" y2="90" stroke="#7f8c8d" stroke-width="2"/><path d="M45 90 L42 93 M45 90 L45 93 M45 90 L48 93 M55 90 L52 93 M55 90 L55 93 M55 90 L58 93" stroke="#7f8c8d" stroke-width="1.5"/></svg>';
+ const board=document.createElement('div');
+ board.className='daa-match-board';
+ board.innerHTML='<svg class="daa-lines" aria-hidden="true"><defs><filter id="daaGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg><div class="daa-center-target">'+esc(q.target)+'</div><div class="daa-match-items"></div>';
+ $('knowledgePlayArea').replaceChildren(board);
+ const lines=board.querySelector('.daa-lines'),target=board.querySelector('.daa-center-target'),itemsBox=board.querySelector('.daa-match-items');
+ const shuffled=shuffle(q.items.map((x,index)=>({word:x[0],emoji:x[1],correct:x[2],originalIndex:index})));
+ const placed=[];
+ const radiusFactor=.38;
+ shuffled.forEach((item,index)=>{
+  const el=document.createElement('div');
+  el.className='daa-match-item';
+  el.dataset.correct=String(item.correct);
+  el.dataset.word=item.word;
+  const visual=item.word==='دارکوب'?birdSvg:'<span class="daa-item-emoji">'+item.emoji+'</span>';
+  el.innerHTML=visual+'<span class="daa-item-word">'+esc(item.word)+'</span>';
+  const angle=(index*(360/shuffled.length)-90+Math.random()*18)*(Math.PI/180);
+  el.dataset.angle=String(angle);
+  itemsBox.append(el);placed.push(el);
  });
+ function positionItems(){
+  const rect=board.getBoundingClientRect();
+  const radius=Math.min(rect.width,rect.height)*radiusFactor;
+  const cx=rect.width/2,cy=rect.height/2;
+  placed.forEach(el=>{
+   const a=Number(el.dataset.angle);
+   el.style.left=(cx+radius*Math.cos(a)-38)+'px';
+   el.style.top=(cy+radius*Math.sin(a)-38)+'px';
+  });
+  lines.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);
+  lines.setAttribute('width',rect.width);lines.setAttribute('height',rect.height);
+ }
+ positionItems();
+ const resizeObserver=new ResizeObserver(positionItems);resizeObserver.observe(board);
+ function makeLine(item){
+  const br=board.getBoundingClientRect(),ir=item.getBoundingClientRect();
+  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',ir.left+ir.width/2-br.left);line.setAttribute('y1',ir.top+ir.height/2-br.top);
+  line.setAttribute('x2',ir.left+ir.width/2-br.left);line.setAttribute('y2',ir.top+ir.height/2-br.top);
+  line.setAttribute('stroke','rgba(255,255,255,.9)');line.setAttribute('stroke-width','5');line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-dasharray','9 8');
+  lines.append(line);return line;
+ }
+ function pointerPos(e){const r=board.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
+ function onMove(e){
+  if(!isDragging||!currentLine)return;
+  const p=pointerPos(e);currentLine.setAttribute('x2',p.x);currentLine.setAttribute('y2',p.y);
+ }
+ function onUp(e){
+  if(!isDragging)return;
+  isDragging=false;document.removeEventListener('pointermove',onMove);document.removeEventListener('pointerup',onUp);
+  activeItem.classList.remove('dragging');
+  const p=pointerPos(e),tr=target.getBoundingClientRect(),br=board.getBoundingClientRect();
+  const tx=tr.left+tr.width/2-br.left,ty=tr.top+tr.height/2-br.top;
+  if(Math.hypot(p.x-tx,p.y-ty)<Math.max(58,tr.width*.58)){
+   if(activeItem.dataset.correct==='true'){
+    currentLine.setAttribute('x2',tx);currentLine.setAttribute('y2',ty);currentLine.setAttribute('stroke','#42e6a4');currentLine.setAttribute('stroke-width','7');currentLine.setAttribute('stroke-dasharray','none');currentLine.setAttribute('filter','url(#daaGlow)');
+    activeItem.classList.add('connected');activeItem.style.pointerEvents='none';
+    selected++;knowledgeCorrect();knowledgeProgressUpdate(selected,total);save();
+    $('knowledgeFeedback').textContent='آفرین! درست وصل کردی.';$('knowledgeFeedback').className='feedback good';
+    if(selected===total){resizeObserver.disconnect();setTimeout(()=>knowledgeFinishStage(),650);}
+   }else{
+    currentLine.style.transition='opacity .35s';currentLine.style.opacity='0';setTimeout(()=>currentLine?.remove(),380);
+    knowledgeWrong();$('knowledgeFeedback').textContent='این کلمه ترکیبِ وسط را ندارد؛ دوباره با دقت امتحان کن.';$('knowledgeFeedback').className='feedback soft';
+   }
+  }else{
+   currentLine.style.transition='opacity .25s';currentLine.style.opacity='0';setTimeout(()=>currentLine?.remove(),280);
+  }
+  activeItem=null;currentLine=null;
+ }
+ placed.forEach(el=>{
+  el.addEventListener('pointerdown',e=>{
+   if(knowledgeLocked||el.classList.contains('connected'))return;
+   e.preventDefault();isDragging=true;activeItem=el;el.classList.add('dragging');currentLine=makeLine(el);
+   document.addEventListener('pointermove',onMove);document.addEventListener('pointerup',onUp);
+  });
+ });
+ knowledgeProgressUpdate(0,total);
 }
 function startKnowledgeSoundStage(level){
  $('knowledgePrompt').textContent='';
