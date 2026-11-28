@@ -539,6 +539,7 @@ body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progre
 
 
 
+#knowledgeGame.hide-knowledge-progress .progressline{display:none!important}
 /* دو مرحلهٔ آغازین جزیره دانایی: بازی آ و ا با ظاهر کیهانی */
 #knowledgeGame .alef-hunt,#knowledgeGame .alef-quiz{max-width:560px;margin:10px auto;padding:12px}
 #knowledgeGame .alef-hunt-target{text-align:center;font-size:clamp(20px,4vw,27px);font-weight:900;margin:5px 0 18px;color:#eaf7ff}
@@ -2236,7 +2237,7 @@ function renderKnowledgeStages(){
 function startKnowledgeStage(i){
   const unlocked=i===0||Array.from({length:i},(_,j)=>j).every(j=>!!data.knowledgeCompleted[j]);
   if(!unlocked){toast('اول مرحله‌های قبلی را کامل کن.');return;}
-  clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;knowledgeLetterSelected=[];$('knowledgeGame').classList.toggle('sound-game-mode',isKnowledgeSoundStage(i));
+  clearInterval(knowledgeSpinTimer);clearTimeout(knowledgeRevealTimer);knowledgeIndex=i;knowledgeProgress=0;knowledgeLocked=false;knowledgeLetterSelected=[];$('knowledgeGame').classList.toggle('sound-game-mode',isKnowledgeSoundStage(i));$('knowledgeGame').classList.toggle('hide-knowledge-progress',i<32);
   $('knowledgeNext').classList.add('hidden');$('knowledgeRetry').classList.add('hidden');$('knowledgeFeedback').textContent='';$('knowledgeFeedback').className='feedback';
   $('knowledgeStageLabel').textContent='مرحله '+fa(i+1);$('knowledgeScoreLabel').textContent=fa(data.knowledgeScore||0);$('knowledgeProgressBar').style.width='0%';
   if(i===0)startKnowledgeAlefFindStage('آ');
@@ -2285,13 +2286,15 @@ function startKnowledgeAlefFindStage(target){
   });
 }
 function startKnowledgeAlefFindStage(target){
- $('knowledgePrompt').textContent='همهٔ «'+target+'»ها را پیدا کن.';
+ $('knowledgePrompt').innerHTML=target==='آ'
+  ?'همه‌ی <strong class="alef-a">آ</strong> ها را پیدا کن.'
+  :'همه‌ی <strong class="alef-e">ا</strong> ها را پیدا کن.';
  const other=target==='آ'?'ا':'آ',count=4+Math.floor(Math.random()*2),letters=[];
  for(let i=0;i<count;i++)letters.push(target);
  for(let i=0;i<5;i++)letters.push(other);
  const extras=['ب','م','ن','د'];while(letters.length<16)letters.push(extras[Math.floor(Math.random()*extras.length)]);
  const colors=target==='آ'?'#45baff':'#ff626f';
- $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">همهٔ <strong style="color:'+colors+'">'+target+'</strong>ها را پیدا کن</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
+ $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
  const grid=$('knowledgeAlefGrid');let left=count;
  knowledgeAlefShuffle(letters).forEach(letter=>{
   const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell';b.textContent=letter;
