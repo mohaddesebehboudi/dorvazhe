@@ -2374,7 +2374,8 @@ function startKnowledgeAlefQuizStage(){
    const b=document.createElement('button');b.type='button';b.className='alef-quiz-option';b.innerHTML='<span class="alef-quiz-emoji">'+option[1]+'</span><span>'+esc(option[0])+'</span>';
    b.onclick=()=>{
     if(knowledgeLocked||b.disabled)return;
-    if(option===q.right){
+    const isAlternateCorrect=questionIndex===17&&q.type==='notfirst'&&option[0]==='ستاره';
+    if(option===q.right||isAlternateCorrect){
      b.classList.add('correct');b.disabled=true;options.querySelectorAll('button').forEach(x=>x.disabled=true);
      score++;knowledgeCorrect();knowledgeProgressUpdate(index+1,30);save();
      const word=b.querySelector('span:last-child');
