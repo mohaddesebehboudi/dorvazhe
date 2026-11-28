@@ -2211,13 +2211,10 @@ if((data.knowledgeStageVersion||0)<11){
  if(oldCompleted[1])shiftedCompleted[1]=true;
  if(oldAwarded[0])shiftedAwarded[0]=true;
  if(oldAwarded[1])shiftedAwarded[1]=true;
- if(oldCompleted[2]){
-  for(let n=2;n<32;n++)shiftedCompleted[n]=true;
-  for(let n=2;n<32;n++)shiftedAwarded[n]=true;
- }else{
-  Object.entries(oldCompleted).forEach(([k,v])=>{const n=Number(k);if(v&&n>=3)shiftedCompleted[n-1]=true;});
-  Object.entries(oldAwarded).forEach(([k,v])=>{const n=Number(k);if(v&&n>=3)shiftedAwarded[n-1]=true;});
- }
+ // تکمیل مرحلهٔ تجمیعی قبلی به‌تنهایی به معنی انجام ۳۰ مرحلهٔ مستقل نیست؛
+ // بنابراین مرحلهٔ تجمیعی حذف می‌شود و پیشرفت مراحل مستقلِ بعد از آن جابه‌جا می‌شود.
+ Object.entries(oldCompleted).forEach(([k,v])=>{const n=Number(k);if(v&&n>=3)shiftedCompleted[n-1]=true;});
+ Object.entries(oldAwarded).forEach(([k,v])=>{const n=Number(k);if(v&&n>=3)shiftedAwarded[n-1]=true;});
  data.knowledgeCompleted=shiftedCompleted;
  data.knowledgeAwarded=shiftedAwarded;
  data.knowledgeStageVersion=11;
