@@ -81,7 +81,7 @@ export default {
         return response({ ok: false, error: "نام کاربری باید ۲ تا ۲۴ نویسه و شامل حروف، عدد، فاصله، خط تیره یا زیرخط باشد." }, 400);
       }
       const action = body.action;
-      if (!["register", "sync"].includes(action)) {
+      if (!["register", "login", "sync"].includes(action)) {
         return response({ ok: false, error: "درخواست نامعتبر است." }, 400);
       }
 
@@ -92,7 +92,7 @@ export default {
         if (action === "register" && existing) {
           return response({ ok: false, error: "این نام کاربری قبلاً ثبت شده است. نام دیگری انتخاب کن.", duplicate: true }, 409);
         }
-        if (action === "sync" && !existing) {
+        if ((action === "sync" || action === "login") && !existing) {
           return response({ ok: false, error: "این نام کاربری ثبت نشده است. ابتدا ثبت‌نام کن." }, 404);
         }
 
@@ -100,11 +100,11 @@ export default {
         const metrics = body.metrics || {};
         players[key] = {
           username,
-          totalProgress: Math.max(0, Number(metrics.totalProgress) || 0),
-          wrongAnswers: Math.max(0, Number(metrics.wrongAnswers) || 0),
-          loginCount: (existing?.loginCount || 0) + (action === "register" ? 1 : 0),
+          totalProgress: Math.max(existing?.totalProgress || 0, Math.max(0, Number(metrics.totalProgress) || 0)),
+          wrongAnswers: Math.max(existing?.wrongAnswers || 0, Math.max(0, Number(metrics.wrongAnswers) || 0)),
+          loginCount: (existing?.loginCount || 0) + (action === "register" || action === "login" ? 1 : 0),
           firstLogin: existing?.firstLogin || now,
-          lastLogin: action === "register" ? now : (existing?.lastLogin || now),
+          lastLogin: action === "register" || action === "login" ? now : (existing?.lastLogin || now),
           lastUpdated: now
         };
 
