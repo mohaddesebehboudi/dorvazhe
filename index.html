@@ -699,6 +699,12 @@ body.alchemy-world .progressline{background:#ffffff1c}body.alchemy-world .progre
 <script>
 (()=>{'use strict';
 const KEY='daryayeParsi_progress';
+// پس از Deploy کردن database/worker.js، آدرس Worker را اینجا قرار بده.
+const PLAYER_LOG_API='';
+let cloudSyncTimer=null;
+function playerLogMetrics(){return {totalProgress:Object.values(data.completed||{}).filter(Boolean).length+Object.values(data.sentenceCompleted||{}).filter(Boolean).length+Object.values(data.combinationCompleted||{}).filter(Boolean).length+Object.values(data.knowledgeCompleted||{}).filter(Boolean).length,wrongAnswers:Number(data.stats?.wrong)||0}}
+async function sendPlayerLog(action){if(!PLAYER_LOG_API||!data?.name)return {ok:false,disabled:true};try{const r=await fetch(PLAYER_LOG_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,username:data.name,metrics:playerLogMetrics()})});const result=await r.json();return {...result,status:r.status}}catch(error){return {ok:false,error:'ارتباط با سامانه ثبت اطلاعات برقرار نشد.'}}}
+function queuePlayerLog(){if(!PLAYER_LOG_API||!data?.name)return;clearTimeout(cloudSyncTimer);cloudSyncTimer=setTimeout(async()=>{const r=await sendPlayerLog('sync');if(!r.ok&&!r.disabled)console.warn('Player log sync failed:',r.error||r.status)},1200)}
 const stages = [
  {tiles:['آ','ب'],answers:['آب']},
  {tiles:['بـ','ا','بـ','ا'],answers:['بابا']},
@@ -791,12 +797,12 @@ const fresh=()=>({
   session:null
 });
       let data;try{data=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{data=fresh()}data={...fresh(),...data,stats:{...fresh().stats,...(data?.stats||{})}};
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{toast('فضای ذخیره‌سازی مرورگر کافی نیست. از پشتیبان‌گیری استفاده کن.')}updateHeader()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch{toast('فضای ذخیره‌سازی مرورگر کافی نیست. از پشتیبان‌گیری استفاده کن.')}updateHeader();queuePlayerLog()}
 function updateHeader(){$('namePill').textContent='👤 '+(data.name||'مهمان');$('pearls').textContent=fa(data.pearls);$('goldPearls').textContent=fa(data.gold);$('gamePearls').textContent=fa(data.pearls)}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');const world=id.startsWith('knowledge')?'cosmic-knowledge':id==='stages'||id==='game'?'word-factory-world':id.startsWith('sentence')?'storybook-world':id.startsWith('combination')?'alchemy-world':'';document.body.classList.remove('cosmic-knowledge','word-factory-world','storybook-world','alchemy-world');if(world)document.body.classList.add(world);window.scrollTo(0,0)}
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2300)}
 function modal(html){$('modal').innerHTML=html;$('modalBack').classList.add('show')}function closeModal(){$('modalBack').classList.remove('show')}
-if(!data.name){modal(`<h2>به دریای پارسی خوش آمدی! 🌊</h2><p>برای شروع، اسمت رو بنویس.</p><input class="field" id="firstName" maxlength="24" placeholder="اسم من..."/><p><button class="action primary" id="saveFirst">شروع ماجراجویی</button></p>`);$('saveFirst').onclick=()=>{let n=$('firstName').value.trim();if(!n)return toast('اول اسمت رو بنویس.');data.name=n;save();closeModal()}}
+if(!data.name){modal(`<h2>به دریای پارسی خوش آمدی! 🌊</h2><p>برای شروع، یک نام کاربری انتخاب کن.</p><input class="field" id="firstName" maxlength="24" placeholder="نام کاربری..."/><p><button class="action primary" id="saveFirst">شروع ماجراجویی</button></p>`);$('saveFirst').onclick=async()=>{let n=$('firstName').value.trim();if(!n)return toast('اول نام کاربری را بنویس.');if(PLAYER_LOG_API){const previous=data.name;data.name=n;const result=await sendPlayerLog('register');if(!result.ok){data.name=previous;return toast(result.error||'ثبت نام کاربری انجام نشد.')}}data.name=n;save();closeModal()}}else if(PLAYER_LOG_API){(async()=>{let result=await sendPlayerLog('login');if(result.status===404){result=await sendPlayerLog('register')}if(!result.ok)console.warn('Player login log failed:',result.error||result.status)})()}
 $('resetProgressBtn').onclick=()=>{modal(`<h2>بازنشانی پیشرفت</h2><p>مطمئنی می‌خواهی پیشرفت بازی را صفر کنی؟ تمام امتیازها، مرواریدها، مراحل تکمیل‌شده و فهرست مرور پاک می‌شوند و بازی از ابتدا شروع خواهد شد.</p><p><button class="action primary" id="confirmResetProgress">بله، بازنشانی کن</button> <button class="action" id="cancelResetProgress">انصراف</button></p>`);$('cancelResetProgress').onclick=closeModal;$('confirmResetProgress').onclick=()=>{const playerName=data.name;data=fresh();data.name=playerName;save();closeModal();location.reload();};};
 $('editName').onclick=()=>{modal(`<h2>تغییر نام</h2><input class="field" id="newName" maxlength="24" value="${esc(data.name)}"/><p><button class="action primary" id="saveName">ذخیره</button> <button class="action" id="cancelName">انصراف</button></p>`);$('saveName').onclick=()=>{let n=$('newName').value.trim();if(n){data.name=n;save();closeModal()}};$('cancelName').onclick=closeModal};
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
