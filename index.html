@@ -2250,7 +2250,6 @@ function knowledgeAlefShuffle(arr){
 }
 function startKnowledgeAlefFindStage(target){
   const colorClass=target==='آ'?'alef-a':'alef-e';
-  $('knowledgePrompt').textContent='';
   const count=4,letters=Array(16);
   // چهار نشانهٔ هدف را در چهار ردیف و چهار ستون متفاوت می‌چینیم.
   const targetColumns=knowledgeAlefShuffle([0,1,2,3]);
@@ -2266,7 +2265,6 @@ function startKnowledgeAlefFindStage(target){
   for(let i=0;i<letters.length;i++)if(letters[i]===undefined)letters[i]=shuffledDistractors[next++];
   $('knowledgePrompt').innerHTML=target==='آ'
    ?'همه‌ی <strong class="alef-a">آ</strong> ها را پیدا کن.'
-   :'همه‌ی <strong class="alef-e">ا</strong> ها را پیدا کن.';
    :'همه‌ی <strong class="alef-e">ا</strong> ها را پیدا کن.';
   $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
   const grid=$('knowledgeAlefGrid');let left=count;
