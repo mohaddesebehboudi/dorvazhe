@@ -2264,10 +2264,11 @@ function startKnowledgeAlefFindStage(target){
   const shuffledDistractors=knowledgeAlefShuffle(distractors);
   let next=0;
   for(let i=0;i<letters.length;i++)if(letters[i]===undefined)letters[i]=shuffledDistractors[next++];
-  const question=target==='آ'
+  $('knowledgePrompt').innerHTML=target==='آ'
    ?'همه‌ی <strong class="alef-a">آ</strong> ها را پیدا کن.'
    :'همه‌ی <strong class="alef-e">ا</strong> ها را پیدا کن.';
-  $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">'+question+'</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
+   :'همه‌ی <strong class="alef-e">ا</strong> ها را پیدا کن.';
+  $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
   const grid=$('knowledgeAlefGrid');let left=count;
   letters.forEach(letter=>{
    const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell';b.textContent=letter;
@@ -2317,8 +2318,8 @@ function startKnowledgeAlefSingleStage(questionIndex){
  if(!knowledgeAlefStageQuestions)knowledgeAlefStageQuestions=buildKnowledgeAlefQuizQuestions();
  const q=knowledgeAlefStageQuestions[questionIndex],isA=q.type==='first';
  const letter=isA?'آ':'ا',colorClass=isA?'alef-a':'alef-e';
- $('knowledgePrompt').textContent=isA?'کدام کلمه با «آ» شروع می‌شود؟':'کدام کلمه «ا» غیرِ اول دارد؟';
- $('knowledgePlayArea').innerHTML='<div class="alef-quiz"><div class="alef-quiz-progress">پرسش '+fa(questionIndex+1)+' از ۳۰</div><div class="alef-quiz-question">کدام کلمه <strong class="'+colorClass+'">'+letter+'</strong> '+(isA?'اول دارد؟':'غیرِ اول دارد؟')+'</div><div class="alef-quiz-options" id="knowledgeAlefOptions"></div></div>';
+ $('knowledgePrompt').innerHTML=isA?'کدام کلمه <strong class="alef-a">آ</strong> اول دارد؟':'کدام کلمه <strong class="alef-e">ا</strong> غیرِ اول دارد؟';
+ $('knowledgePlayArea').innerHTML='<div class="alef-quiz"><div class="alef-quiz-options" id="knowledgeAlefOptions"></div></div>';
  const options=$('knowledgeAlefOptions');
  q.options.forEach(option=>{
   const b=document.createElement('button');b.type='button';b.className='alef-quiz-option';b.innerHTML='<span class="alef-quiz-emoji">'+option[1]+'</span><span>'+esc(option[0])+'</span>';
