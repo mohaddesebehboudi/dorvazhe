@@ -28,7 +28,7 @@ function validUsername(value) {
     /^[\p{L}\p{N}_ -]+$/u.test(name);
 }
 
-async function githubRequest(path, options = {}) {
+async function githubRequest(path, env, options = {}) {
   return fetch(API + path, {
     ...options,
     headers: {
@@ -41,8 +41,8 @@ async function githubRequest(path, options = {}) {
   });
 }
 
-async function readPlayers() {
-  const res = await githubRequest("/repos/" + REPO + "/contents/" + FILE_PATH);
+async function readPlayers(env) {
+  const res = await githubRequest("/repos/" + REPO + "/contents/" + FILE_PATH, env);
   if (res.status === 404) return { players: {}, sha: null };
   if (!res.ok) throw new Error("GitHub read failed: " + res.status);
   const file = await res.json();
@@ -52,7 +52,7 @@ async function readPlayers() {
   return { players: JSON.parse(content || "{}"), sha: file.sha };
 }
 
-async function writePlayers(players, sha) {
+async function writePlayers(players, sha, env) {
   const content = btoa(String.fromCharCode(...new TextEncoder().encode(
     JSON.stringify(players, null, 2)
   )));
@@ -62,7 +62,7 @@ async function writePlayers(players, sha) {
     ...(sha ? { sha } : {}),
     branch: "main"
   };
-  return githubRequest("/repos/" + REPO + "/contents/" + FILE_PATH, {
+  return githubRequest("/repos/" + REPO + "/contents/" + FILE_PATH, env, {
     method: "PUT",
     body: JSON.stringify(body)
   });
@@ -86,7 +86,7 @@ export default {
       }
 
       for (let attempt = 0; attempt < 6; attempt++) {
-        const { players, sha } = await readPlayers();
+        const { players, sha } = await readPlayers(env);
         const existing = players[key];
 
         if (action === "register" && existing) {
@@ -108,7 +108,7 @@ export default {
           lastUpdated: now
         };
 
-        const saved = await writePlayers(players, sha);
+        const saved = await writePlayers(players, sha, env);
         if (saved.ok) {
           return response({ ok: true, player: players[key] });
         }
