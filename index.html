@@ -2288,7 +2288,7 @@ function startKnowledgeAlefFindStage(target){
  $('knowledgePlayArea').innerHTML='<div class="alef-hunt"><div class="alef-hunt-target">همهٔ <strong style="color:'+colors+'">'+target+'</strong>ها را پیدا کن</div><div class="alef-hunt-grid" id="knowledgeAlefGrid"></div><div class="alef-hunt-count" id="knowledgeAlefCount">باقی‌مانده: '+fa(count)+'</div></div>';
  const grid=$('knowledgeAlefGrid');let left=count;
  knowledgeAlefShuffle(letters).forEach(letter=>{
-  const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell '+(letter==='آ'?'alef-a':'alef-e');b.textContent=letter;
+  const b=document.createElement('button');b.type='button';b.className='alef-hunt-cell';b.textContent=letter;
   b.onclick=()=>{
    if(knowledgeLocked||b.disabled)return;
    if(letter===target){b.disabled=true;b.classList.add('found');left--;knowledgeCorrect();knowledgeProgressUpdate(count-left,count);save();$('knowledgeAlefCount').textContent=left?'باقی‌مانده: '+fa(left):'آفرین! همه را پیدا کردی';
