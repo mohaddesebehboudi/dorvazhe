@@ -889,7 +889,7 @@ function renderGame(){
     $('progressBar').style.width=(stages.length?((current+1)/stages.length*100):0)+'%';
 
     $('target').innerHTML=Array.from({length:answerUnits.length},(_,i)=>
-        `<button class="slot ${placed[i]!==undefined?'filled':''}" data-slot="${i}">${placed[i]!==undefined?esc(tileValue(placed[i])):' '}</button>`
+        `<button class="slot ${placed[i]!==undefined?'filled':''}" data-slot="${i}" style="${current===34&&i===1?'margin-inline-end:18px':''}">${placed[i]!==undefined?esc(tileValue(placed[i])):' '}</button>`
     ).join('');
 
     $('tiles').innerHTML=tiles.map(t=>
@@ -962,7 +962,7 @@ function renderGame(){
 function persistSession(){data.session={stage:current,review:reviewMode,answer,answerUnits,tiles:tiles.map(t=>t.id),placed:[...placed],attempts,hinted};save()}
 function pick(id){if(success||placed.includes(id))return;let pos=placed.findIndex(v=>v===undefined);if(pos<0)pos=placed.length;put(id,pos)}
 function put(id,pos){if(success||!tiles.some(t=>t.id===id)||placed.includes(id))return;let next=[...placed];while(next.length<=pos)next.push(undefined);if(next[pos]!==undefined){let empty=next.findIndex(v=>v===undefined);if(empty<0)empty=next.length;pos=empty;while(next.length<=pos)next.push(undefined)}next[pos]=id;placed=next;renderGame();persistSession()}
-function wordNow(){return placed.filter(v=>v!==undefined).map(tileValue).join('')}
+function wordNow(){let values=placed.filter(v=>v!==undefined).map(tileValue);return current===34?values.slice(0,2).join('')+' '+values.slice(2).join(''):values.join('')}
       function normalizeWord(s) {
     return String(s)
         .normalize('NFC')
